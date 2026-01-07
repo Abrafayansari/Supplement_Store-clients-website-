@@ -2,8 +2,32 @@ import Admin from "../classes/Admin.js";
 import Customer from "../classes/Customer.js";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-const users=[]
+import jwt from "jsonwebtoken"
+import { products } from "./ProductController.js";
+
+const users = [
+  new Customer({
+    id: "1",
+    name: "Rafay",
+    email: "rafay@example.com",
+    password: await bcrypt.hash("user123", 10) // hashed password
+  }),
+  new Customer({
+    id: "2",
+    name: "Ansari",
+    email: "ansari@example.com",
+    password: await bcrypt.hash("user456", 10)
+  }),
+  new Admin({
+    id: "3",
+    name: "Admin User",
+    email: "admin@example.com",
+    password: await bcrypt.hash("admin123", 10)
+  })
+];
 dotenv.config()
+
+/////signup
 export const signUp = async(req, res) => {
   const { id, name, email, password, role } = req.body;
 
@@ -79,6 +103,53 @@ export const login = async(req, res) => {
   });
 };
 
+
+export const addToCart = (req, res) => {
+  const userId = req.user.id; // from authenticate middleware
+  const { productid, quantity } = req.body;
+
+  // 1. Retrieve user
+  const user = users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+const product=products.find((i)=>i.id===productid);
+if (!product) return res.status(404).json({ message: "Product not found" });
+
+  // 2. Add to cart
+  user.addToCart(productid, quantity); // using your Customer method
+
+  // 3. Respond
+  res.json({
+    message: "Product added to cart",
+    user: user
+  });
+};
+
+export const addtowhislist=(req,res)=>{
+ const user = users.find(u => u.id === req.user.id);
+  if (!user) return res.status(404).json({ message: "User not found" });
+const id=req.body.productid
+  const product = products.find(p => p.id ===id );
+  if (!product) return res.status(404).json({ message: "Product not found" });
+
+  user.addToWishlist(id);
+
+  res.json({
+    message: "Added to wishlist",
+    wishlist: user.wishlist
+  });
+
+}
+
 export const check =(req,res)=>{
-    return res.send("seccess");
+    return res.send("success");
+}
+
+export const logout=(req,res)=>{
+res.cookie("access_token", "", {
+  httpOnly: true,
+  expires: new Date(0), // Set expiration in the past
+  sameSite: "strict"
+});
+res.status(200).send("Logout successful");
+
 }
