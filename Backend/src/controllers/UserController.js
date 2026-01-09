@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { products } from "./ProductController.js";
+import {PrismaClient} from "@prisma/client";
 
+const prisma =new PrismaClient();
 const users = [
   new Customer({
     id: "1",
@@ -28,35 +30,66 @@ const users = [
 dotenv.config()
 
 /////signup
-export const signUp = async(req, res) => {
-  const { id, name, email, password, role } = req.body;
+export const signUp = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
 
-  if (!email || !password || !role) {
-    return res.status(400).json({ error: "Missing required fields" });
+    // 1. Validate input
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // 2. Check if email exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (existingUser) {
+      return res.status(409).json({ error: "Email already registered" });
+    }
+
+    // 3. Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 4. Create user in DB
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role,
+      },
+    });
+
+    // 5. Generate JWT
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRY || "1h" }
+    );
+
+    // 6. Set JWT in cookie (httpOnly)
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: false, // true in prod (HTTPS)
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    // 7. Respond
+    return res.status(201).json({
+      message: "User created successfully",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
-
-  // DB-style uniqueness check
-  const existingUser = users.find(u => u.email === email);
-  if (existingUser) {
-    return res.status(409).json({ error: "Email already registered" });
-  }
-
-  let user;
-const hashedPassword = await bcrypt.hash(password, 10);
-  if (role === "ADMIN") {
-    user = new Admin({ id, name, email, password:hashedPassword });
-  } else if (role === "CUSTOMER") {
-    user = new Customer({ id, name, email, password:hashedPassword });
-  } else {
-    return res.status(400).json({ error: "Invalid role" });
-  }
-
-  users.push(user);
-
-  return res.status(201).json({
-    message: "User created successfully",
-    user
-  });
 };
 
 export const login = async(req, res) => {
