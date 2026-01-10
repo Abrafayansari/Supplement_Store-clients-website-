@@ -3,6 +3,7 @@ import { addToCart, addtowhislist, check, login, logout, signUp } from "../contr
 import { authenticate } from "../middlewares/auth.js";
 import {adminOnly} from "../middlewares/authorization.js";
 import { createProduct } from "../controllers/ProductController.js";
+import { upload } from "../middlewares/uploads.js";
 
 
 export const router=express.Router();
@@ -10,7 +11,7 @@ export const router=express.Router();
 router.get("/check",check);
 router.post("/signup",signUp);
 router.post("/login",login);
-router.post("/create-product",authenticate,adminOnly,createProduct);
+router.post("/create-product",authenticate,adminOnly,upload.array("images", 5),createProduct);
 router.post("/addtocart",authenticate,addToCart);
 router.get("/logout",authenticate,logout);
 router.post("/addtowishlist",authenticate,addtowhislist);

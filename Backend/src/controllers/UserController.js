@@ -4,29 +4,8 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { products } from "./ProductController.js";
-import {PrismaClient} from "@prisma/client";
+import {prisma} from "../config/db.js";
 
-const prisma =new PrismaClient();
-const users = [
-  new Customer({
-    id: "1",
-    name: "Rafay",
-    email: "rafay@example.com",
-    password: await bcrypt.hash("user123", 10) // hashed password
-  }),
-  new Customer({
-    id: "2",
-    name: "Ansari",
-    email: "ansari@example.com",
-    password: await bcrypt.hash("user456", 10)
-  }),
-  new Admin({
-    id: "3",
-    name: "Admin User",
-    email: "admin@example.com",
-    password: await bcrypt.hash("admin123", 10)
-  })
-];
 dotenv.config()
 
 /////signup
@@ -100,7 +79,7 @@ export const login = async(req, res) => {
   }
 
   // DB-style lookup
-  const user = users.find(u => u.email === email);
+  const user = await prisma.user.findUnique({where:{email:email}});
 
   if (!user) {
     return res.status(401).json({ error: "Invalid credentials" });
@@ -132,44 +111,119 @@ export const login = async(req, res) => {
 
  return res.status(200).json({
     message: "Login successful",
-    token
+  
   });
 };
 
 
-export const addToCart = (req, res) => {
-  const userId = req.user.id; // from authenticate middleware
-  const { productid, quantity } = req.body;
+export const addToCart = async (req, res) => {
+  try {
+    const userid = req.user.userId ;
+    const { productId, quantity } = req.body;
 
-  // 1. Retrieve user
-  const user = users.find(u => u.id === userId);
-  if (!user) return res.status(404).json({ message: "User not found" });
-const product=products.find((i)=>i.id===productid);
-if (!product) return res.status(404).json({ message: "Product not found" });
+    const qty=parseInt(quantity)
+    if (!productId || !quantity || quantity <= 0) {
+      return res.status(400).json({ error: "Invalid product or quantity" });
+    }
 
-  // 2. Add to cart
-  user.addToCart(productid, quantity); // using your Customer method
+    // 1. Check product
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
 
-  // 3. Respond
-  res.json({
-    message: "Product added to cart",
-    user: user
-  });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    if (product.stock < qty) {
+      return res.status(400).json({ error: "Insufficient stock" });
+    }
+    console.log(userid)
+
+    // 2. Check if already in cart
+    const existingItem = await prisma.cartItem.findUnique({
+      where: {
+        userId_productId: {
+          userId: userid,
+          productId: productId,
+        },
+      },
+    });
+    let cartItem;
+
+    if (existingItem) {
+      // 3a. Update quantity
+      cartItem = await prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: {
+          quantity: existingItem.quantity + qty,
+        },
+      });
+    } else {
+      // 3b. Create new cart item
+      cartItem = await prisma.cartItem.create({
+        data: {
+          userId: userid,
+          productId: productId,
+          quantity: qty,
+          price: product.price,
+        },
+      });
+    }
+
+    return res.status(200).json({
+      message: "Product added to cart",
+      cartItem,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 };
 
-export const addtowhislist=(req,res)=>{
- const user = users.find(u => u.id === req.user.id);
-  if (!user) return res.status(404).json({ message: "User not found" });
-const id=req.body.productid
-  const product = products.find(p => p.id ===id );
+
+export const addtowhislist=async(req,res)=>{
+  try {
+    
+  
+ const userId = req.user.userId;
+const productId=req.body.productId
+  const product =await prisma.product.findUnique({where:{id:productId}});
   if (!product) return res.status(404).json({ message: "Product not found" });
 
-  user.addToWishlist(id);
+const exist=await prisma.wishlistItem.findUnique({
+  where:
+  {userId_productId:{
+    userId:userId,
+    productId:productId
+  }}
+})
+
+if(exist){
+  return res.status(400).json({message:"Product already in wishlist"})
+}
+
+await prisma.wishlistItem.create({
+  data:{
+    userId:userId,  
+    productId:productId
+  }
+})
+
+const wishlist=await prisma.wishlistItem.findMany({
+  where:{userId:userId},
+  include:{product:true}
+})
 
   res.json({
+
     message: "Added to wishlist",
-    wishlist: user.wishlist
+    wishlist: wishlist
   });
+  } catch (error) {
+    console.log(error.message)
+    res.sendStatus(500).json({message:"Internal server error"});
+  }
 
 }
 

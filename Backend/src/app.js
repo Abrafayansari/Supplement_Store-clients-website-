@@ -9,6 +9,8 @@ import cookieParser from "cookie-parser"; // << here
 const app = express();
 
 // Middlewares
+app.use("/uploads", express.static("uploads"));
+
 app.use(bodyparser());
 app.use(cors());
 app.use(express.json());

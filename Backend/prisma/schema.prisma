@@ -27,7 +27,7 @@ model User {
   password  String
   role      Role
 
-  cartItems CartItem[]
+  cartItems CartItem[]  
   wishlist  WishlistItem[]
   orders    Order[]
   reviews   Review[]   // 👈 user-written reviews
@@ -45,7 +45,7 @@ model Product {
   category    String
   subCategory String?
 
-  price       Int
+  price       Float
   size        String?
   stock       Int
 

@@ -1,4 +1,6 @@
 import Product from "../classes/Product.js";
+import cloudinary from "../config/cloudinary.js";
+import { prisma } from "../config/db.js";
 
 export const products = [
   new Product({
@@ -78,21 +80,67 @@ export const products = [
   })
 ];
 
-export const createProduct = (req, res) => {
-  try {
+export const createProduct = async(req, res) => {
+    try {
+    const {
+      name,
+      brand,
+      category,
+      subCategory,
+      price,
+      size,
+      stock,
+      description,
+      warnings = [],
+      directions,
+      additionalInfo = {},
+      variants = {},
+    } = req.body;
 
-    const product = new Product(req.body);
+    // Validate uploaded images
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "At least one image is required" });
+    }
 
-    products.push(product);
+    // Map uploaded files to paths
+   const imageUploadPromises = req.files.map((file) => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          { folder: "products" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        ).end(file.buffer);
+      });
+    });
+
+    const imageUrls = await Promise.all(imageUploadPromises);
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        brand,
+        category,
+        subCategory,
+        price: Number(price),
+        size,
+        stock: Number(stock),
+        description,
+        warnings: Array.isArray(warnings) ? warnings : [warnings],
+        directions,
+        additionalInfo: JSON.parse(additionalInfo || "{}"),
+        variants: JSON.parse(variants || "{}"),
+        images: imageUrls,
+      },
+    });
 
     return res.status(201).json({
       message: "Product created successfully",
-      product
+      product,
     });
-
   } catch (error) {
-    return res.status(400).json({
-      error: error.message
-    });
+    console.error(error);
+    return res.status(500).json({ error: error.message });
   }
 };
