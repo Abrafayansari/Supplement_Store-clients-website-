@@ -56,9 +56,12 @@ model Product {
   variants    Json
   images      String[]
 
+  rating       Float    @default(0)   
+  reviewCount  Int      @default(0)   
+
   isActive    Boolean  @default(true)
 
-  reviews     Review[]   // 👈 REAL reviews
+  reviews     Review[]
   cartItems   CartItem[]
   wishlist    WishlistItem[]
   orderItems  OrderItem[]
@@ -77,7 +80,7 @@ model CartItem {
   price     Int   // price snapshot
 
   user      User    @relation(fields: [userId], references: [id],onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -90,8 +93,8 @@ model WishlistItem {
   userId    String
   productId String
 
-  user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [id],onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

@@ -3,7 +3,6 @@ import Customer from "../classes/Customer.js";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
-import { products } from "./ProductController.js";
 import {prisma} from "../config/db.js";
 
 dotenv.config()
@@ -111,8 +110,12 @@ export const login = async(req, res) => {
 
  return res.status(200).json({
     message: "Login successful",
-  
-  });
+    user: { 
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role} ,
+token  });
 };
 
 
@@ -227,6 +230,74 @@ const wishlist=await prisma.wishlistItem.findMany({
 
 }
 
+export const giveReview = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { productId, rating, comment } = req.body;
+
+    if (!productId || rating === undefined) {
+      return res.status(400).json({ message: "Product ID and rating are required" });
+    }
+
+    const parsedRating = Number(rating);
+    if (isNaN(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const existingReview = await prisma.review.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    if (existingReview) {
+      return res.status(400).json({ message: "You already reviewed this product" });
+    }
+
+    const review = await prisma.review.create({
+      data: {
+        userId,
+        productId,
+        rating: parsedRating,
+        comment,
+      },
+    });
+
+    const stats = await prisma.review.aggregate({
+      where: { productId },
+      _avg: { rating: true },
+      _count: { rating: true },
+    });
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        rating: stats._avg.rating,
+        reviewCount: stats._count.rating,
+      },
+    });
+
+    res.status(201).json({
+      message: "Review added successfully",
+      review,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 export const check =(req,res)=>{
     return res.send("success");
 }
@@ -239,4 +310,4 @@ res.cookie("access_token", "", {
 });
 res.status(200).send("Logout successful");
 
-}
+} 
