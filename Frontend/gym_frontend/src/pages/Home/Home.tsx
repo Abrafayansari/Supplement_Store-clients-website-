@@ -5,11 +5,21 @@ import { motion } from 'framer-motion';
 import Slider from '../../components/Slider.tsx';
 import Categories from './Categories.tsx';
 import ProductCard from '../../components/ProductCard.tsx';
-import { initialProducts } from '../../data/Product.tsx';
+import { fetchProducts } from '../../data/Product.tsx';
 
 const Home: React.FC = () => {
+
+  const [initialProducts, setInitialProducts] = React.useState<Array<any>>([]);
+
+  React.useEffect(() => {
+   
+       fetchProducts({ sort: 'newest', limit: 10 }).then(( res) => setInitialProducts(res.products))
+       .catch(console.error);
+      
+      }, []);
+
   // Get the first 3 products marked as 'isNew' to populate the New Arrivals section
-  const newArrivals = initialProducts.filter(p => p.isNew).slice(0, 3);
+   ;
 
   return (
     <div className="pb-0 overflow-x-hidden">
@@ -44,9 +54,9 @@ const Home: React.FC = () => {
             </div>
             
             <div className="space-y-6">
-              <h1 className="text-6xl md:text-8xl xl:text-[7.5rem] font-black uppercase leading-[0.8] tracking-tighter text-white">
+              <h1 className="text-5xl md:text-8xl xl:text-[5.5rem] font-black uppercase leading-[0.8] tracking-tighter text-white">
                 PRECISION <br />
-                <span className="shine-gold">BIOLOGY</span>.
+                <span className="shine-gold">BIOLOGY </span>.
               </h1>
               <div className="h-2 w-32 bg-brand rounded-none"></div>
             </div>
@@ -151,7 +161,7 @@ const Home: React.FC = () => {
 
             {/* Product Cards Row - Using the ProductCard component */}
             <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              {newArrivals.map((product) => (
+              {initialProducts.slice(0, 3).map((product) => (
                 <div key={product.id} className="flex justify-center">
                   <ProductCard product={product} />
                 </div>

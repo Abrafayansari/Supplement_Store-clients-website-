@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart, Eye, GitCompare } from 'lucide-react';
-import { Product } from '../data/Product.tsx';
 import { useCart } from '../contexts/CartContext.tsx';
 import { toast } from 'sonner';
+import { Product } from '@/types.ts';
 import QuickViewModal from './QuickViewModal.tsx';
 
 interface ProductCardProps {
@@ -22,15 +22,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
     toast.success(`${product.name} added to protocol.`);
   };
 
+  const booleanIsNew = (() => {
+    const now = new Date();
+    const createdAt = new Date(product.createdAt);
+    const diffInDays = (now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+    return diffInDays <= 30; 
+  })();
+
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsQuickViewOpen(true);
   };
 
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
+  // const discount = product.originalPrice
+  //   ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  //   : 0;
 
   return (
     <>
@@ -43,22 +50,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <Link to={`/product/${product.id}`} className="flex flex-col h-full">
           <div className="relative h-[260px] md:h-[280px] overflow-hidden bg-brand-matte/5 flex items-center justify-center shrink-0">
             <img
-              src={product.image}
+              src={product.images[0]}
               alt={product.name}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
             
             <div className="absolute top-3 left-3 flex flex-col gap-2">
-              {product.isNew && (
+              {booleanIsNew && (
                 <span className="bg-brand-gold text-brand-matte text-[10px] font-black px-2 py-1 uppercase tracking-wider">
                   NEW
                 </span>
               )}
-              {discount > 0 && (
+              {/* {discount > 0 && (
                 <span className="bg-brand text-white text-[10px] font-black px-2 py-1 uppercase tracking-wider">
                   -{discount}%
                 </span>
-              )}
+              )} */}
             </div>
 
             <div
@@ -104,13 +111,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <div className="flex items-center justify-between mt-auto pt-2">
               <div className="flex flex-col">
                 <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">
-                  ${product.price.toFixed(2)}
+                  Rs. {product.price.toFixed(2)}
                 </span>
-                {product.originalPrice && (
+                {/* {product.originalPrice && (
                   <span className="text-[10px] text-brand-matte/30 line-through font-bold">
-                    ${product.originalPrice.toFixed(2)}
+                    RS{product.originalPrice.toFixed(2)}
                   </span>
-                )}
+                )} */}
               </div>
               <div className="flex text-brand-gold">
                 {[...Array(5)].map((_, i) => (

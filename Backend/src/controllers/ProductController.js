@@ -158,3 +158,106 @@ export const uploadbulkproducts = async (req, res) => {
     res.status(500).json({ error: "Something went wrong", details: error.message });
   }
 };
+
+
+
+
+// export const getallproducts=async(req,res)=>{
+// const product= await prisma.product.findMany();
+// if(product.length===0){
+// return res.status(401).json({message:"no products found"})
+// }
+// res.status(201).send(product);
+// }
+
+export const getallproducts=async(req,res)=>{
+  try {
+    const {
+      subCategory,
+      search,
+      minPrice,
+      maxPrice,
+      sort = "newest",
+      page = "1",
+      limit = "12",
+      inStock,
+      rating,
+    } = req.query;
+
+    const where = {
+      isActive: true,
+    };
+
+    if (subCategory) {
+      where.subCategory = subCategory;
+    }
+
+    if (search) {
+      where.OR = [
+        { name: { contains: String(search), mode: "insensitive" } },
+        { brand: { contains: String(search), mode: "insensitive" } },
+        { id: { equals: String(search) } }, // <-- added ID search
+      ];
+    }
+
+    if (minPrice || maxPrice) {
+      where.price = {
+        gte: minPrice ? Number(minPrice) : 0,
+        lte: maxPrice ? Number(maxPrice) : 999999,
+      };
+    }
+
+    if (inStock === "true") {
+      where.stock = { gt: 0 };
+    }
+
+    if (rating) {
+      where.rating = { gte: Number(rating) };
+    }
+
+    let orderBy = { createdAt: "desc" };
+
+    if (sort === "price-asc") orderBy = { price: "asc" };
+    if (sort === "price-desc") orderBy = { price: "desc" };
+    if (sort === "name") orderBy = { name: "asc" };
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip,
+        take: Number(limit),
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    res.json({
+      products,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch products" });
+  }
+}
+
+
+export const getCategories = async (req, res) => {
+  try {
+    // Fetch unique categories or subCategories from products
+    const categories = await prisma.product.findMany({
+      where: { isActive: true },
+      select: { subCategory: true, category: true },
+      distinct: ['subCategory'], // get unique subCategories
+    });
+
+    res.json({categories}); // array of { subCategory, category }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to fetch categories' });
+  }
+};

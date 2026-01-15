@@ -2,7 +2,7 @@ import express from "express"
 import { addToCart, addtowhislist, check, giveReview, login, logout, signUp } from "../controllers/UserController.js"
 import { authenticate } from "../middlewares/auth.js";
 import {adminOnly} from "../middlewares/authorization.js";
-import { createProduct, uploadbulkproducts } from "../controllers/ProductController.js";
+import { createProduct, getallproducts, getCategories, uploadbulkproducts } from "../controllers/ProductController.js";
 import upload  from "../middlewares/uploads.js";
 
 
@@ -20,3 +20,7 @@ router.post("/uploadproducts",authenticate,adminOnly,upload.fields([
     { name: "excel", maxCount: 1 },
     { name: "images", maxCount: 1 },
   ]),uploadbulkproducts);
+
+  router.get("/getallproducts",getallproducts);
+ router.get("/getcategories",getCategories)
+

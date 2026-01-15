@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-brand-matte border-b border-brand-gold/30 py-3 shadow-2xl' : 'bg-brand-matte/90 backdrop-blur-md py-6'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-brand-matte border-b border-brand-gold/30 py-1 shadow-2xl' : 'bg-brand-matte/90 border-b border-brand-gold/30 backdrop-blur-md py-3'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center gap-2 group">
@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
 
           <div className="hidden md:flex items-center space-x-12">
             {[
-              { label: 'Index', path: '/' },
+              { label: 'Home', path: '/' },
               { label: 'Shop', path: '/products' },
               { label: 'Contact', path: '/contact' }
             ].map((item) => (

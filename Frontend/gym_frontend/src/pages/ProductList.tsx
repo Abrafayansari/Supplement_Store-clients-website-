@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   Search, 
@@ -13,7 +13,7 @@ import {
   Filter,
   ArrowUpDown
 } from 'lucide-react';
-import { initialProducts, categories } from '../data/Product.tsx';
+import {   fetchProducts, getCategories} from '../data/Product.tsx';
 import ProductCard from '../components/ProductCard.tsx';
 import { 
   Sheet, 
@@ -29,35 +29,119 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu.tsx";
+import axios from 'axios';
+import {Product } from '@/types.ts';
+import { set } from 'react-hook-form';
 
 const ProductList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [maxPrice, setMaxPrice] = useState(200);
+  const [maxPrice, setMaxPrice] = useState(2000000);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'name'>('newest');
-
+const [products, setProducts] = useState<Product[]>([]);
+const [loading, setLoading] = useState(true);
+const [page, setPage] = useState(1);
+const [subcategories, setsubCategories] = useState<Array<any>>([]);
+// const subCategories = [
+//   "Protein",        // Whey & Isolates
+//   "Pre-Workout",    // Pre-workout formulas
+//   "Creatine",       // Creatine and blends
+//   "BCAA / EAA",     // Amino acids
+//   "Mass Gainer",    // High calorie supplements
+//   "Vitamins & Multivitamins",
+//   "Omega & Health", // Fish oil etc.
+//   "Energy / Hydration",
+//   "Snacks / Bars",  // Protein bars & high-protein foods
+//   "Accessories",    // Shakers, bottles etc.
+//   "Other Supplements" // Anything else
+// ];
   const activeCategory = searchParams.get('category') || 'All';
 
+
+useEffect(() => {
+  getCategories()
+    .then(res => setsubCategories(res))
+    .catch(console.error);
+  fetchProducts({
+    subCategory: activeCategory !== "All" ? activeCategory : undefined,
+    search: searchQuery || undefined,
+    maxPrice,
+    sort: sortBy,
+    page: 1,
+    limit: 12,
+    inStock: true,
+  })
+    .then(res => setProducts(res.products))
+    .catch(console.error);
+}, [activeCategory, searchQuery, maxPrice, sortBy]);
+
+
+
+// useEffect( () => {
+//     axios.get('http://localhost:5000/api/getallproducts')
+//     .then(res => setProducts(res.data))
+//     .catch(console.error);
+    
+//   }, []);
+
+
+  // const processedProducts = useMemo(() => {
+  //   let filtered = products.filter(p => {
+  //     const matchesCategory = 
+  //       activeCategory === 'All' || 
+  //       p.subCategory.toLowerCase() === activeCategory.toLowerCase();
+  //     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+  //     const matchesPrice = p.price <= maxPrice;
+  //     return matchesCategory && matchesSearch && matchesPrice;
+  //   });
+
+  //   // Sorting Logic
+  //   if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+  //   else if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+  //   else if (sortBy === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+  //   else if (sortBy === 'newest') filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+
+  //   return filtered;
+  // }, [products,activeCategory, searchQuery, maxPrice, sortBy]);
+
+  const isNew = (product: Product) => {
+  const now = new Date();
+  const createdAt = new Date(product.createdAt);
+  const diffInDays =
+    (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+
+  return diffInDays <= 30;
+};
+
+
+
   const processedProducts = useMemo(() => {
-    let filtered = initialProducts.filter(p => {
-      const matchesCategory = 
-        activeCategory === 'All' || 
-        p.category.toLowerCase() === activeCategory.toLowerCase();
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesPrice = p.price <= maxPrice;
-      return matchesCategory && matchesSearch && matchesPrice;
-    });
+  let filtered = products.filter(p => {
+    const matchesCategory =
+      activeCategory === 'All' ||
+      p.subCategory?.toLowerCase() === activeCategory.toLowerCase();
 
-    // Sorting Logic
-    if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
-    else if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
-    else if (sortBy === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortBy === 'newest') filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+    const matchesSearch =
+      !searchQuery ||
+      p.name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return filtered;
-  }, [activeCategory, searchQuery, maxPrice, sortBy]);
+    const matchesPrice = p.price <= maxPrice;
+
+    return matchesCategory && matchesSearch && matchesPrice;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === 'price-asc') return a.price - b.price;
+    if (sortBy === 'price-desc') return b.price - a.price;
+    if (sortBy === 'name') return a.name.localeCompare(b.name);
+    if (sortBy === 'newest') return Number(isNew(b)) - Number(isNew(a));
+    return 0;
+  });
+
+  return sorted;
+}, [products, activeCategory, searchQuery, maxPrice, sortBy]);
 
   const removeCategory = () => {
     searchParams.delete('category');
@@ -86,19 +170,19 @@ const ProductList: React.FC = () => {
             All Archive
             <ChevronDown className={`w-3 h-3 transition-transform ${activeCategory === 'All' ? 'rotate-180' : ''}`} />
           </button>
-          {categories.map(cat => (
+          {subcategories.map(cat => (
             <button 
-              key={cat.id}
+              key={cat.subCategory}
               onClick={() => {
-                searchParams.set('category', cat.name);
+                searchParams.set('category', cat.subCategory);
                 setSearchParams(searchParams);
                 setIsFilterOpen(false);
               }}
-              className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all ${activeCategory.toLowerCase() === cat.name.toLowerCase() ? 'bg-brand text-white' : 'text-brand-matte/40 hover:bg-brand-warm border border-transparent hover:border-brand-matte/5'}`}
+              className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all ${activeCategory.toLowerCase() === cat.subCategory.toLowerCase() ? 'bg-brand text-white' : 'text-brand-matte/40 hover:bg-brand-warm border border-transparent hover:border-brand-matte/5'}`}
             >
-              {cat.name} Series
+              {cat.subCategory} Series
               <Badge variant="outline" className="text-[8px] border-white/20 text-inherit">
-                {initialProducts.filter(p => p.category.toLowerCase() === cat.name.toLowerCase()).length}
+                {products.filter(p => p.subCategory?.toLowerCase() === cat.subCategory.toLowerCase()).length}
               </Badge>
             </button>
           ))}
@@ -145,6 +229,8 @@ const ProductList: React.FC = () => {
     }
   };
 
+
+
   return (
     <div className="bg-brand-warm min-h-screen pt-32 pb-48 selection:bg-brand selection:text-white">
       <div className="max-w-[1700px] mx-auto px-6">
@@ -174,6 +260,11 @@ const ProductList: React.FC = () => {
         </div>
 
         {/* SHOP HEADER & SEARCH */}
+        <p className='text-black'>{products.length} products</p>
+        <p className='text-black'>
+          
+          {processedProducts.length} filtered products
+        </p>
         <header className="mb-16 space-y-12">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10">
             <div className="space-y-4">
@@ -315,19 +406,19 @@ const ProductList: React.FC = () => {
                     ) : (
                       <div className="bg-white border border-brand-matte/5 p-6 flex items-center gap-8 group hover:border-brand-gold/30 transition-luxury">
                         <div className="w-24 h-24 bg-brand-warm border border-brand-matte/5 p-4 shrink-0">
-                          <img src={product.image} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" alt={product.name} />
+                          <img src={product.images[0]} className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" alt={product.name} />
                         </div>
                         <div className="flex-grow space-y-2">
                           <div className="flex items-center gap-3">
-                            <span className="text-brand-gold text-[9px] font-black uppercase tracking-widest">{product.category} Series</span>
+                            <span className="text-brand-gold text-[9px] font-black uppercase tracking-widest">{product.subCategory} Series</span>
                             <div className="w-1 h-1 bg-brand-matte/20 rounded-full"></div>
                             <span className="text-brand-matte/30 text-[9px] font-bold uppercase tracking-widest">ID: {product.id}</span>
                           </div>
                           <h3 className="text-xl font-black text-brand-matte uppercase tracking-tight group-hover:text-brand transition-colors">{product.name}</h3>
                           <div className="flex items-center gap-4 pt-2">
                             <span className="text-2xl font-black text-brand italic tracking-tighter">${product.price.toFixed(2)}</span>
-                            {product.originalPrice && (
-                              <span className="text-xs text-brand-matte/20 line-through font-bold">${product.originalPrice.toFixed(2)}</span>
+                            {product.price && (
+                              <span className="text-xs text-brand-matte/20 line-through font-bold">${product.price.toFixed(2)}</span>
                             )}
                           </div>
                         </div>

@@ -1,19 +1,28 @@
-
+// types/Product.ts
 export interface Product {
   id: string;
   name: string;
+  brand?: string;
+  category: string;
+  subCategory?: string;
   price: number;
-  category: 'Protein' | 'Vitamins' | 'Pre-Workout' | 'Wellness';
-  image: string;
-  rating: number;
-  description: string;
-  ingredients: string[];
-  variants: {
-    flavors: string[];
-    sizes: string[];
-  };
+  size?: string;
   stock: number;
-  reviews: Review[];
+  description?: string;
+  warnings: string[];
+  directions?: string;
+  additionalInfo: any;
+  variants: any[];
+  images: string[];
+  rating: number;
+  reviewCount: number;
+  isActive: boolean;
+  reviews: any[];
+  cartItems: any[];
+  wishlist: any[];
+  orderItems: any[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Review {
