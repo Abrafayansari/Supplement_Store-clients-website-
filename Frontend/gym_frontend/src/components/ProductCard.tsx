@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye, GitCompare } from 'lucide-react';
+import { ShoppingCart, Heart, Eye, GitCompare, Rss } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
-import { toast } from 'sonner';
+import { toast } from 'react-toast';
 import { Product } from '@/types.ts';
 import QuickViewModal from './QuickViewModal.tsx';
+import axios from 'axios';
 
 interface ProductCardProps {
   product: Product;
@@ -15,11 +16,34 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { addToCart } = useCart();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+const handleAddToCart =async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product);
-    toast.success(`${product.name} added to protocol.`);
+    try {
+      const res = await axios.post("http://localhost:5000/api/addtocart",{
+        productId: product.id,
+        quantity: 1
+      }
+    , {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`
+  }
+}
+    );
+      if (res.status === 401) {
+        toast.error("Please login to add items to cart.");
+        return;
+      }
+      console.log(res);
+      addToCart(res.data.cartItem, 1);
+      toast.success(`${product.name} added to protocol.`);
+    } catch (err: any) {
+  if (err.response?.status === 401) {
+    toast.error("Please login to add items to cart.");
+    return;
+  }
+  toast.error("Failed to add item to cart.");
+}
   };
 
   const booleanIsNew = (() => {
@@ -31,6 +55,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
+
     e.stopPropagation();
     setIsQuickViewOpen(true);
   };

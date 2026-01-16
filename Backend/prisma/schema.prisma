@@ -26,7 +26,7 @@ model User {
   email     String   @unique
   password  String
   role      Role
-
+  addressId    String?  
   cartItems CartItem[]  
   wishlist  WishlistItem[]
   orders    Order[]
@@ -34,6 +34,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  addresses Address[]
 }
 
 
@@ -101,15 +103,22 @@ model WishlistItem {
   @@unique([userId, productId])
 }
 
+enum Status{
+PENDING
+SHIPPED
+DELIVERED
+CANCELLED
+}
+
 model Order {
   id        String   @id @default(uuid())
   userId    String
   total     Int
-  status    String
-
+  status    Status   @default(PENDING)
+  addressId String
   user      User       @relation(fields: [userId], references: [id])
   items     OrderItem[]
-
+  adress    Address    @relation(fields: [addressId], references: [id])
   createdAt DateTime @default(now())
 }
 
@@ -143,3 +152,23 @@ model Review {
 
   @@unique([userId, productId]) // one review per user per product
 }
+
+model Address {
+  id         String  @id @default(uuid())
+  userId     String @unique
+  fullName   String
+  phone      String
+  street     String
+  city       String
+  state      String
+  zipCode    String
+  country    String
+
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders     Order[] 
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+

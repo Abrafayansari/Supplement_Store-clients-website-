@@ -49,8 +49,9 @@ export const signUp = async (req, res) => {
     res.cookie("access_token", token, {
       httpOnly: true,
       secure: false, // true in prod (HTTPS)
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 60 * 60 * 1000, // 1 hour
+       path: "/",
     });
 
     // 7. Respond
@@ -104,8 +105,9 @@ export const login = async(req, res) => {
   res.cookie("access_token", token, {
     httpOnly: true,
     secure: false, // true in production (HTTPS)
-    sameSite: "strict",
-    maxAge: 60 * 60 * 1000
+    sameSite: "none",
+    maxAge: 60 * 60 * 1000,
+     path: "/",
   });
 
  return res.status(200).json({
@@ -120,6 +122,9 @@ token  });
 
 
 export const addToCart = async (req, res) => {
+   console.log("Cookies:", req.cookies);
+  console.log("Headers:", req.headers.cookie);
+  console.log("User:", req.user)
   try {
     const userid = req.user.userId ;
     const { productId, quantity } = req.body;
@@ -299,7 +304,7 @@ export const giveReview = async (req, res) => {
 
 
 export const check =(req,res)=>{
-    return res.send("success");
+    return res.send("success",req.cookies);
 }
 
 export const logout=(req,res)=>{

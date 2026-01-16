@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X } from 'lucide-react';
 import { useStore } from '../StoreContext.tsx';
-
+import { ToastContainer } from 'react-toast';
 const Navbar: React.FC = () => {
   const { cart, user, logout } = useStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,6 +24,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-brand-matte border-b border-brand-gold/30 py-1 shadow-2xl' : 'bg-brand-matte/90 border-b border-brand-gold/30 backdrop-blur-md py-3'}`}>
+      <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center gap-2 group">

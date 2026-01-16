@@ -8,7 +8,7 @@ import upload  from "../middlewares/uploads.js";
 
 export const router=express.Router();
 
-router.get("/check",check);
+router.get("/check",authenticate,check);
 router.post("/signup",signUp);
 router.post("/login",login);
 router.post("/create-product",authenticate,adminOnly,upload.array("images", 5),createProduct);
