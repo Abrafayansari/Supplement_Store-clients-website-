@@ -42,17 +42,17 @@ export const signUp = async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRY || "1h" }
+      { expiresIn: process.env.JWT_EXPIRY }
     );
 
     // 6. Set JWT in cookie (httpOnly)
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: false, // true in prod (HTTPS)
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000, // 1 hour
-       path: "/",
-    });
+    // res.cookie("access_token", token, {
+    //   httpOnly: true,
+    //   secure: false, // true in prod (HTTPS)
+    //   sameSite: "none",
+    //   maxAge: 60 * 60 * 1000, // 1 hour
+    //    path: "/",
+    // });
 
     // 7. Respond
     return res.status(201).json({
@@ -102,21 +102,20 @@ export const login = async(req, res) => {
       expiresIn: process.env.JWT_EXPIRY
     }
   );
-  res.cookie("access_token", token, {
-    httpOnly: true,
-    secure: false, // true in production (HTTPS)
-    sameSite: "none",
-    maxAge: 60 * 60 * 1000,
-     path: "/",
-  });
+  // res.cookie("access_token", token, {
+  //   httpOnly: true,
+  //   secure: false, // true in production (HTTPS)
+  //   sameSite: "none",
+  //   maxAge: 60 * 60 * 1000,
+  //    path: "/",
+  // });
 
  return res.status(200).json({
     message: "Login successful",
     user: { 
       id: user.id,
       name: user.name,
-      email: user.email,
-      role: user.role} ,
+      email: user.email, role: user.role} ,
 token  });
 };
 
