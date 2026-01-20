@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart, Eye, GitCompare, Rss } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
-import { toast } from 'react-toast';
+import { toast } from 'sonner';
 import { Product } from '@/types.ts';
 import QuickViewModal from './QuickViewModal.tsx';
 import axios from 'axios';
@@ -16,41 +16,31 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { addToCart } = useCart();
 
-const handleAddToCart =async (e: React.MouseEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!localStorage.getItem("token")) {
+      toast.error("Login required");
+      return;
+    }
+    if (loading) return;
+
     try {
-      const res = await axios.post("http://localhost:5000/api/addtocart",{
-        productId: product.id,
-        quantity: 1
-      }
-    , {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`
-  }
-}
-    );
-      if (res.status === 401) {
-        toast.error("Please login to add items to cart.");
-        return;
-      }
-      console.log(res);
-      addToCart(res.data.cartItem, 1);
-      toast.success(`${product.name} added to protocol.`);
-    } catch (err: any) {
-  if (err.response?.status === 401) {
-    toast.error("Please login to add items to cart.");
-    return;
-  }
-  toast.error("Failed to add item to cart.");
-}
+      setLoading(true);
+      await addToCart(product, 1);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   const booleanIsNew = (() => {
     const now = new Date();
     const createdAt = new Date(product.createdAt);
     const diffInDays = (now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
-    return diffInDays <= 30; 
+    return diffInDays <= 30;
   })();
 
   const handleQuickView = (e: React.MouseEvent) => {
@@ -79,7 +69,7 @@ const handleAddToCart =async (e: React.MouseEvent) => {
               alt={product.name}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            
+
             <div className="absolute top-3 left-3 flex flex-col gap-2">
               {booleanIsNew && (
                 <span className="bg-brand-gold text-brand-matte text-[10px] font-black px-2 py-1 uppercase tracking-wider">
@@ -94,9 +84,8 @@ const handleAddToCart =async (e: React.MouseEvent) => {
             </div>
 
             <div
-              className={`absolute right-3 top-3 flex flex-col gap-2 transition-all duration-300 ${
-                isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
-              }`}
+              className={`absolute right-3 top-3 flex flex-col gap-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                }`}
             >
               <button
                 onClick={(e) => { e.preventDefault(); }}
@@ -114,9 +103,8 @@ const handleAddToCart =async (e: React.MouseEvent) => {
 
             <button
               onClick={handleAddToCart}
-              className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
-                isHovered ? 'translate-y-0' : 'translate-y-full'
-              }`}
+              className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'
+                }`}
             >
               <ShoppingCart className="w-4 h-4" />
               ADD TO CART
@@ -132,7 +120,7 @@ const handleAddToCart =async (e: React.MouseEvent) => {
                 {product.name}
               </h3>
             </div>
-            
+
             <div className="flex items-center justify-between mt-auto pt-2">
               <div className="flex flex-col">
                 <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">
@@ -165,4 +153,4 @@ const handleAddToCart =async (e: React.MouseEvent) => {
   );
 };
 
-  export default ProductCard;
+export default ProductCard;

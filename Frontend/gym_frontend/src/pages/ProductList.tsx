@@ -32,7 +32,7 @@ import { Product } from '@/types.ts';
 const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState('');
-    const [maxPrice, setMaxPrice] = useState(200);
+    const [maxPrice, setMaxPrice] = useState(20000000);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'name'>('newest');

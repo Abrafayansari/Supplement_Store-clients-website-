@@ -7,6 +7,7 @@ import { useCart } from '../contexts/CartContext.tsx';
 import { Product } from '@/types.ts';
 import { toast } from 'sonner';
 import { Badge } from '../components/ui/badge.tsx';
+import axios from 'axios';
 
 const ProductDetail: React.FC = () => {
     const [initialProducts, setInitialProducts] = useState<Array<any>>([]);
@@ -16,8 +17,9 @@ const ProductDetail: React.FC = () => {
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'details' | 'usage' | 'reviews'>('details');
-    const [selectedVariant, setSelectedVariant] = useState('Standard');
+    const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
     const [activeImageIdx, setActiveImageIdx] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const found = async () => {
@@ -38,12 +40,30 @@ const ProductDetail: React.FC = () => {
         </div>
     );
 
-    const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) {
-            addToCart(product);
+    const handleAddToCart = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // if (!selectedVariant) {
+        //     toast.error("Please select a variant");
+        //     return;
+        // }
+
+        if (!localStorage.getItem("token")) {
+            toast.error("Login required");
+            return;
         }
-        toast.success(`Protocol ${product.name} initialized in cart.`);
+
+        if (loading) return;
+
+        try {
+            setLoading(true);
+            await addToCart(product, quantity);
+        } finally {
+            setLoading(false);
+        }
     };
+
 
     const normalizeVariants = (variants: any[]) => {
         if (!variants || variants.length === 0) return [];
@@ -180,13 +200,17 @@ const ProductDetail: React.FC = () => {
                                     <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">Required Field</span>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {normalizeVariants(product.variants)?.map(v => (
+                                    {product.variants.map((variant: any) => (
                                         <button
-                                            key={v.value}
-                                            onClick={() => setSelectedVariant(v.value)}
-                                            className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all duration-300 ${selectedVariant === v.value ? 'bg-brand-matte text-white border-brand-matte shadow-lg' : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'}`}
+                                            key={variant.sku}
+                                            onClick={() => setSelectedVariant(variant)}
+                                            className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
+      ${selectedVariant?.sku === variant.sku
+                                                    ? 'bg-brand-matte text-white border-brand-matte'
+                                                    : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'
+                                                }`}
                                         >
-                                            {v.label}
+                                            {variant.flavor || variant.name || variant.sku}
                                         </button>
                                     ))}
                                 </div>
