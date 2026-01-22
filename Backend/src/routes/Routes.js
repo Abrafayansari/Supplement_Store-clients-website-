@@ -1,8 +1,9 @@
 import express from "express"
-import { addToCart, addtowhislist, check, clearCart, deleteCartItem, giveReview, login, logout, showcart, signUp, updateCart } from "../controllers/UserController.js"
+import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile } from "../controllers/UserController.js"
+import { getUserOrders } from "../controllers/OrderController.js";
 import { authenticate } from "../middlewares/auth.js";
 import { adminOnly } from "../middlewares/authorization.js";
-import { createProduct, getallproducts, getCategories, uploadbulkproducts } from "../controllers/ProductController.js";
+import { createProduct, getallproducts, getCategories, uploadbulkproducts, getProductById } from "../controllers/ProductController.js";
 import upload from "../middlewares/uploads.js";
 
 
@@ -14,7 +15,6 @@ router.post("/login", login);
 router.post("/create-product", authenticate, adminOnly, upload.array("images", 5), createProduct);
 router.post("/addtocart", authenticate, addToCart);
 router.get("/logout", authenticate, logout);
-router.post("/addtowishlist", authenticate, addtowhislist);
 router.post("/givereview", authenticate, giveReview);
 router.post("/uploadproducts", authenticate, adminOnly, upload.fields([
   { name: "excel", maxCount: 1 },
@@ -22,8 +22,16 @@ router.post("/uploadproducts", authenticate, adminOnly, upload.fields([
 ]), uploadbulkproducts);
 
 router.get("/getallproducts", getallproducts);
+router.get("/product/:id", getProductById);
 router.get("/getcategories", getCategories)
 router.post("/updatecart", authenticate, updateCart);
 router.delete("/removecartitem", authenticate, deleteCartItem)
 router.delete("/clearcart", authenticate, clearCart)
 router.get("/showcart", authenticate, showcart)
+router.post("/wishlist", authenticate, addToWishlist);
+router.delete("/wishlist/:productId", authenticate, removeFromWishlist)
+router.get("/wishlist/exists/:productId", authenticate, isWishlisted);
+router.get("/wishlist", authenticate, getWishlist);
+router.get("/orders", authenticate, getUserOrders);
+router.get("/getprofile", authenticate, getProfile);
+router.put("/profile", authenticate, updateProfile);

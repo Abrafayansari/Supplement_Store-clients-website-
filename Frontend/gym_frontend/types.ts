@@ -11,8 +11,7 @@ export interface Product {
   description?: string;
   warnings: string[];
   directions?: string;
-  additionalInfo: any;
-  variants: any[];
+  variants: string[];
   images: string[];
   rating: number;
   reviewCount: number;
@@ -35,7 +34,7 @@ export interface Review {
 
 export interface CartItem extends Product {
   quantity: number;
-  selectedFlavor?: string;
+  selectedVariant?: string;
   selectedSize?: string;
 }
 
@@ -53,7 +52,17 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'User' | 'Admin';
-  status: 'Active' | 'Suspended';
-  joinDate: string;
+  role: 'ADMIN' | 'CUSTOMER';
+  status?: 'Active' | 'Suspended';
+  joinDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface WishlistItem {
+  id: string;
+  productId: string;
+  userId: string;
+  product: Product;
+  createdAt: string;
 }

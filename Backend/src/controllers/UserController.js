@@ -63,6 +63,7 @@ export const signUp = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        createdAt: user.createdAt,
       },
       token,
     });
@@ -116,7 +117,9 @@ export const login = async (req, res) => {
     user: {
       id: user.id,
       name: user.name,
-      email: user.email, role: user.role
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
     },
     token
   });
@@ -191,53 +194,87 @@ export const addToCart = async (req, res) => {
   }
 };
 
+// controllers/wishlistController.js
 
-export const addtowhislist = async (req, res) => {
+// Add product to wishlist
+export const addToWishlist = async (req, res) => {
   try {
-
-
     const userId = req.user.userId;
-    const productId = req.body.productId
+    const { productId } = req.body;
+
+    // Check if product exists
     const product = await prisma.product.findUnique({ where: { id: productId } });
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    const exist = await prisma.wishlistItem.findUnique({
-      where:
-      {
-        userId_productId: {
-          userId: userId,
-          productId: productId
-        }
-      }
-    })
+    // Check if already in wishlist
+    const exists = await prisma.wishlistItem.findUnique({
+      where: { userId_productId: { userId, productId } }
+    });
+    if (exists) return res.status(400).json({ message: "Product already in wishlist" });
 
-    if (exist) {
-      return res.status(400).json({ message: "Product already in wishlist" })
-    }
-
+    // Add to wishlist
     await prisma.wishlistItem.create({
-      data: {
-        userId: userId,
-        productId: productId
-      }
-    })
+      data: { userId, productId }
+    });
+
+    res.status(201).json({ message: "Added to wishlist" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Remove product from wishlist
+export const removeFromWishlist = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { productId } = req.params;
+
+    await prisma.wishlistItem.delete({
+      where: { userId_productId: { userId, productId } }
+    });
+
+    res.status(200).json({ message: "Removed from wishlist" });
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Wishlist item not found" });
+  }
+};
+
+// Check if product is in wishlist
+export const isWishlisted = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { productId } = req.params;
+
+    const exists = await prisma.wishlistItem.findUnique({
+      where: { userId_productId: { userId, productId } }
+    });
+
+    res.status(200).json({ exists: !!exists });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Wishlist check failed" });
+  }
+};
+
+// Get all wishlist items for user
+export const getWishlist = async (req, res) => {
+  try {
+    const userId = req.user.userId;
 
     const wishlist = await prisma.wishlistItem.findMany({
-      where: { userId: userId },
+      where: { userId },
       include: { product: true }
-    })
-
-    res.json({
-
-      message: "Added to wishlist",
-      wishlist: wishlist
     });
-  } catch (error) {
-    console.log(error.message)
-    res.sendStatus(500).json({ message: "Internal server error" });
-  }
 
-}
+    res.status(200).json({ wishlist });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch wishlist" });
+  }
+};
+
 
 export const giveReview = async (req, res) => {
   try {
@@ -453,3 +490,72 @@ export const showcart = async (req, res) => {
     res.status(500).json({ message: "Failed to show cart" })
   }
 }
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ error: "Name and email are required" });
+    }
+
+    // Check if email is already taken by another user
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email,
+        NOT: { id: userId }
+      }
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ error: "Email already in use" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { name, email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      }
+    });
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to update profile" });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch profile" });
+  }
+};
+

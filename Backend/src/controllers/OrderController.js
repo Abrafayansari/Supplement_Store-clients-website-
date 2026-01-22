@@ -3,12 +3,12 @@ import { prisma } from "../config/db.js";
 // Create a new Order with Order Items
 export const createOrder = async (req, res) => {
   try {
-    const { userId, addressId,  items } = req.body;
+    const { userId, addressId, items } = req.body;
 
     // 1. Validate input
     if (!userId || !addressId || !items || items.length === 0) {
-      return res.status(400).json({ 
-        error: "Missing required fields: userId, addressId, items" 
+      return res.status(400).json({
+        error: "Missing required fields: userId, addressId, items"
       });
     }
 
@@ -37,14 +37,14 @@ export const createOrder = async (req, res) => {
         where: { id: item.productId },
       });
       if (!product) {
-        return res.status(404).json({ 
-          error: `Product with ID ${item.productId} not found` 
+        return res.status(404).json({
+          error: `Product with ID ${item.productId} not found`
         });
       }
 
       if (product.stock < item.quantity) {
-        return res.status(400).json({ 
-          error: `Insufficient stock for product ${product.name}` 
+        return res.status(400).json({
+          error: `Insufficient stock for product ${product.name}`
         });
       }
 
@@ -114,8 +114,8 @@ export const createAddress = async (req, res) => {
 
     // 1. Validate input
     if (!userId || !fullName || !phone || !street || !city || !state || !zipCode || !country) {
-      return res.status(400).json({ 
-        error: "Missing required fields: userId, fullName, phone, street, city, state, zipCode, country" 
+      return res.status(400).json({
+        error: "Missing required fields: userId, fullName, phone, street, city, state, zipCode, country"
       });
     }
 
@@ -132,8 +132,8 @@ export const createAddress = async (req, res) => {
       where: { userId },
     });
     if (existingAddress) {
-      return res.status(409).json({ 
-        error: "Address already exists for this user. Update existing address instead." 
+      return res.status(409).json({
+        error: "Address already exists for this user. Update existing address instead."
       });
     }
 
@@ -196,5 +196,32 @@ export const updateAddress = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all orders for a user
+export const getUserOrders = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const orders = await prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        adress: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({ orders });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch orders" });
   }
 };

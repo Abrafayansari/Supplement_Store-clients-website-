@@ -114,16 +114,16 @@ const Checkout: React.FC = () => {
           <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-10">Archive Summary</h2>
           <div className="space-y-8 mb-10 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
             {cart.map(item => (
-              <div key={`${item.id}-${item.selectedFlavor}`} className="flex gap-6 items-center">
+              <div key={`${item.id}-${item.selectedVariant}`} className="flex gap-6 items-center">
                 <div className="w-20 h-20 bg-zinc-900 border border-zinc-800 p-3 shrink-0 relative">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                  <img src={item.images[0]} alt={item.name} className="w-full h-full object-contain" />
                   <span className="absolute -top-3 -right-3 bg-brand text-white text-[10px] font-black w-6 h-6 rounded-none flex items-center justify-center border border-black">
                     {item.quantity}
                   </span>
                 </div>
                 <div className="flex-grow min-w-0">
                   <h4 className="text-[11px] font-black text-white uppercase tracking-widest truncate">{item.name}</h4>
-                  <p className="text-[9px] text-zinc-600 font-black uppercase mt-1 italic">{item.selectedFlavor}</p>
+                  <p className="text-[9px] text-zinc-600 font-black uppercase mt-1 italic">{item.selectedVariant}</p>
                 </div>
                 <span className="text-[11px] font-black text-brand italic">${(item.price * item.quantity).toFixed(2)}</span>
               </div>

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye, GitCompare, Rss } from 'lucide-react';
+import { ShoppingCart, Heart, Eye } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
 import { toast } from 'sonner';
 import { Product } from '@/types.ts';
 import QuickViewModal from './QuickViewModal.tsx';
-import axios from 'axios';
+import { useWishlist } from '../contexts/WishlistContext.tsx';
 
 interface ProductCardProps {
   product: Product;
@@ -15,8 +15,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, checkIfWishlisted } = useWishlist();
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const check = async () => {
+      const exists = await checkIfWishlisted(product.id);
+      setIsWishlisted(exists);
+    }
+    check();
+  }, [product.id, checkIfWishlisted]);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -42,6 +52,30 @@ const ProductCard = ({ product }: ProductCardProps) => {
     const diffInDays = (now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
     return diffInDays <= 30;
   })();
+
+  const handleAddToWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!localStorage.getItem("token")) {
+      toast.error("Login required");
+      return;
+    }
+
+    try {
+      if (isWishlisted) {
+        await removeFromWishlist(product.id);
+        setIsWishlisted(false);
+      } else {
+        await addToWishlist(product.id);
+        setIsWishlisted(true);
+      }
+    } catch {
+      // errors handled in context
+    }
+  };
+
+
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -88,11 +122,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 }`}
             >
               <button
-                onClick={(e) => { e.preventDefault(); }}
-                className="w-9 h-9 bg-white border border-brand-matte/5 rounded-none flex items-center justify-center text-brand-matte hover:bg-brand-gold transition-colors shadow-md"
+                onClick={handleAddToWishlist}
+                className={`w-9 h-9 border rounded-none flex items-center justify-center transition-colors shadow-md
+    ${isWishlisted
+                    ? 'bg-red-500 text-white border-red-500'
+                    : 'bg-white text-brand-matte border-brand-matte/5 hover:bg-brand-gold'
+                  }
+  `}
               >
-                <Heart className="w-4 h-4" />
+                <Heart
+                  className="w-4 h-4"
+                  fill={isWishlisted ? 'currentColor' : 'none'}
+                />
               </button>
+
+
               <button
                 onClick={handleQuickView}
                 className="w-9 h-9 bg-white border border-brand-matte/5 rounded-none flex items-center justify-center text-brand-matte hover:bg-brand-gold transition-colors shadow-md"

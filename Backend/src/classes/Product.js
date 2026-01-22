@@ -13,9 +13,7 @@ class Product {
     description,
     warnings = [],
     directions = "",
-    additionalInfo = {},
-
-    variants = {},   // flavor OR color (explained below)
+    variants = [],   // array of variant names (e.g. flavors)
     images = [],
 
     reviews = [],
@@ -42,9 +40,7 @@ class Product {
     this.description = description;
     this.warnings = warnings;
     this.directions = directions;
-    this.additionalInfo = additionalInfo;
-
-    this.variants = variants; // flavor OR color
+    this.variants = variants;
     this.images = images;
 
     this.reviews = reviews;

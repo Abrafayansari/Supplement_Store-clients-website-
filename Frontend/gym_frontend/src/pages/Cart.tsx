@@ -41,7 +41,7 @@ const Cart: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
         <div className="lg:col-span-2 space-y-8">
           {items.map(item => (
-            <div key={`${item.product.id}-${item.product.variants}-${item.product.size}`} className="flex flex-col sm:flex-row gap-8 bg-zinc-900 p-6 border border-zinc-800 hover:border-zinc-700 transition">
+            <div key={`${item.product.id}-${item.product.variants.join('-')}-${item.product.size}`} className="flex flex-col sm:flex-row gap-8 bg-zinc-900 p-6 border border-zinc-800 hover:border-zinc-700 transition">
               <div className="w-full sm:w-40 h-40 bg-zinc-950 p-4 shrink-0 overflow-hidden border border-zinc-800">
                 <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-contain opacity-100" />
               </div>
@@ -52,9 +52,7 @@ const Cart: React.FC = () => {
                       <Link to={`/product/${item.product.id}`}>{item.product.name}</Link>
                     </h3>
                     <p className="text-sm text-zinc-500 font-medium mt-1 uppercase tracking-widest">
-                      {Object.entries(item.product.variants)
-                        .map(([key, value]) => `${key}: ${value}`)
-                        .join(' • ')}
+                      {item.product.variants.join(' • ')}
                     </p>
 
                   </div>

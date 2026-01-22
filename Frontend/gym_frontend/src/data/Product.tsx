@@ -39,7 +39,6 @@ export const fetchProducts = async (
     description: p.description,
     warnings: p.warnings || [],
     directions: p.directions,
-    additionalInfo: p.additionalInfo || {},
     variants: p.variants || [],
     images: p.images || [],
     rating: p.rating ?? 0,
@@ -66,6 +65,42 @@ export interface Category {
   category: string;
   subCategory: string;
 }
+
+
+export const fetchProductById = async (id: string): Promise<Product | null> => {
+  try {
+    const res = await axios.get(`http://localhost:5000/api/product/${id}`);
+    const p = res.data;
+
+    return {
+      id: p.id,
+      name: p.name,
+      brand: p.brand,
+      category: p.category,
+      subCategory: p.subCategory,
+      price: p.price,
+      size: p.size,
+      stock: p.stock,
+      description: p.description,
+      warnings: p.warnings || [],
+      directions: p.directions,
+      variants: p.variants || [],
+      images: p.images || [],
+      rating: p.rating ?? 0,
+      reviewCount: p.reviewCount ?? 0,
+      isActive: p.isActive ?? true,
+      reviews: p.reviews || [],
+      cartItems: p.cartItems || [],
+      wishlist: p.wishlist || [],
+      orderItems: p.orderItems || [],
+      createdAt: new Date(p.createdAt),
+      updatedAt: new Date(p.updatedAt),
+    };
+  } catch (error) {
+    console.error("Failed to fetch product by ID", error);
+    return null;
+  }
+};
 
 export const getCategories = async (): Promise<Category[]> => {
   const res = await axios.get('http://localhost:5000/api/getcategories');

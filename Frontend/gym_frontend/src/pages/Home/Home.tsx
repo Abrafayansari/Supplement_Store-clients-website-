@@ -1,22 +1,41 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Zap, ShieldCheck, Target, Award, FlaskConical, ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import Slider from '../../components/Slider.tsx';
 import Categories from './Categories.tsx';
 import ProductCard from '../../components/ProductCard.tsx';
 import { fetchProducts } from '../../data/Product.tsx';
 
 const Home: React.FC = () => {
+  const heroRef = React.useRef<HTMLDivElement>(null);
+  const isInView = useInView(heroRef, { once: true });
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   const [initialProducts, setInitialProducts] = React.useState<Array<any>>([]);
+  const [typedText, setTypedText] = React.useState('');
+  const fullText = 'BIOLOGY';
 
   React.useEffect(() => {
-   
-       fetchProducts({ sort: 'newest', limit: 10 }).then(( res) => setInitialProducts(res.products))
-       .catch(console.error);
-      
-      }, []);
+    fetchProducts({ sort: 'newest', limit: 10 }).then((res) => setInitialProducts(res.products))
+      .catch(console.error);
+  }, []);
+
+  React.useEffect(() => {
+    if (isInView) {
+      let i = 0;
+      const timer = setInterval(() => {
+        setTypedText(fullText.slice(0, i + 1));
+        i++;
+        if (i === fullText.length) clearInterval(timer);
+      }, 150);
+      return () => clearInterval(timer);
+    }
+  }, [isInView]);
 
   // Get the first 3 products marked as 'isNew' to populate the New Arrivals section
    ;
@@ -54,25 +73,52 @@ const Home: React.FC = () => {
             </div>
             
             <div className="space-y-6">
-              <h1 className="text-5xl md:text-8xl xl:text-[5.5rem] font-black uppercase leading-[0.8] tracking-tighter text-white">
+              <motion.h1
+                className="text-5xl md:text-8xl xl:text-[5.5rem] font-black uppercase leading-[0.8] tracking-tighter text-white"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
                 PRECISION <br />
-                <span className="shine-gold">BIOLOGY </span>.
-              </h1>
-              <div className="h-2 w-32 bg-brand rounded-none"></div>
+                <span className="shine-gold">{typedText}</span>
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                  className="shine-gold"
+                >
+                  |
+                </motion.span>
+                .
+              </motion.h1>
+              <motion.div
+                className="h-2 w-32 bg-brand rounded-none"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1, delay: 1.5 }}
+              ></motion.div>
             </div>
             
             <p className="text-base md:text-lg text-white/30 max-w-xl font-light leading-relaxed italic border-l-4 border-brand-gold/20 pl-10">
               Forged in pursuit of total physiological dominance. PureVigor compounds represent the convergence of pharmaceutical isolation and human performance.
             </p>
             
-            <div className="space-y-16">
+              <div className="space-y-16">
               <div className="flex flex-col sm:flex-row gap-8 pt-4">
-                <Link to="/products" className="btn-luxury px-12 py-6 text-[12px] flex items-center justify-center gap-5 rounded-none shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-luxury">
-                  DEPLOY CATALOG <ArrowRight className="w-5 h-5" />
-                </Link>
-                <div className="px-12 py-6 text-[12px] font-black uppercase tracking-[0.4em] border border-white/10 cursor-default flex items-center justify-center rounded-none opacity-50">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Link to="/products" className="btn-luxury px-12 py-6 text-[12px] flex items-center justify-center gap-5 rounded-none shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-luxury hover:shadow-[0_30px_60px_rgba(201,164,77,0.3)]">
+                    DEPLOY CATALOG <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </motion.div>
+                <motion.div
+                  className="px-12 py-6 text-[12px] font-black uppercase tracking-[0.4em] border border-white/10 cursor-default flex items-center justify-center rounded-none opacity-50"
+                  whileHover={{ borderColor: 'rgba(201,164,77,0.5)', opacity: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                >
                   EST. 2023
-                </div>
+                </motion.div>
               </div>
 
               <div className="flex flex-wrap gap-8 pt-12 border-t border-white/5">
@@ -81,15 +127,25 @@ const Home: React.FC = () => {
                   { icon: <FlaskConical className="w-5 h-5 text-brand-gold" />, label: 'LAB CERTIFIED', sub: 'Grade-A Isolation' },
                   { icon: <Award className="w-5 h-5 text-brand-gold" />, label: 'ELITE STATUS', sub: 'Verified Protocol' }
                 ].map((badge, idx) => (
-                  <div key={idx} className="flex items-center gap-4 group/badge cursor-default">
-                    <div className="p-4 bg-white/5 rounded-none group-hover/badge:bg-brand transition-all duration-500 shadow-xl border border-white/5 group-hover/badge:rotate-3">
+                  <motion.div
+                    key={idx}
+                    className="flex items-center gap-4 group/badge cursor-default"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 2 + idx * 0.2 }}
+                  >
+                    <motion.div
+                      className="p-4 bg-white/5 rounded-none shadow-xl border border-white/5"
+                      whileHover={{ rotate: 3, backgroundColor: 'rgba(201,164,77,0.1)' }}
+                      transition={{ duration: 0.3 }}
+                    >
                       {badge.icon}
-                    </div>
+                    </motion.div>
                     <div className="space-y-1">
                       <p className="text-[10px] font-black text-white uppercase tracking-widest">{badge.label}</p>
                       <p className="text-[8px] text-white/10 font-bold uppercase tracking-tight">{badge.sub}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>

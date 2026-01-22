@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Star, Minus, Plus, ShoppingBag, ArrowLeft, ShieldCheck, Zap, Beaker, FileText, Share2, Heart, FlaskConical, Target, Droplets, AlertTriangle, PlayCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchProducts } from '../data/Product.tsx';
+import { fetchProducts, fetchProductById } from '../data/Product.tsx';
 import { useCart } from '../contexts/CartContext.tsx';
 import { Product } from '@/types.ts';
 import { toast } from 'sonner';
@@ -17,19 +17,19 @@ const ProductDetail: React.FC = () => {
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'details' | 'usage' | 'reviews'>('details');
-    const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
+    const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
     const [activeImageIdx, setActiveImageIdx] = useState(0);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const found = async () => {
-            // In a real app, optimize this to not fetch everything
-            const { products } = await fetchProducts({ search: id });
-            const { products: relatedProducts } = await fetchProducts({ sort: 'newest', limit: 10 });
-            setInitialProducts(relatedProducts);
-            if (products.length > 0) {
-                setProduct(products[0]);
+            if (id) {
+                const fetchedProduct = await fetchProductById(id);
+                setProduct(fetchedProduct);
             }
+            // Fetch related products separately
+            const { products: relatedProducts } = await fetchProducts({ sort: 'newest', limit: 4 });
+            setInitialProducts(relatedProducts);
         };
         found();
     }, [id]);
@@ -62,21 +62,6 @@ const ProductDetail: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
-
-
-    const normalizeVariants = (variants: any[]) => {
-        if (!variants || variants.length === 0) return [];
-        if (typeof variants[0] === 'string') {
-            return variants.map(v => ({ label: v, value: v }));
-        }
-        if (typeof variants[0] === 'object') {
-            return variants.map(v => ({
-                label: v.flavor || v.name || v.sku,
-                value: v.sku || v.id || v.flavor,
-            }));
-        }
-        return [];
     };
 
     const isNew = (product: Product) => {
@@ -163,7 +148,7 @@ const ProductDetail: React.FC = () => {
                         <div className="space-y-6">
                             <div className="flex items-center gap-4">
                                 <div className="h-[2px] w-12 bg-brand"></div>
-                                <span className="text-[13px] font-black uppercase tracking-[0.6em] text-brand">{product.brand || 'V-ARCHIVE'}</span>
+                                <span className="text-[13px] font-black uppercase tracking-[0.6em] text-brand">{product.brand}</span>
                             </div>
 
                             <div className="space-y-4">
@@ -180,9 +165,6 @@ const ProductDetail: React.FC = () => {
 
                             <div className="flex items-end gap-6 border-b border-brand-matte/5 pb-8">
                                 <p className="text-5xl font-black text-brand italic tracking-tighter leading-none">${product.price.toFixed(2)}</p>
-                                {product.price && (
-                                    <p className="text-xl text-brand-matte/20 line-through font-bold italic tracking-tighter pb-1">${(product.price * 1.2).toFixed(2)}</p>
-                                )}
                             </div>
                         </div>
 
@@ -194,27 +176,29 @@ const ProductDetail: React.FC = () => {
                         <div className="bg-white p-8 shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-brand-matte/5 space-y-8 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-1 h-full bg-brand"></div>
 
-                            <div className="space-y-4">
-                                <div className="flex justify-between">
-                                    <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte">Protocol Variant</h4>
-                                    <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">Required Field</span>
+                            {product.variants && product.variants.length > 0 && (
+                                <div className="space-y-4">
+                                    <div className="flex justify-between">
+                                        <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte">Protocol Variant</h4>
+                                        <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">Required Field</span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {product.variants.map((variant: any, idx: number) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setSelectedVariant(variant)}
+                                                className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
+                                                    ${selectedVariant === variant
+                                                        ? 'bg-brand-matte text-white border-brand-matte'
+                                                        : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'
+                                                    }`}
+                                            >
+                                                {variant}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {product.variants.map((variant: any) => (
-                                        <button
-                                            key={variant.sku}
-                                            onClick={() => setSelectedVariant(variant)}
-                                            className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
-      ${selectedVariant?.sku === variant.sku
-                                                    ? 'bg-brand-matte text-white border-brand-matte'
-                                                    : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'
-                                                }`}
-                                        >
-                                            {variant.flavor || variant.name || variant.sku}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                            )}
 
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <div className="flex items-center bg-brand-warm border border-brand-matte/10 shrink-0">
@@ -254,7 +238,6 @@ const ProductDetail: React.FC = () => {
                                 {[
                                     { label: 'Category', val: product.category },
                                     { label: 'Series ID', val: product.subCategory || 'Master' },
-                                    { label: 'Purity Yield', val: '99.9%' },
                                     { label: 'Deployment', val: product.stock > 0 ? 'ACTIVE' : 'DEPLETED' },
                                 ].map((spec, i) => (
                                     <div key={i} className="flex justify-between py-4 border-b border-white/10 text-[11px] font-bold uppercase tracking-widest">
@@ -300,7 +283,7 @@ const ProductDetail: React.FC = () => {
                                                     <h4 className="text-sm font-black uppercase tracking-widest">Safety Warnings</h4>
                                                 </div>
                                                 <ul className="space-y-2">
-                                                    {(product.warnings || ['Consult professional advice before use']).map((w, i) => (
+                                                    {(product.warnings && product.warnings.length > 0 ? product.warnings : ['Consult professional advice before use']).map((w, i) => (
                                                         <li key={i} className="text-[11px] font-bold text-brand-matte/50 uppercase tracking-widest list-disc ml-4">{w}</li>
                                                     ))}
                                                 </ul>
@@ -324,15 +307,36 @@ const ProductDetail: React.FC = () => {
                                             <h4 className="text-2xl font-black uppercase tracking-tighter text-brand-matte">Operational Directions</h4>
                                         </div>
                                         <p className="text-lg text-brand-matte/60 leading-relaxed font-medium italic pl-12">
-                                            {product.directions || 'Establish your personal threshold by beginning with 50% of recommended dosage.'}
+                                            {product.directions || 'No specific directions provided. Consult label.'}
                                         </p>
                                     </div>
                                 )}
                                 {activeTab === 'reviews' && (
-                                    <div className="py-20 border-2 border-dashed border-brand-matte/10 text-center space-y-6 bg-white animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                        <Beaker className="w-12 h-12 text-brand-matte/10 mx-auto" />
-                                        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte/30">Registry Intelligence Pending Verification</p>
-                                        <button className="text-brand font-black uppercase tracking-widest text-[11px] border-b-2 border-brand pb-2 hover:text-brand-gold hover:border-brand-gold transition-colors">Submit Deployment Log</button>
+                                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        {product.reviews && product.reviews.length > 0 ? (
+                                            <div className="space-y-6">
+                                                {product.reviews.map((review: any, i: number) => (
+                                                    <div key={i} className="border-b border-brand-matte/10 pb-6">
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <div className="flex text-brand-gold">
+                                                                {[...Array(5)].map((_, stars) => (
+                                                                    <Star key={stars} className={`w-3 h-3 ${stars < review.rating ? 'fill-current' : 'text-brand-matte/10'}`} />
+                                                                ))}
+                                                            </div>
+                                                            <span className="text-[10px] font-bold uppercase text-brand-matte/40">{new Date(review.createdAt || Date.now()).toLocaleDateString()}</span>
+                                                        </div>
+                                                        <p className="text-brand-matte/80 italic">"{review.comment}"</p>
+                                                        {review.user && <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte mt-2">- {review.user.name || 'Verified User'}</p>}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="py-20 border-2 border-dashed border-brand-matte/10 text-center space-y-6 bg-white">
+                                                <Beaker className="w-12 h-12 text-brand-matte/10 mx-auto" />
+                                                <p className="text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte/30">Registry Intelligence Pending Verification</p>
+                                                <button onClick={() => navigate(`/product/${product.id}/review`)} className="text-brand font-black uppercase tracking-widest text-[11px] border-b-2 border-brand pb-2 hover:text-brand-gold hover:border-brand-gold transition-colors">Submit Deployment Log</button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

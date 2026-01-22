@@ -5,8 +5,8 @@ import * as XLSX from "xlsx";
 import AdmZip from "adm-zip";
 import streamifier from "streamifier";
 
-export const createProduct = async(req, res) => {
-    try {
+export const createProduct = async (req, res) => {
+  try {
     const {
       name,
       brand,
@@ -18,8 +18,7 @@ export const createProduct = async(req, res) => {
       description,
       warnings = [],
       directions,
-      additionalInfo = {},
-      variants = {},
+      variants = [],
     } = req.body;
 
     // Validate uploaded images
@@ -28,7 +27,7 @@ export const createProduct = async(req, res) => {
     }
 
     // Map uploaded files to paths
-   const imageUploadPromises = req.files.map((file) => {
+    const imageUploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload_stream(
           { folder: "products" },
@@ -54,8 +53,7 @@ export const createProduct = async(req, res) => {
         description,
         warnings: Array.isArray(warnings) ? warnings : [warnings],
         directions,
-        additionalInfo: JSON.parse(additionalInfo || "{}"),
-        variants: JSON.parse(variants || "{}"),
+        variants: typeof variants === 'string' ? JSON.parse(variants) : (Array.isArray(variants) ? variants : []),
         images: imageUrls,
       },
     });
@@ -106,7 +104,7 @@ export const uploadbulkproducts = async (req, res) => {
     for (const row of rows) {
       const productImages = [];
       if (row.images) {
-        const imageNames  = row.images.split("|"); // filenames in Excel
+        const imageNames = row.images.split("|"); // filenames in Excel
         for (const name of imageNames) {
           const buffer = imagesMap[name.trim()];
           if (!buffer) {
@@ -141,8 +139,7 @@ export const uploadbulkproducts = async (req, res) => {
         description: row.description || null,
         warnings: row.warnings ? row.warnings.split("|") : [],
         directions: row.directions || null,
-        additionalInfo: row.additionalInfo ? JSON.parse(row.additionalInfo) : {},
-        variants: row.variants ? JSON.parse(row.variants) : {},
+        variants: row.variants ? row.variants.split("|") : [],
         images: productImages,
       });
     }
@@ -170,7 +167,7 @@ export const uploadbulkproducts = async (req, res) => {
 // res.status(201).send(product);
 // }
 
-export const getallproducts=async(req,res)=>{
+export const getallproducts = async (req, res) => {
   try {
     const {
       subCategory,
@@ -246,6 +243,33 @@ export const getallproducts=async(req,res)=>{
 }
 
 
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: {
+        reviews: {
+          include: {
+            user: {
+              select: { name: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch product" });
+  }
+};
+
 export const getCategories = async (req, res) => {
   try {
     // Fetch unique categories or subCategories from products
@@ -255,7 +279,7 @@ export const getCategories = async (req, res) => {
       distinct: ['subCategory'], // get unique subCategories
     });
 
-    res.json({categories}); // array of { subCategory, category }
+    res.json({ categories }); // array of { subCategory, category }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to fetch categories' });

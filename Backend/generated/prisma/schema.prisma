@@ -19,12 +19,12 @@ enum Role {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
-  role     Role
-
+  id        String         @id @default(uuid())
+  name      String
+  email     String         @unique
+  password  String
+  role      Role
+  addressId String?
   cartItems CartItem[]
   wishlist  WishlistItem[]
   orders    Order[]
@@ -32,6 +32,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  addresses Address[]
 }
 
 model Product {
@@ -41,20 +43,22 @@ model Product {
   category    String
   subCategory String?
 
-  price Int
+  price Float
   size  String?
   stock Int
 
-  description    String?
-  warnings       String[]
-  directions     String?
-  additionalInfo Json
-  variants       Json
-  images         String[]
+  description String?
+  warnings    String[]
+  directions  String?
+  variants    String[]
+  images      String[]
+
+  rating      Float @default(0)
+  reviewCount Int   @default(0)
 
   isActive Boolean @default(true)
 
-  reviews    Review[] // 👈 REAL reviews
+  reviews    Review[]
   cartItems  CartItem[]
   wishlist   WishlistItem[]
   orderItems OrderItem[]
@@ -73,7 +77,7 @@ model CartItem {
   price    Int // price snapshot
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -86,24 +90,31 @@ model WishlistItem {
   userId    String
   productId String
 
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@unique([userId, productId])
 }
 
+enum Status {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
 model Order {
-  id     String @id @default(uuid())
-  userId String
-  total  Int
-  status String
-
-  user  User        @relation(fields: [userId], references: [id])
-  items OrderItem[]
-
-  createdAt DateTime @default(now())
+  id        String      @id @default(uuid())
+  userId    String
+  total     Int
+  status    Status      @default(PENDING)
+  addressId String
+  user      User        @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+  adress    Address     @relation(fields: [addressId], references: [id])
+  createdAt DateTime    @default(now())
 }
 
 model OrderItem {
@@ -134,4 +145,22 @@ model Review {
   createdAt DateTime @default(now())
 
   @@unique([userId, productId]) // one review per user per product
+}
+
+model Address {
+  id       String @id @default(uuid())
+  userId   String @unique
+  fullName String
+  phone    String
+  street   String
+  city     String
+  state    String
+  zipCode  String
+  country  String
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

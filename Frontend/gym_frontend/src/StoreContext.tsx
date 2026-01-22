@@ -4,12 +4,12 @@ import { MOCK_USERS } from './mockData';
 
 interface StoreContextType {
   cart: CartItem[];
-  addToCart: (product: Product, flavor?: string, size?: string) => void;
+  addToCart: (product: Product, variant?: string, size?: string) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
   clearCart: () => void;
   user: User | null;
-  login: (email: string, role: 'User' | 'Admin') => void;
+  login: (email: string, role: 'CUSTOMER' | 'ADMIN') => void;
   logout: () => void;
 }
 
@@ -19,21 +19,21 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [cart, setCart] = useState<CartItem[]>([]);
   const [user, setUser] = useState<User | null>(null);
 
-  const addToCart = (product: Product, flavor?: string, size?: string) => {
+  const addToCart = (product: Product, variant?: string, size?: string) => {
     setCart(prev => {
-      const existing = prev.find(item => 
-        item.id === product.id && 
-        item.selectedFlavor === flavor && 
+      const existing = prev.find(item =>
+        item.id === product.id &&
+        item.selectedVariant === variant &&
         item.selectedSize === size
       );
       if (existing) {
-        return prev.map(item => 
-          (item.id === product.id && item.selectedFlavor === flavor && item.selectedSize === size)
-            ? { ...item, quantity: item.quantity + 1 } 
+        return prev.map(item =>
+          (item.id === product.id && item.selectedVariant === variant && item.selectedSize === size)
+            ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1, selectedFlavor: flavor, selectedSize: size }];
+      return [...prev, { ...product, quantity: 1, selectedVariant: variant, selectedSize: size }];
     });
   };
 
@@ -53,7 +53,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const clearCart = () => setCart([]);
 
-  const login = (email: string, role: 'User' | 'Admin') => {
+  const login = (email: string, role: 'CUSTOMER' | 'ADMIN') => {
     const foundUser = MOCK_USERS.find(u => u.email === email && u.role === role) || {
       id: 'temp-user',
       name: 'Authorized Guest',

@@ -54,8 +54,7 @@ model Product {
   description String?
   warnings    String[]
   directions  String?
-  additionalInfo Json
-  variants    Json
+  variants    String[]
   images      String[]
 
   rating       Float    @default(0)   
