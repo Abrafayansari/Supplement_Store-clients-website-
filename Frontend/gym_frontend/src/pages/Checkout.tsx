@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Product } from '@/types';
 
-const API_URL = import.meta.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const PAKISTAN_PROVINCES = [
   'Punjab',

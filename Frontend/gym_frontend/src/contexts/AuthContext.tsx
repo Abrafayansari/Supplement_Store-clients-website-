@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { User } from '../../types';
 
-const API_URL = import.meta.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface AuthContextType {
   user: User | null;
@@ -30,12 +30,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const storedToken = localStorage.getItem('token');
 
     if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-      fetchProfile(storedToken);
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser) {
+          setUser(parsedUser);
+          setToken(storedToken);
+          fetchProfile(storedToken);
+        } else {
+          logout();
+        }
+      } catch (err) {
+        console.error('Invalid user in localStorage:', storedUser);
+        logout();
+      }
     } else {
       setLoading(false);
     }
+
   }, []);
 
   const fetchProfile = async (currentToken: string) => {

@@ -7,22 +7,13 @@ import cookieParser from "cookie-parser"; // << here
 // import productRoutes from "./routes/product.routes.js";
 
 const app = express();
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://supplement-store-clients-website.vercel.app"
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: [
+    'http://localhost:5173',
+    'https://supplement-store-clients-website.vercel.app'
+  ],
   credentials: true
 }));
-
 app.use(cookieParser());
 
 app.use(express.json());
