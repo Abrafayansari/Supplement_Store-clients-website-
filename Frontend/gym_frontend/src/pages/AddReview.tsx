@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Star, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
+const API_URL = import.meta.env.REACT_APP_API_URL;
+
 const AddReview: React.FC = () => {
     const { id } = useParams(); // productId
     const navigate = useNavigate();
@@ -29,7 +31,7 @@ const AddReview: React.FC = () => {
         try {
             setLoading(true);
             await axios.post(
-                'http://localhost:5000/api/givereview',
+                `${API_URL}/givereview`,
                 { productId: id, rating, comment },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { toast } from 'sonner';
 
+const API_URL = import.meta.env.REACT_APP_API_URL;
+
 const Profile: React.FC = () => {
   const { user, logout, token, updateProfile } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
@@ -24,7 +26,7 @@ const Profile: React.FC = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/orders', {
+      const res = await axios.get(`${API_URL}/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrders(res.data.orders);

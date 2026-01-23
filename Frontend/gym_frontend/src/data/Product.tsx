@@ -2,6 +2,9 @@
 import axios from "axios";
 import { Product } from "@/types";
 
+const API_URL = import.meta.env.REACT_APP_API_URL;
+
+
 export interface ProductQueryParams {
   subCategory?: string;
   search?: string;
@@ -22,7 +25,7 @@ export const fetchProducts = async (
   page: number;
   totalPages: number;
 }> => {
-  const res = await axios.get("http://localhost:5000/api/getallproducts", {
+  const res = await axios.get(`${API_URL}/getallproducts`, {
     params,
   });
 
@@ -69,7 +72,7 @@ export interface Category {
 
 export const fetchProductById = async (id: string): Promise<Product | null> => {
   try {
-    const res = await axios.get(`http://localhost:5000/api/product/${id}`);
+    const res = await axios.get(`${API_URL}/product/${id}`);
     const p = res.data;
 
     return {
@@ -103,6 +106,6 @@ export const fetchProductById = async (id: string): Promise<Product | null> => {
 };
 
 export const getCategories = async (): Promise<Category[]> => {
-  const res = await axios.get('http://localhost:5000/api/getcategories');
+  const res = await axios.get(`${API_URL}/getcategories`);
   return res.data.categories;
 };

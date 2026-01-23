@@ -4,6 +4,8 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
 
+const API_URL = import.meta.env.REACT_APP_API_URL;
+
 interface WishlistContextType {
     items: WishlistItem[];
     addToWishlist: (productId: string) => Promise<void>;
@@ -25,7 +27,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
             return;
         }
         try {
-            const res = await axios.get("http://localhost:5000/api/wishlist", {
+            const res = await axios.get(`${API_URL}/wishlist`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setItems(res.data.wishlist);
@@ -41,7 +43,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
                 toast.error("Please login to add items to wishlist.");
                 return;
             }
-            await axios.post("http://localhost:5000/api/wishlist",
+            await axios.post(`${API_URL}/wishlist`,
                 { productId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -61,7 +63,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
             const token = localStorage.getItem("token");
             if (!token) return;
 
-            await axios.delete(`http://localhost:5000/api/wishlist/${productId}`, {
+            await axios.delete(`${API_URL}/wishlist/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -76,7 +78,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
         const token = localStorage.getItem("token");
         if (!token) return false;
         try {
-            const res = await axios.get(`http://localhost:5000/api/wishlist/exists/${productId}`, {
+            const res = await axios.get(`${API_URL}/wishlist/exists/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return res.data.exists;

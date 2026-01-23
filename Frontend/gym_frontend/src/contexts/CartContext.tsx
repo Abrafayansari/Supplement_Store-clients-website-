@@ -3,6 +3,8 @@ import { Product } from '@/types.ts';
 import axios from 'axios';
 import { toast } from 'sonner';
 
+const API_URL = import.meta.env.REACT_APP_API_URL;
+
 interface CartItem {
   product: Product;
   quantity: number;
@@ -41,7 +43,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addToCart = async (product: Product, quantity = 1) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/addtocart", {
+      const res = await axios.post(`${API_URL}/addtocart`, {
         productId: product.id,
         quantity: quantity
       }
@@ -69,7 +71,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
   const removeFromCart = async (productId: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/removecart/${productId}`, {
+      await axios.delete(`${API_URL}/removecart/${productId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -86,7 +88,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const updateQuantity = async (productId: string, quantity: number) => {
     try {
       await axios.post(
-        "http://localhost:5000/api/updatecart",
+        `${API_URL}/updatecart`,
         { productId, quantity },
         {
           headers: {
@@ -115,7 +117,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const clearCart = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/clearcart", {
+      await axios.delete(`${API_URL}/clearcart`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -137,7 +139,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/showcart", {
+      const res = await axios.get(`${API_URL}/showcart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
