@@ -48,6 +48,20 @@ export interface Order {
   items: { productName: string; quantity: number; price: number }[];
 }
 
+export interface Address {
+  id: string;
+  userId: string;
+  fullName: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -57,6 +71,7 @@ export interface User {
   joinDate?: string;
   createdAt?: string;
   updatedAt?: string;
+  address?: Address;
 }
 
 export interface WishlistItem {

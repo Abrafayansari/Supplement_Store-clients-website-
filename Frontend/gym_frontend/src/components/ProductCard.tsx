@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Heart, Eye, CreditCard } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
 import { toast } from 'sonner';
 import { Product } from '@/types.ts';
@@ -9,13 +9,15 @@ import { useWishlist } from '../contexts/WishlistContext.tsx';
 
 interface ProductCardProps {
   product: Product;
+  mode?: 'default' | 'buyNow';
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, checkIfWishlisted } = useWishlist();
+  const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!localStorage.getItem("token")) {
+      toast.error("Login required");
+      return;
+    }
+    navigate('/checkout', { state: { singleItem: { product, quantity: 1 } } });
   };
 
 
@@ -145,14 +157,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </button>
             </div>
 
-            <button
-              onClick={handleAddToCart}
-              className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'
-                }`}
-            >
-              <ShoppingCart className="w-4 h-4" />
-              ADD TO CART
-            </button>
+            {mode === 'default' ? (
+              <button
+                onClick={handleAddToCart}
+                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'
+                  }`}
+              >
+                <ShoppingCart className="w-4 h-4" />
+                ADD TO CART
+              </button>
+            ) : (
+              <button
+                onClick={handleBuyNow}
+                className={`absolute bottom-0 left-0 right-0 bg-brand-gold text-brand-matte py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'
+                  }`}
+              >
+                <CreditCard className="w-4 h-4" />
+                BUY NOW
+              </button>
+            )}
           </div>
 
           <div className="p-4 md:p-5 flex-grow flex flex-col justify-between bg-white overflow-hidden">

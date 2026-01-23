@@ -1,6 +1,6 @@
 import express from "express"
 import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile } from "../controllers/UserController.js"
-import { getUserOrders } from "../controllers/OrderController.js";
+import { createAddress, createOrder, getUserOrders, updateAddress } from "../controllers/OrderController.js";
 import { authenticate } from "../middlewares/auth.js";
 import { adminOnly } from "../middlewares/authorization.js";
 import { createProduct, getallproducts, getCategories, uploadbulkproducts, getProductById } from "../controllers/ProductController.js";
@@ -32,6 +32,9 @@ router.post("/wishlist", authenticate, addToWishlist);
 router.delete("/wishlist/:productId", authenticate, removeFromWishlist)
 router.get("/wishlist/exists/:productId", authenticate, isWishlisted);
 router.get("/wishlist", authenticate, getWishlist);
+router.post("/address", authenticate, createAddress);
+router.put("/address/:userId", authenticate, updateAddress);
+router.post("/orders", authenticate, createOrder);
 router.get("/orders", authenticate, getUserOrders);
 router.get("/getprofile", authenticate, getProfile);
 router.put("/profile", authenticate, updateProfile);

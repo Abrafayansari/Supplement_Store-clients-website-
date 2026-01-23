@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, Minus, Plus, ShoppingBag, ArrowLeft, ShieldCheck, Zap, Beaker, FileText, Share2, Heart, FlaskConical, Target, Droplets, AlertTriangle, PlayCircle } from 'lucide-react';
+import { Star, Minus, Plus, ShoppingBag, ArrowLeft, ShieldCheck, Zap, Beaker, FileText, Share2, Heart, FlaskConical, Target, Droplets, AlertTriangle, PlayCircle, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchProducts, fetchProductById } from '../data/Product.tsx';
 import { useCart } from '../contexts/CartContext.tsx';
@@ -62,6 +62,15 @@ const ProductDetail: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+    const handleBuyNow = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!localStorage.getItem("token")) {
+            toast.error("Login required");
+            return;
+        }
+        navigate('/checkout', { state: { singleItem: { product, quantity } } });
     };
 
     const isNew = (product: Product) => {
@@ -209,9 +218,16 @@ const ProductDetail: React.FC = () => {
 
                                 <button
                                     onClick={handleAddToCart}
-                                    className="flex-grow btn-luxury py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl"
+                                    className="flex-grow bg-brand-matte text-white py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-white hover:text-black transition-all"
                                 >
                                     <ShoppingBag className="w-4 h-4" /> Add Protocol
+                                </button>
+
+                                <button
+                                    onClick={handleBuyNow}
+                                    className="flex-grow bg-brand-gold text-brand-matte py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-brand-matte hover:text-brand-gold transition-all"
+                                >
+                                    <CreditCard className="w-4 h-4" /> Buy Now
                                 </button>
                             </div>
 

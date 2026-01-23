@@ -38,30 +38,33 @@ const Home: React.FC = () => {
   }, [isInView]);
 
   // Get the first 3 products marked as 'isNew' to populate the New Arrivals section
-   ;
+  ;
 
   return (
     <div className="pb-0 overflow-x-hidden">
       {/* 1. HERO SECTION - Overpowered Matte Black (#0E0E0E) */}
-      <section className="relative min-h-screen flex items-center overflow-hidden py-32 lg:py-0 pt-20 bg-brand-matte">
+      <section
+        ref={heroRef}
+        className="relative min-h-screen flex items-center overflow-hidden py-32 lg:py-0 pt-20 bg-brand-matte"
+      >
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-brand-matte z-10"></div>
           {/* Elite Gold Grid */}
-          <div className="absolute inset-0 z-[11] opacity-[0.04] pointer-events-none" 
-            style={{ 
-              backgroundImage: 'radial-gradient(#C9A24D 1.5px, transparent 1.5px)', 
-              backgroundSize: '54px 54px' 
+          <div className="absolute inset-0 z-[11] opacity-[0.04] pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(#C9A24D 1.5px, transparent 1.5px)',
+              backgroundSize: '54px 54px'
             }}
           ></div>
-          <img 
-            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=2000" 
-            className="w-full h-full object-cover grayscale opacity-5" 
+          <img
+            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=2000"
+            className="w-full h-full object-cover grayscale opacity-5"
             alt="Elite Operations"
           />
         </div>
 
         <div className="container mx-auto px-6 relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center py-20">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
@@ -71,7 +74,7 @@ const Home: React.FC = () => {
               <span className="h-[2px] w-20 bg-brand-gold"></span>
               <span className="text-brand-gold text-[11px] font-black uppercase tracking-[0.8em] animate-pulse">DEPLOYMENT PROTOCOL 01</span>
             </div>
-            
+
             <div className="space-y-6">
               <motion.h1
                 className="text-5xl md:text-8xl xl:text-[5.5rem] font-black uppercase leading-[0.8] tracking-tighter text-white"
@@ -97,12 +100,12 @@ const Home: React.FC = () => {
                 transition={{ duration: 1, delay: 1.5 }}
               ></motion.div>
             </div>
-            
+
             <p className="text-base md:text-lg text-white/30 max-w-xl font-light leading-relaxed italic border-l-4 border-brand-gold/20 pl-10">
               Forged in pursuit of total physiological dominance. PureVigor compounds represent the convergence of pharmaceutical isolation and human performance.
             </p>
-            
-              <div className="space-y-16">
+
+            <div className="space-y-16">
               <div className="flex flex-col sm:flex-row gap-8 pt-4">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -199,9 +202,9 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             {/* Feature Image Card - Styled to match ProductCard height */}
             <div className="lg:col-span-1 relative group overflow-hidden bg-brand-matte h-[420px] rounded-none">
-              <img 
-                src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80&w=800" 
-                alt="Support Muscle Growth" 
+              <img
+                src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80&w=800"
+                alt="Support Muscle Growth"
                 className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000"
               />
               <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-brand-matte/80 to-transparent">
@@ -280,10 +283,10 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className="relative aspect-[4/5] bg-brand-warm overflow-hidden shadow-2xl">
-             <img 
-              src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&q=80&w=1000" 
-              className="w-full h-full object-cover grayscale brightness-75 hover:scale-105 transition-transform duration-1000" 
-              alt="The Standard" 
+            <img
+              src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&q=80&w=1000"
+              className="w-full h-full object-cover grayscale brightness-75 hover:scale-105 transition-transform duration-1000"
+              alt="The Standard"
             />
             <div className="absolute inset-0 border-[20px] border-white/10 m-10"></div>
           </div>
@@ -294,20 +297,20 @@ const Home: React.FC = () => {
       <section className="py-40 bg-brand-matte text-white relative">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-20">
           {[
-            { 
-              icon: <Target className="w-12 h-12 text-brand" />, 
-              title: "PRECISION", 
-              desc: "Targeted formulae designed for specific metabolic outcomes." 
+            {
+              icon: <Target className="w-12 h-12 text-brand" />,
+              title: "PRECISION",
+              desc: "Targeted formulae designed for specific metabolic outcomes."
             },
-            { 
-              icon: <Award className="w-12 h-12 text-brand-gold" />, 
-              title: "ELITE STATUS", 
-              desc: "Supplying the chemical foundation for world-class athletes." 
+            {
+              icon: <Award className="w-12 h-12 text-brand-gold" />,
+              title: "ELITE STATUS",
+              desc: "Supplying the chemical foundation for world-class athletes."
             },
-            { 
-              icon: <ShieldCheck className="w-12 h-12 text-white" />, 
-              title: "INTEGRITY", 
-              desc: "Full label disclosure. Zero proprietary blends. Zero fillers." 
+            {
+              icon: <ShieldCheck className="w-12 h-12 text-white" />,
+              title: "INTEGRITY",
+              desc: "Full label disclosure. Zero proprietary blends. Zero fillers."
             }
           ].map((item, idx) => (
             <div key={idx} className="flex flex-col items-center text-center space-y-8">
@@ -341,13 +344,13 @@ const Home: React.FC = () => {
       {/* 8. CTA SECTION - Warm White (#FAFAFA) */}
       <section className="bg-brand-warm py-40 text-center relative overflow-hidden">
         <div className="absolute top-0 right-0 p-24 opacity-[0.03] pointer-events-none">
-           <span className="text-[300px] font-black text-brand-matte uppercase select-none leading-none tracking-tighter">VIGOR</span>
+          <span className="text-[300px] font-black text-brand-matte uppercase select-none leading-none tracking-tighter">VIGOR</span>
         </div>
         <div className="container mx-auto px-6 relative z-10 space-y-16">
           <h2 className="text-6xl md:text-[9rem] font-black uppercase tracking-tighter leading-[0.8] text-brand-matte">INITIALIZE <br /><span className="text-brand">YOUR PROTOCOL</span></h2>
           <p className="text-brand-matte/50 max-w-2xl mx-auto italic text-xl leading-relaxed">Secure your clearance for the most advanced biological optimization network on the planet.</p>
           <div className="flex justify-center">
-             <Link to="/signup" className="btn-luxury px-16 py-8 text-[14px] rounded-none shadow-[0_30px_60px_rgba(123,15,23,0.15)] hover:shadow-brand-gold/20">Secure Operational Access</Link>
+            <Link to="/signup" className="btn-luxury px-16 py-8 text-[14px] rounded-none shadow-[0_30px_60px_rgba(123,15,23,0.15)] hover:shadow-brand-gold/20">Secure Operational Access</Link>
           </div>
         </div>
       </section>
