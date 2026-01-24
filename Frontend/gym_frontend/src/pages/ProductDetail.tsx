@@ -44,7 +44,7 @@ const ProductDetail: React.FC = () => {
         e.preventDefault();
         e.stopPropagation();
 
-        // if (!selectedVariant) {
+        // if (!selectedVariant) {  
         //     toast.error("Please select a variant");
         //     return;
         // }
