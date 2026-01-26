@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL
 
 interface WishlistContextType {
     items: WishlistItem[];
