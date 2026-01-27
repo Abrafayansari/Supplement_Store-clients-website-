@@ -104,16 +104,26 @@ model WishlistItem {
 
 enum Status{
 PENDING
+PROCESSING
 SHIPPED
 DELIVERED
 CANCELLED
 }
+
+enum PaymentMethod {
+  COD
+  ONLINE
+}
+
 
 model Order {
   id        String   @id @default(uuid())
   userId    String
   total     Int
   status    Status   @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+  paymentStatus String        @default("PENDING")
+  receipt       String?       
   addressId String
   user      User       @relation(fields: [userId], references: [id])
   items     OrderItem[]
@@ -154,7 +164,7 @@ model Review {
 
 model Address {
   id         String  @id @default(uuid())
-  userId     String @unique
+  userId     String
   fullName   String
   phone      String
   street     String

@@ -1,12 +1,22 @@
 import { prisma } from "../config/db.js";
+import cloudinary from "../config/cloudinary.js";
 
 // Create a new Order with Order Items
 export const createOrder = async (req, res) => {
   try {
-    const { userId, addressId, items } = req.body;
+    let { userId, addressId, items, paymentMethod, receipt } = req.body;
+
+    // Parse items if they come as a JSON string (for multipart/form-data)
+    if (typeof items === 'string') {
+      try {
+        items = JSON.parse(items);
+      } catch (e) {
+        return res.status(400).json({ error: "Invalid items format" });
+      }
+    }
 
     // 1. Validate input
-    if (!userId || !addressId || !items || items.length === 0) {
+    if (!userId || !addressId || !items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({
         error: "Missing required fields: userId, addressId, items"
       });
@@ -58,12 +68,36 @@ export const createOrder = async (req, res) => {
       });
     }
 
+    // 4.5. Handle Receipt Upload to Cloudinary
+    let receiptUrl = receipt;
+    if (req.file) {
+      const uploadResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          { folder: "receipts" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        ).end(req.file.buffer);
+      });
+      receiptUrl = uploadResult;
+    } else if (receipt && receipt.startsWith("data:image")) {
+      // Handle case where it might be sent as base64 in body
+      const uploadResult = await cloudinary.uploader.upload(receipt, {
+        folder: "receipts"
+      });
+      receiptUrl = uploadResult.secure_url;
+    }
+
     // 5. Create Order with OrderItems (transaction)
     const order = await prisma.order.create({
       data: {
         userId,
         addressId,
         total: Math.round(total), // Ensure integer
+        paymentMethod: paymentMethod || 'COD',
+        paymentStatus: paymentMethod === 'ONLINE' ? 'PAID' : 'PENDING',
+        receipt: receiptUrl,
         items: {
           create: orderItemsData,
         },
@@ -112,14 +146,12 @@ export const createAddress = async (req, res) => {
   try {
     const { userId, fullName, phone, street, city, state, zipCode, country } = req.body;
 
-    // 1. Validate input
     if (!userId || !fullName || !phone || !street || !city || !state || !zipCode || !country) {
       return res.status(400).json({
         error: "Missing required fields: userId, fullName, phone, street, city, state, zipCode, country"
       });
     }
 
-    // 2. Verify user exists
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -127,17 +159,6 @@ export const createAddress = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // 3. Check if address already exists for this user (since it has @unique constraint)
-    const existingAddress = await prisma.address.findUnique({
-      where: { userId },
-    });
-    if (existingAddress) {
-      return res.status(409).json({
-        error: "Address already exists for this user. Update existing address instead."
-      });
-    }
-
-    // 4. Create address
     const address = await prisma.address.create({
       data: {
         userId,
@@ -164,20 +185,18 @@ export const createAddress = async (req, res) => {
 // Update existing Address
 export const updateAddress = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { addressId } = req.params;
     const { fullName, phone, street, city, state, zipCode, country } = req.body;
 
-    // 1. Verify address exists
     const existingAddress = await prisma.address.findUnique({
-      where: { userId },
+      where: { id: addressId },
     });
     if (!existingAddress) {
-      return res.status(404).json({ error: "Address not found for this user" });
+      return res.status(404).json({ error: "Address not found" });
     }
 
-    // 2. Update address
     const address = await prisma.address.update({
-      where: { userId },
+      where: { id: addressId },
       data: {
         fullName: fullName || existingAddress.fullName,
         phone: phone || existingAddress.phone,
@@ -196,6 +215,25 @@ export const updateAddress = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all addresses for a user
+export const getUserAddresses = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const addresses = await prisma.address.findMany({
+      where: { userId },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({ addresses });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch addresses" });
   }
 };
 
@@ -223,5 +261,72 @@ export const getUserOrders = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Failed to fetch orders" });
+  }
+};
+
+// Get all orders (Admin)
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        adress: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({ orders });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to fetch all orders" });
+  }
+};
+
+// Update order status (Admin)
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    const updatedOrder = await prisma.order.update({
+      where: { id: orderId },
+      data: { status },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+        adress: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      message: "Order status updated successfully",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to update order status" });
   }
 };

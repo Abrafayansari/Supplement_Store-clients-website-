@@ -1,80 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PureVigor | Elite Supplement Protocols</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              brand: {
-                DEFAULT: '#7B0F17',
-                gold: '#C9A24D',
-                matte: '#0E0E0E',
-                warm: '#FAFAFA',
-              }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PureVigor | Elite Supplement Protocols</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              DEFAULT: '#7B0F17',
+              gold: '#C9A24D',
+              matte: '#0E0E0E',
+              warm: '#FAFAFA',
             }
           }
         }
       }
-    </script>
-    <style>
-        body { 
-          font-family: 'Inter', sans-serif; 
-          -webkit-font-smoothing: antialiased;
-          background-color: #0E0E0E;
-          color: #FAFAFA;
-        }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0E0E0E; }
-        ::-webkit-scrollbar-thumb { background: #7B0F17; }
-        .transition-luxury { transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
-        .btn-luxury {
-          background-color: #7B0F17;
-          color: white;
-          text-transform: uppercase;
-          font-weight: 800;
-          letter-spacing: 0.15em;
-          transition: all 0.3s ease;
-          border: 1px solid transparent;
-        }
-        .btn-luxury:hover {
-          background-color: #C9A24D;
-          border-color: #FFF;
-          box-shadow: 0 0 20px rgba(201, 162, 77, 0.4);
-          transform: translateY(-2px);
-        }
-        @keyframes gold-shine {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .shine-gold {
-          background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
-          background-size: 200% auto;
-          animation: gold-shine 5s linear infinite;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .glass-panel {
-          background: rgba(20, 20, 20, 0.8);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .mesh-bg {
-          background-color: #0E0E0E;
-          background-image: 
-            radial-gradient(at 0% 0%, hsla(355, 78%, 27%, 0.15) 0, transparent 50%), 
-            radial-gradient(at 100% 0%, hsla(41, 55%, 54%, 0.1) 0, transparent 50%);
-        }
-    </style>
-    <script type="importmap">
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #0E0E0E;
+      color: #FAFAFA;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0E0E0E;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #7B0F17;
+    }
+
+    .transition-luxury {
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .btn-luxury {
+      background-color: #7B0F17;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-luxury:hover {
+      background-color: #C9A24D;
+      border-color: #FFF;
+      box-shadow: 0 0 20px rgba(201, 162, 77, 0.4);
+      transform: translateY(-2px);
+    }
+
+    @keyframes gold-shine {
+      0% {
+        background-position: -200% center;
+      }
+
+      100% {
+        background-position: 200% center;
+      }
+    }
+
+    .shine-gold {
+      background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+      background-size: 200% auto;
+      animation: gold-shine 5s linear infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass-panel {
+      background: rgba(20, 20, 20, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mesh-bg {
+      background-color: #0E0E0E;
+      background-image:
+        radial-gradient(at 0% 0%, hsla(355, 78%, 27%, 0.15) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(41, 55%, 54%, 0.1) 0, transparent 50%);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #7B0F17;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #C9A24D;
+    }
+  </style>
+  <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@19.0.0",
@@ -130,8 +172,10 @@
 }
 </script>
 </head>
+
 <body class="mesh-bg text-white selection:bg-brand-gold selection:text-brand-matte">
-    <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
+  <div id="root"></div>
+  <script type="module" src="index.tsx"></script>
 </body>
+
 </html>

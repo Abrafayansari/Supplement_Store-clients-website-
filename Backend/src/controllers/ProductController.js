@@ -285,3 +285,86 @@ export const getCategories = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch categories' });
   }
 };
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      brand,
+      category,
+      subCategory,
+      price,
+      size,
+      stock,
+      description,
+      warnings,
+      directions,
+      variants,
+      existingImages // Array of image URLs to keep
+    } = req.body;
+
+    let imageUrls = [];
+    if (existingImages) {
+      imageUrls = Array.isArray(existingImages) ? existingImages : [existingImages];
+    }
+
+    // Handle new image uploads if any
+    if (req.files && req.files.length > 0) {
+      const imageUploadPromises = req.files.map((file) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader.upload_stream(
+            { folder: "products" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result.secure_url);
+            }
+          ).end(file.buffer);
+        });
+      });
+      const newImageUrls = await Promise.all(imageUploadPromises);
+      imageUrls = [...imageUrls, ...newImageUrls];
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        brand,
+        category,
+        subCategory,
+        price: price ? Number(price) : undefined,
+        size,
+        stock: stock ? Number(stock) : undefined,
+        description,
+        warnings: warnings ? (Array.isArray(warnings) ? warnings : JSON.parse(warnings)) : undefined,
+        directions,
+        variants: variants ? (Array.isArray(variants) ? variants : JSON.parse(variants)) : undefined,
+        images: imageUrls.length > 0 ? imageUrls : undefined,
+      },
+    });
+
+    res.json({ message: "Product updated successfully", product: updatedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // We could either hard delete or soft delete. 
+    // Given the 'isActive' field in schema, a soft delete is better.
+    await prisma.product.update({
+      where: { id },
+      data: { isActive: false }
+    });
+
+    res.json({ message: "Product decommissioned successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};

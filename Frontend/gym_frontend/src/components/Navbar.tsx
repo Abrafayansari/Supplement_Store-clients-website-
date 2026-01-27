@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Search, Menu, X, Heart, Package } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Heart, Package, LayoutDashboard } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { ToastContainer } from 'react-toast';
 const Navbar: React.FC = () => {
   const { totalItems } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
@@ -58,14 +58,28 @@ const Navbar: React.FC = () => {
 
             {user ? (
               <div className="relative group/user-menu">
-                <button className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-luxury">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/70 hidden sm:block">
-                    {user.name.split(' ')[0]}
-                  </span>
-                  <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center border border-brand-gold/30">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
-                </button>
+                {isAdmin ? (
+                  <Link
+                    to="/admin"
+                    className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-luxury"
+                  >
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/70 hidden sm:block">
+                      {user.name.split(' ')[0]}
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center border border-brand-gold/30">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
+                  </Link>
+                ) : (
+                  <button className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-luxury">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/70 hidden sm:block">
+                      {user.name.split(' ')[0]}
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center border border-brand-gold/30">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
+                  </button>
+                )}
 
                 {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-56 opacity-0 translate-y-2 pointer-events-none group-hover/user-menu:opacity-100 group-hover/user-menu:translate-y-0 group-hover/user-menu:pointer-events-auto transition-all duration-300 z-[70]">
@@ -74,6 +88,11 @@ const Navbar: React.FC = () => {
                       <p className="text-[10px] font-black text-white uppercase tracking-tighter truncate">{user.name}</p>
                       <p className="text-[9px] font-bold text-brand-gold uppercase tracking-[0.2em]">{user.role}</p>
                     </div>
+                    {isAdmin && (
+                      <Link to="/admin" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-white hover:bg-brand-gold/20 transition-luxury border-b border-white/5 mb-2">
+                        <LayoutDashboard className="w-4 h-4" /> Admin Console
+                      </Link>
+                    )}
                     <Link to="/profile" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-brand-gold hover:bg-white/5 transition-luxury">
                       <User className="w-4 h-4" /> Account Protocols
                     </Link>
@@ -122,6 +141,9 @@ const Navbar: React.FC = () => {
           <Link to="/" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>The Index</Link>
           <Link to="/products" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Shop Elite</Link>
           <Link to="/contact" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+          {isAdmin && (
+            <Link to="/admin" className="block text-4xl font-black text-brand-gold hover:text-white transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Admin Console</Link>
+          )}
           <div className="space-y-6 pt-10 border-t border-white/10">
             {['Protein', 'Vitamins', 'Pre-Workout', 'Wellness'].map(cat => (
               <Link key={cat} to={`/products?category=${cat}`} onClick={() => setIsMenuOpen(false)} className="block text-sm font-bold uppercase tracking-[0.3em] text-white/50 hover:text-brand-gold">{cat}</Link>
