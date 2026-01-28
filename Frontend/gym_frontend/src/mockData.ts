@@ -5,7 +5,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: '1',
     name: 'Nitro Whey Isolate',
-    brand: 'Vigor',
+    brand: 'Nexus',
     price: 54.99,
     category: 'Protein',
     subCategory: 'Whey',
@@ -28,7 +28,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: '2',
     name: 'Ferocious Pre-Workout',
-    brand: 'Vigor',
+    brand: 'Nexus',
     price: 110.00,
     category: 'Pre-Workout',
     subCategory: 'Focus',
@@ -120,7 +120,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: '6',
     name: 'Omega-3 Gold',
-    brand: 'Vigor',
+    brand: 'Nexus',
     price: 24.99,
     category: 'Vitamins',
     subCategory: 'Health',
@@ -147,7 +147,7 @@ export const MOCK_ORDERS: Order[] = [
     id: 'ORD-001',
     date: '2023-10-25',
     customerName: 'Operative Alpha',
-    customerEmail: 'alpha@vigor.com',
+    customerEmail: 'alpha@nexus.com',
     total: 89.98,
     status: 'Shipped',
     items: [
@@ -161,7 +161,7 @@ export const MOCK_USERS: User[] = [
   {
     id: 'u1',
     name: 'Commander Admin',
-    email: 'admin@purevigor.com',
+    email: 'admin@nexus.com',
     role: 'ADMIN',
     status: 'Active',
     joinDate: '2023-01-01'

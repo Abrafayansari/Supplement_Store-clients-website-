@@ -6,6 +6,7 @@ import Slider from '../../components/Slider.tsx';
 import Categories from './Categories.tsx';
 import ProductCard from '../../components/ProductCard.tsx';
 import { fetchProducts } from '../../data/Product.tsx';
+import NexusLoader from '../../components/NexusLoader';
 
 const Home: React.FC = () => {
   const heroRef = React.useRef<HTMLDivElement>(null);
@@ -17,12 +18,16 @@ const Home: React.FC = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   const [initialProducts, setInitialProducts] = React.useState<Array<any>>([]);
+  const [loading, setLoading] = React.useState(true);
   const [typedText, setTypedText] = React.useState('');
   const fullText = 'BIOLOGY';
 
   React.useEffect(() => {
-    fetchProducts({ sort: 'newest', limit: 10 }).then((res) => setInitialProducts(res.products))
-      .catch(console.error);
+    setLoading(true);
+    fetchProducts({ sort: 'newest', limit: 10 })
+      .then((res) => setInitialProducts(res.products))
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   React.useEffect(() => {
@@ -102,7 +107,7 @@ const Home: React.FC = () => {
             </div>
 
             <p className="text-base md:text-lg text-white/30 max-w-xl font-light leading-relaxed italic border-l-4 border-brand-gold/20 pl-10">
-              Forged in pursuit of total physiological dominance. PureVigor compounds represent the convergence of pharmaceutical isolation and human performance.
+              Forged in pursuit of total physiological dominance. Nexus compounds represent the convergence of pharmaceutical isolation and human performance.
             </p>
 
             <div className="space-y-16">
@@ -219,12 +224,20 @@ const Home: React.FC = () => {
             </div>
 
             {/* Product Cards Row - Using the ProductCard component */}
-            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              {initialProducts.slice(0, 3).map((product) => (
-                <div key={product.id} className="flex justify-center">
-                  <ProductCard product={product} />
+            <div className="lg:col-span-3">
+              {loading ? (
+                <div className="flex items-center justify-center h-full min-h-[400px]">
+                  <NexusLoader />
                 </div>
-              ))}
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                  {initialProducts.slice(0, 3).map((product) => (
+                    <div key={product.id} className="flex justify-center">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -263,7 +276,7 @@ const Home: React.FC = () => {
               </h2>
             </div>
             <p className="text-lg text-brand-matte/60 leading-relaxed font-light">
-              PureVigor was born from a singular frustration: the supplement industry's obsession with marketing over molecules. We dismantled the traditional model to build a brand centered on transparency, pharmaceutical-grade isolation, and biological efficacy.
+              Nexus was born from a singular frustration: the supplement industry's obsession with marketing over molecules. We dismantled the traditional model to build a brand centered on transparency, pharmaceutical-grade isolation, and biological efficacy.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="space-y-4">
@@ -344,7 +357,7 @@ const Home: React.FC = () => {
       {/* 8. CTA SECTION - Warm White (#FAFAFA) */}
       <section className="bg-brand-warm py-40 text-center relative overflow-hidden">
         <div className="absolute top-0 right-0 p-24 opacity-[0.03] pointer-events-none">
-          <span className="text-[300px] font-black text-brand-matte uppercase select-none leading-none tracking-tighter">VIGOR</span>
+          <span className="text-[300px] font-black text-brand-matte uppercase select-none leading-none tracking-tighter">NEXUS</span>
         </div>
         <div className="container mx-auto px-6 relative z-10 space-y-16">
           <h2 className="text-6xl md:text-[9rem] font-black uppercase tracking-tighter leading-[0.8] text-brand-matte">INITIALIZE <br /><span className="text-brand">YOUR PROTOCOL</span></h2>

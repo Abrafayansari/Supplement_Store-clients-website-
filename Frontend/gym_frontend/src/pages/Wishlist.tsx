@@ -5,13 +5,23 @@ import { ShoppingCart, Heart, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { toast } from 'sonner';
+import NexusLoader from '../components/NexusLoader';
 
 const Wishlist: React.FC = () => {
     const { items, showWishlist, removeFromWishlist } = useWishlist();
     const { addToCart } = useCart();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        showWishlist();
+        const fetchWishlist = async () => {
+            setLoading(true);
+            try {
+                await showWishlist();
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchWishlist();
     }, []);
 
     const handleAddToCart = async (product: any) => {
@@ -19,7 +29,20 @@ const Wishlist: React.FC = () => {
     };
 
     const handleRemove = async (productId: string) => {
-        await removeFromWishlist(productId);
+        try {
+            await removeFromWishlist(productId);
+            toast.success("removed from wishlist")
+        } catch (error) {
+            toast.error("Failed to remove item")
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="bg-brand-matte min-h-screen pt-12 pb-24 flex items-center justify-center">
+                <NexusLoader />
+            </div>
+        );
     }
 
     return (

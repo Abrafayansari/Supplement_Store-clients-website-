@@ -135,6 +135,12 @@ const Auth: React.FC<AuthProps> = ({ mode }) => {
                             </div>
                         </div>
 
+                        <div className="pt-1 flex justify-end">
+                            {(mode === 'login' || mode === 'admin-login') && (
+                                <Link to="/forgot-password" className="text-xs font-bold text-brand-gold hover:text-white transition-colors uppercase tracking-widest">Forgot Password?</Link>
+                            )}
+                        </div>
+
                         <div className="pt-4">
                             <button 
                                 type="submit" 

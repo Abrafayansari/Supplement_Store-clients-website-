@@ -7,11 +7,14 @@ import {
     List,
     X,
     ChevronDown,
+    ChevronLeft,
+    ChevronRight,
     FlaskConical,
     Filter,
     ArrowUpDown
 } from 'lucide-react';
 import { fetchProducts, getCategories } from '../data/Product.tsx';
+import NexusLoader from '../components/NexusLoader';
 import ProductCard from '../components/ProductCard.tsx';
 import {
     Sheet,
@@ -38,28 +41,44 @@ const ProductList: React.FC = () => {
     const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'name'>('newest');
     const [products, setProducts] = useState<Product[]>([]);
     const [subcategories, setsubCategories] = useState<Array<any>>([]);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const activeCategory = searchParams.get('category') || 'All';
 
     useEffect(() => {
-        getCategories()
-            .then(res => setsubCategories(res))
-            .catch(console.error);
-        fetchProducts({
-            subCategory: activeCategory !== "All" ? activeCategory : undefined,
-            search: searchQuery || undefined,
-            maxPrice,
-            sort: sortBy,
-            page: 1,
-            limit: 12,
-            inStock: true,
-        })
-            .then(res => {
-                setProducts(res.products)
-                console.log('Fetched products:', res.products);
-            }
-            )
-            .catch(console.error);
+        setPage(1);
     }, [activeCategory, searchQuery, maxPrice, sortBy]);
+
+    useEffect(() => {
+        const loadPageData = async () => {
+            setLoading(true);
+            try {
+                const [catsRes, productsRes] = await Promise.all([
+                    getCategories(),
+                    fetchProducts({
+                        subCategory: activeCategory !== "All" ? activeCategory : undefined,
+                        search: searchQuery || undefined,
+                        maxPrice,
+                        sort: sortBy,
+                        page,
+                        limit: 12,
+                        inStock: true,
+                    })
+                ]);
+                setsubCategories(catsRes);
+                setProducts(productsRes.products);
+                setTotalPages(productsRes.totalPages);
+                console.log('Fetched products:', productsRes.products);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadPageData();
+    }, [activeCategory, searchQuery, maxPrice, sortBy, page]);
 
     const isNew = (product: Product) => {
         const now = new Date();
@@ -310,47 +329,81 @@ const ProductList: React.FC = () => {
                     </aside>
 
                     <main className="flex-grow">
-                        {processedProducts.length > 0 ? (
-                            <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8' : 'flex flex-col gap-6'}`}>
-                                {processedProducts.map(product => (
-                                    <div key={product.id} className={`${viewMode === 'grid' ? 'flex justify-start' : 'w-full'}`}>
-                                        {viewMode === 'grid' ? (
-                                            <ProductCard product={product} />
-                                        ) : (
-                                            <div className="bg-white p-6 flex items-center gap-8 group shadow-[0_5px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-luxury border border-transparent hover:border-brand-gold/20 w-full relative overflow-hidden">
-                                                <div className="absolute top-0 right-0 w-1 h-full bg-brand-gold scale-y-0 group-hover:scale-y-100 transition-transform origin-bottom duration-500"></div>
-                                                <div className="w-40 h-40 bg-brand-warm p-6 shrink-0 flex items-center justify-center mixing-blend-multiply">
-                                                    <img src={product.images[0]} className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" alt={product.name} />
-                                                </div>
-                                                <div className="flex-grow space-y-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <Badge variant="outline" className="border-brand-gold/30 text-brand-gold text-[9px] font-black uppercase tracking-widest rounded-none px-2 py-0.5">{product.subCategory}</Badge>
-                                                        <span className="text-brand-matte/20 text-[9px] font-bold uppercase tracking-widest">SEQ-ID: {product.id}</span>
-                                                    </div>
-
-                                                    <div className="space-y-1">
-                                                        <h3 className="text-2xl font-black text-brand-matte uppercase tracking-tight group-hover:text-brand transition-colors">{product.name}</h3>
-                                                        <p className="text-xs text-brand-matte/50 line-clamp-2 max-w-xl">{product.description}</p>
-                                                    </div>
-
-                                                    <div className="flex items-center gap-6 pt-2">
-                                                        <span className="text-3xl font-black text-brand italic tracking-tighter">${product.price.toFixed(2)}</span>
-                                                        <div className="h-8 w-[1px] bg-brand-matte/10"></div>
-                                                        {product.price && (
-                                                            <span className="text-xs text-brand-matte/30 line-through font-bold">MSRP ${(product.price * 1.2).toFixed(2)}</span>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-4">
-                                                    <button className="btn-luxury px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] relative overflow-hidden">
-                                                        Authentication
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                        {loading ? (
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <NexusLoader />
                             </div>
+                        ) : processedProducts.length > 0 ? (
+                            <>
+                                <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8' : 'flex flex-col gap-6'}`}>
+                                    {processedProducts.map(product => (
+                                        <div key={product.id} className={`${viewMode === 'grid' ? 'flex justify-start' : 'w-full'}`}>
+                                            {viewMode === 'grid' ? (
+                                                <ProductCard product={product} />
+                                            ) : (
+                                                <div className="bg-white p-6 flex items-center gap-8 group shadow-[0_5px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-luxury border border-transparent hover:border-brand-gold/20 w-full relative overflow-hidden">
+                                                    <div className="absolute top-0 right-0 w-1 h-full bg-brand-gold scale-y-0 group-hover:scale-y-100 transition-transform origin-bottom duration-500"></div>
+                                                    <div className="w-40 h-40 bg-brand-warm p-6 shrink-0 flex items-center justify-center mixing-blend-multiply">
+                                                        <img src={product.images[0]} className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500" alt={product.name} />
+                                                    </div>
+                                                    <div className="flex-grow space-y-4">
+                                                        <div className="flex items-center gap-3">
+                                                            <Badge variant="outline" className="border-brand-gold/30 text-brand-gold text-[9px] font-black uppercase tracking-widest rounded-none px-2 py-0.5">{product.subCategory}</Badge>
+                                                            <span className="text-brand-matte/20 text-[9px] font-bold uppercase tracking-widest">SEQ-ID: {product.id}</span>
+                                                        </div>
+
+                                                        <div className="space-y-1">
+                                                            <h3 className="text-2xl font-black text-brand-matte uppercase tracking-tight group-hover:text-brand transition-colors">{product.name}</h3>
+                                                            <p className="text-xs text-brand-matte/50 line-clamp-2 max-w-xl">{product.description}</p>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-6 pt-2">
+                                                            <span className="text-3xl font-black text-brand italic tracking-tighter">${product.price.toFixed(2)}</span>
+                                                            <div className="h-8 w-[1px] bg-brand-matte/10"></div>
+                                                            {product.price && (
+                                                                <span className="text-xs text-brand-matte/30 line-through font-bold">MSRP ${(product.price * 1.2).toFixed(2)}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4">
+                                                        <button className="btn-luxury px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] relative overflow-hidden">
+                                                            Authentication
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {totalPages > 1 && (
+                                    <div className="mt-16 flex items-center justify-center gap-4 border-t border-brand-matte/5 pt-12">
+                                        <button
+                                            onClick={() => {
+                                                setPage(p => Math.max(1, p - 1));
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }}
+                                            disabled={page === 1}
+                                            className="p-4 border border-brand-matte/10 hover:border-brand-gold hover:text-brand-gold disabled:opacity-30 disabled:hover:border-brand-matte/10 disabled:hover:text-inherit transition-all"
+                                        >
+                                            <ChevronLeft className="w-5 h-5" />
+                                        </button>
+                                        <span className="text-[12px] font-black uppercase tracking-widest text-brand-matte/60">
+                                            Page <span className="text-brand">{page}</span> of {totalPages}
+                                        </span>
+                                        <button
+                                            onClick={() => {
+                                                setPage(p => Math.min(totalPages, p + 1));
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }}
+                                            disabled={page === totalPages}
+                                            className="p-4 border border-brand-matte/10 hover:border-brand-gold hover:text-brand-gold disabled:opacity-30 disabled:hover:border-brand-matte/10 disabled:hover:text-inherit transition-all"
+                                        >
+                                            <ChevronRight className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                )}
+                            </>
                         ) : (
                             <div className="py-32 text-center space-y-8 bg-white/50 border border-brand-matte/5 p-12">
                                 <Search className="w-16 h-16 text-brand-matte/10 mx-auto" />

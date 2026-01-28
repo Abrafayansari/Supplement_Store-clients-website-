@@ -128,7 +128,9 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   addressId: 'addressId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  resetToken: 'resetToken',
+  resetTokenExpire: 'resetTokenExpire'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {

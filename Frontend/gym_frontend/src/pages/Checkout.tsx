@@ -79,6 +79,7 @@ const Checkout: React.FC = () => {
         }
       } catch (err) {
         console.error("Failed to fetch addresses:", err);
+      } finally {
       }
     };
 
@@ -341,7 +342,7 @@ const Checkout: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-[11px] font-black text-white uppercase tracking-[0.2em]">Online Protocol</p>
-                        <p className="text-[9px] text-zinc-600 font-bold uppercase mt-1">Bank Transfer / Vigor-Pay</p>
+                        <p className="text-[9px] text-zinc-600 font-bold uppercase mt-1">Bank Transfer / Nexus-Pay</p>
                       </div>
                     </div>
                     {paymentMethod === 'ONLINE' && <CheckCircle className="absolute top-6 right-6 w-5 h-5 text-brand" />}
@@ -353,8 +354,8 @@ const Checkout: React.FC = () => {
                     <div className="space-y-2">
                       <h4 className="text-[10px] font-black text-brand uppercase tracking-widest">Deployment Account</h4>
                       <div className="bg-black p-4 border border-zinc-800">
-                        <p className="text-xs text-white font-bold">IBAN: PK64 VIGO 0000 9238 4721 00</p>
-                        <p className="text-[10px] text-zinc-500 mt-1 uppercase font-bold tracking-widest">Bank: Vigor Elite Finance</p>
+                        <p className="text-xs text-white font-bold">IBAN: PK64 NEXUS 0000 9238 4721 00</p>
+                        <p className="text-[10px] text-zinc-500 mt-1 uppercase font-bold tracking-widest">Bank: Nexus Elite Finance</p>
                       </div>
                     </div>
 

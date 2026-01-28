@@ -34,6 +34,9 @@ model User {
   updatedAt DateTime @updatedAt
 
   addresses Address[]
+
+  resetToken       String?
+  resetTokenExpire DateTime?
 }
 
 model Product {

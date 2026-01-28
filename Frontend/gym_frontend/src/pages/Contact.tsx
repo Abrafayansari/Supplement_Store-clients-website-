@@ -9,7 +9,7 @@ const Contact: React.FC = () => {
       {/* Hero Header */}
       <section className="bg-brand-matte py-40 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 p-24 opacity-5 pointer-events-none">
-           <span className="text-[200px] font-black text-brand-gold uppercase select-none leading-none tracking-tighter">REACH</span>
+          <span className="text-[200px] font-black text-brand-gold uppercase select-none leading-none tracking-tighter">REACH</span>
         </div>
         <div className="container mx-auto px-6 relative z-10 text-center space-y-6">
           <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none">
@@ -25,7 +25,7 @@ const Contact: React.FC = () => {
           <div className="space-y-8">
             <div className="bg-white p-12 border border-black/5 shadow-2xl space-y-8 h-full">
               <h3 className="text-[12px] font-black uppercase tracking-[0.4em] text-brand border-b border-black/5 pb-4">Base Operations</h3>
-              
+
               <div className="space-y-12">
                 <div className="flex gap-6 group">
                   <div className="w-12 h-12 bg-brand-warm flex items-center justify-center shrink-0 text-brand group-hover:bg-brand group-hover:text-white transition-all">
@@ -43,7 +43,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40 mb-2">Digital Link</h4>
-                    <p className="text-sm font-black uppercase tracking-tight">command@purevigor.com</p>
+                    <p className="text-sm font-black uppercase tracking-tight">command@nexus.com</p>
                   </div>
                 </div>
 
@@ -115,22 +115,22 @@ const Contact: React.FC = () => {
       {/* Map Placeholder / FAQ teaser */}
       <section className="py-24 border-t border-black/5 bg-white">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-           <div className="space-y-10">
-              <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">IMMEDIATE <span className="text-brand">INTEL</span></h3>
-              <p className="text-lg text-brand-matte/50 leading-relaxed font-light">Looking for shipping rates or returns? Our automated intelligence system can provide immediate answers to standard operational questions.</p>
-              <button className="text-brand-gold font-black uppercase tracking-widest text-[11px] border-b border-brand-gold pb-1 hover:text-brand hover:border-brand transition-all">Open FAQ Archive</button>
-           </div>
-           <div className="bg-brand-matte aspect-video relative flex items-center justify-center overflow-hidden grayscale">
-              <img 
-                src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=1000" 
-                className="w-full h-full object-cover opacity-40" 
-                alt="Tactical Map"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-4 h-4 bg-brand animate-ping rounded-full"></div>
-                 <div className="w-2 h-2 bg-brand rounded-full absolute"></div>
-              </div>
-           </div>
+          <div className="space-y-10">
+            <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">IMMEDIATE <span className="text-brand">INTEL</span></h3>
+            <p className="text-lg text-brand-matte/50 leading-relaxed font-light">Looking for shipping rates or returns? Our automated intelligence system can provide immediate answers to standard operational questions.</p>
+            <button className="text-brand-gold font-black uppercase tracking-widest text-[11px] border-b border-brand-gold pb-1 hover:text-brand hover:border-brand transition-all">Open FAQ Archive</button>
+          </div>
+          <div className="bg-brand-matte aspect-video relative flex items-center justify-center overflow-hidden grayscale">
+            <img
+              src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=1000"
+              className="w-full h-full object-cover opacity-40"
+              alt="Tactical Map"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-4 h-4 bg-brand animate-ping rounded-full"></div>
+              <div className="w-2 h-2 bg-brand rounded-full absolute"></div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

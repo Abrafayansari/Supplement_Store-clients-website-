@@ -9,9 +9,9 @@ const About: React.FC = () => {
       {/* 1. Hero Section */}
       <section className="relative h-[60vh] bg-brand-matte flex items-center justify-center text-center">
         <div className="absolute inset-0 opacity-30">
-          <img 
-            src="https://images.unsplash.com/photo-1574680077505-ef74a4ef2441?auto=format&fit=crop&q=80&w=2000" 
-            alt="The Lab" 
+          <img
+            src="https://images.unsplash.com/photo-1574680077505-ef74a4ef2441?auto=format&fit=crop&q=80&w=2000"
+            alt="The Lab"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-brand-matte/60"></div>
@@ -42,7 +42,7 @@ const About: React.FC = () => {
               </h2>
             </div>
             <p className="text-lg text-brand-matte/60 leading-relaxed font-light">
-              PureVigor was born from a singular frustration: the supplement industry's obsession with marketing over molecules. We dismantled the traditional model to build a brand centered on transparency, pharmaceutical-grade isolation, and biological efficacy.
+              Nexus was born from a singular frustration: the supplement industry's obsession with marketing over molecules. We dismantled the traditional model to build a brand centered on transparency, pharmaceutical-grade isolation, and biological efficacy.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="space-y-4">
@@ -62,10 +62,10 @@ const About: React.FC = () => {
             </div>
           </div>
           <div className="relative aspect-[4/5] bg-brand-warm overflow-hidden">
-             <img 
-              src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&q=80&w=1000" 
-              className="w-full h-full object-cover grayscale brightness-75 hover:scale-105 transition-transform duration-1000" 
-              alt="The Standard" 
+            <img
+              src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&q=80&w=1000"
+              className="w-full h-full object-cover grayscale brightness-75 hover:scale-105 transition-transform duration-1000"
+              alt="The Standard"
             />
             <div className="absolute inset-0 border-[20px] border-white/10 m-10"></div>
           </div>
@@ -76,20 +76,20 @@ const About: React.FC = () => {
       <section className="py-40 bg-brand-matte text-white relative">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-20">
           {[
-            { 
-              icon: <Target className="w-12 h-12 text-brand" />, 
-              title: "PRECISION", 
-              desc: "Targeted formulae designed for specific metabolic outcomes." 
+            {
+              icon: <Target className="w-12 h-12 text-brand" />,
+              title: "PRECISION",
+              desc: "Targeted formulae designed for specific metabolic outcomes."
             },
-            { 
-              icon: <Award className="w-12 h-12 text-brand-gold" />, 
-              title: "ELITE STATUS", 
-              desc: "Supplying the chemical foundation for world-class athletes." 
+            {
+              icon: <Award className="w-12 h-12 text-brand-gold" />,
+              title: "ELITE STATUS",
+              desc: "Supplying the chemical foundation for world-class athletes."
             },
-            { 
-              icon: <ShieldCheck className="w-12 h-12 text-white" />, 
-              title: "INTEGRITY", 
-              desc: "Full label disclosure. Zero proprietary blends. Zero fillers." 
+            {
+              icon: <ShieldCheck className="w-12 h-12 text-white" />,
+              title: "INTEGRITY",
+              desc: "Full label disclosure. Zero proprietary blends. Zero fillers."
             }
           ].map((item, idx) => (
             <div key={idx} className="flex flex-col items-center text-center space-y-8">

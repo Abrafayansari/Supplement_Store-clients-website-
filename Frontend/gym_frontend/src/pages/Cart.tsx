@@ -1,16 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
 import ProductCard from '../components/ProductCard.tsx';
+import NexusLoader from '../components/NexusLoader.tsx';
 
 const Cart: React.FC = () => {
   const { items, showCart } = useCart();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    showCart();
+    const loadCart = async () => {
+      setLoading(true);
+      try {
+        await showCart();
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadCart();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-black min-h-screen flex items-center justify-center">
+        <NexusLoader />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (

@@ -8,11 +8,15 @@ import {
 import { MOCK_ORDERS, MOCK_PRODUCTS } from '../../mockData.ts';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
+import NexusLoader from '../../components/NexusLoader';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+import logo from '../../assets/nexus_logo.jpg';
+
 const AdminDashboard: React.FC = () => {
   const { token } = useAuth();
+
   const [dashboardData, setDashboardData] = React.useState<{
     totalUsers: number;
     totalOrders: number;
@@ -22,6 +26,7 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -98,9 +103,9 @@ const AdminDashboard: React.FC = () => {
     <div className="min-h-screen bg-[#0E0E0E] text-white flex font-sans">
       <aside className="w-72 bg-black border-r border-white/10 hidden xl:flex flex-col p-8 space-y-12 backdrop-blur-3xl sticky top-0 h-screen">
         <Link to="/" className="flex items-center gap-4 group">
-          <div className="w-12 h-12 bg-brand flex items-center justify-center text-white font-black text-2xl skew-x-[-12deg] group-hover:bg-brand-gold transition-colors duration-500">P</div>
+          <img src={logo} alt="Nexus Logo" className="w-12 h-12 object-contain" />
           <div className="flex flex-col">
-            <span className="text-xl font-black text-white tracking-tighter uppercase leading-none">Pure<span className="text-brand-gold italic">Vigor</span></span>
+            <span className="text-xl font-black text-white tracking-tighter uppercase leading-none">NEXUS</span>
             <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.4em]">ADMIN CONTROLS</span>
           </div>
         </Link>
@@ -161,87 +166,95 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
-          {stats.map(stat => (
-            <div key={stat.label} className="bg-white/[0.03] p-10 border border-white/5 shadow-2xl space-y-6 group hover:border-brand-gold/30 transition-all duration-500">
-              <div className="w-14 h-14 bg-black border border-white/10 text-brand-gold rounded-none flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-                {stat.icon}
-              </div>
-              <div className="space-y-2">
-                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">{stat.label}</p>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-black text-white tracking-tighter">{stat.value}</span>
-                  <span className={`text-[10px] font-black ${stat.trend.startsWith('+') ? 'text-brand' : 'text-white/20'} flex items-center gap-1`}>
-                    {stat.trend.startsWith('+') ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                    {stat.trend}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 relative z-10">
-          <div className="lg:col-span-2 bg-white/[0.02] border border-white/5 shadow-2xl p-10 space-y-10">
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Live Dispatches</h3>
-              <Link to="/admin/orders" className="text-[10px] font-black text-brand-gold flex items-center gap-2 hover:text-white transition-all duration-300 uppercase tracking-widest group">
-                Full Log <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em]">Protocol ID</th>
-                    <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em]">Operative</th>
-                    <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em] text-right">Valuation</th>
-                    <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em] text-right">Vector</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {(recentOrders.length > 0 ? recentOrders : []).map(order => (
-                    <tr key={order.id} className="group hover:bg-white/[0.02] transition-all duration-500">
-                      <td className="py-6 font-black text-white/60 text-sm tracking-tighter group-hover:text-brand-gold transition-colors italic">#{order.id.slice(0, 8)}</td>
-                      <td className="py-6 text-xs font-black text-white uppercase tracking-widest">{order.user.name}</td>
-                      <td className="py-6 text-sm font-black text-brand-gold text-right italic">${order.total}</td>
-                      <td className="py-6 text-right">
-                        <span className={`inline-block px-4 py-1.5 border text-[9px] font-black uppercase tracking-widest ${getStatusStyle(order.status)}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {loading ? (
+          <div className="flex-grow flex items-center justify-center min-h-[500px]">
+            <NexusLoader />
           </div>
-
-          <div className="bg-white/[0.02] border border-white/5 shadow-2xl p-10 space-y-10 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand/10 transition-colors" />
-            <h3 className="text-2xl font-black text-white uppercase tracking-tighter relative z-10">Elite Assets</h3>
-            <div className="space-y-8 relative z-10">
-              {MOCK_PRODUCTS.slice(0, 3).map(product => (
-                <div key={product.id} className="flex items-center gap-6 group/item hover:translate-x-2 transition-transform duration-500">
-                  <div className="w-16 h-16 bg-black flex items-center justify-center p-3 border border-white/10 group-hover/item:border-brand-gold/30 transition-colors">
-                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain grayscale group-hover/item:grayscale-0 transition-all duration-500" />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+              {stats.map(stat => (
+                <div key={stat.label} className="bg-white/[0.03] p-10 border border-white/5 shadow-2xl space-y-6 group hover:border-brand-gold/30 transition-all duration-500">
+                  <div className="w-14 h-14 bg-black border border-white/10 text-brand-gold rounded-none flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                    {stat.icon}
                   </div>
-                  <div className="flex-grow min-w-0">
-                    <h4 className="text-xs font-black text-white uppercase truncate tracking-widest">{product.name}</h4>
-                    <p className="text-[9px] text-white/30 font-bold uppercase tracking-widest">Active Inventory</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-black text-brand-gold italic">$4.5k</p>
-                    <p className="text-[9px] text-brand font-black">+12%</p>
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">{stat.label}</p>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-3xl font-black text-white tracking-tighter">{stat.value}</span>
+                      <span className={`text-[10px] font-black ${stat.trend.startsWith('+') ? 'text-brand' : 'text-white/20'} flex items-center gap-1`}>
+                        {stat.trend.startsWith('+') ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                        {stat.trend}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-            <button className="w-full py-5 bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:text-brand-gold hover:border-brand-gold transition-all duration-500 relative z-10">
-              In-Depth Logistics
-            </button>
-          </div>
-        </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 relative z-10">
+              <div className="lg:col-span-2 bg-white/[0.02] border border-white/5 shadow-2xl p-10 space-y-10">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Live Dispatches</h3>
+                  <Link to="/admin/orders" className="text-[10px] font-black text-brand-gold flex items-center gap-2 hover:text-white transition-all duration-300 uppercase tracking-widest group">
+                    Full Log <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="border-b border-white/10">
+                        <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em]">Protocol ID</th>
+                        <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em]">Operative</th>
+                        <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em] text-right">Valuation</th>
+                        <th className="pb-6 text-[9px] font-black text-white/20 uppercase tracking-[0.4em] text-right">Vector</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {(recentOrders.length > 0 ? recentOrders : []).map(order => (
+                        <tr key={order.id} className="group hover:bg-white/[0.02] transition-all duration-500">
+                          <td className="py-6 font-black text-white/60 text-sm tracking-tighter group-hover:text-brand-gold transition-colors italic">#{order.id.slice(0, 8)}</td>
+                          <td className="py-6 text-xs font-black text-white uppercase tracking-widest">{order.user.name}</td>
+                          <td className="py-6 text-sm font-black text-brand-gold text-right italic">${order.total}</td>
+                          <td className="py-6 text-right">
+                            <span className={`inline-block px-4 py-1.5 border text-[9px] font-black uppercase tracking-widest ${getStatusStyle(order.status)}`}>
+                              {order.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="bg-white/[0.02] border border-white/5 shadow-2xl p-10 space-y-10 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand/10 transition-colors" />
+                <h3 className="text-2xl font-black text-white uppercase tracking-tighter relative z-10">Elite Assets</h3>
+                <div className="space-y-8 relative z-10">
+                  {MOCK_PRODUCTS.slice(0, 3).map(product => (
+                    <div key={product.id} className="flex items-center gap-6 group/item hover:translate-x-2 transition-transform duration-500">
+                      <div className="w-16 h-16 bg-black flex items-center justify-center p-3 border border-white/10 group-hover/item:border-brand-gold/30 transition-colors">
+                        <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain grayscale group-hover/item:grayscale-0 transition-all duration-500" />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <h4 className="text-xs font-black text-white uppercase truncate tracking-widest">{product.name}</h4>
+                        <p className="text-[9px] text-white/30 font-bold uppercase tracking-widest">Active Inventory</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black text-brand-gold italic">$4.5k</p>
+                        <p className="text-[9px] text-brand font-black">+12%</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button className="w-full py-5 bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:text-brand-gold hover:border-brand-gold transition-all duration-500 relative z-10">
+                  In-Depth Logistics
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </main>
 
       <style>{`

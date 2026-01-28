@@ -8,9 +8,10 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
           <div className="space-y-8">
-            <div className="flex items-center gap-2 text-white">
+            <div className="flex items-center gap-3 text-white">
+              <img src="/src/assets/nexus_logo.jpg" alt="Nexus Logo" className="h-10 w-auto object-contain" />
               <span className="text-3xl font-black tracking-tighter uppercase">
-                PURE<span className="text-brand-gold">VIGOR</span>
+                NEXUS
               </span>
             </div>
             <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
@@ -57,7 +58,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-white/10 mt-24 pt-10 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.3em]">
-          <p>© 2024 PUREVIGOR ELITE OPS. ALL RIGHTS RESERVED.</p>
+          <p>© 2024 NEXUS SUPPLEMENTS. ALL RIGHTS RESERVED.</p>
           <div className="flex space-x-10 mt-6 md:mt-0">
             <a href="#" className="hover:text-white transition-luxury">PRIVACY POLICY</a>
             <a href="#" className="hover:text-white transition-luxury">TERMS OF DEPLOYMENT</a>

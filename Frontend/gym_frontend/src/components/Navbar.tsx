@@ -4,6 +4,8 @@ import { ShoppingCart, User, Search, Menu, X, Heart, Package, LayoutDashboard } 
 import { useCart } from '../contexts/CartContext.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { ToastContainer } from 'react-toast';
+import logo from '../assets/nexus_logo.jpg';
+
 const Navbar: React.FC = () => {
   const { totalItems } = useCart();
   const { user, logout, isAdmin } = useAuth();
@@ -29,9 +31,10 @@ const Navbar: React.FC = () => {
       <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-3 group">
+            <img src={logo} alt="Nexus Logo" className="h-10 w-auto object-contain transition-luxury group-hover:scale-110" />
             <span className="text-3xl font-black tracking-tighter uppercase text-white">
-              PURE<span className="text-brand-gold italic">VIGOR</span>
+              NEXUS
             </span>
           </Link>
 
@@ -135,7 +138,7 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-brand-matte h-screen fixed inset-0 z-50 px-8 py-20 space-y-8 animate-in slide-in-from-right duration-500 overflow-y-auto">
           <div className="flex justify-between items-center mb-16">
-            <span className="text-2xl font-black text-brand-gold uppercase tracking-tighter">PureVigor</span>
+            <span className="text-2xl font-black text-brand-gold uppercase tracking-tighter">NEXUS</span>
             <button onClick={() => setIsMenuOpen(false)} className="text-white"><X className="w-8 h-8" /></button>
           </div>
           <Link to="/" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>The Index</Link>

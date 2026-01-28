@@ -240,7 +240,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                         required
                                         value={formData.brand}
                                         onChange={e => setFormData({ ...formData, brand: e.target.value })}
-                                        placeholder="E.G. PUREVIGOR"
+                                        placeholder="E.G. NEXUS"
                                         className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
                                     />
                                 </div>

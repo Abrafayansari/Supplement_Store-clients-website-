@@ -8,6 +8,7 @@ import { Product } from '@/types.ts';
 import { toast } from 'sonner';
 import { Badge } from '../components/ui/badge.tsx';
 import axios from 'axios';
+import NexusLoader from '../components/NexusLoader';
 
 const ProductDetail: React.FC = () => {
     const [initialProducts, setInitialProducts] = useState<Array<any>>([]);
@@ -20,25 +21,35 @@ const ProductDetail: React.FC = () => {
     const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
     const [activeImageIdx, setActiveImageIdx] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
 
     useEffect(() => {
         const found = async () => {
-            if (id) {
-                const fetchedProduct = await fetchProductById(id);
-                setProduct(fetchedProduct);
+            setFetching(true);
+            try {
+                if (id) {
+                    const fetchedProduct = await fetchProductById(id);
+                    setProduct(fetchedProduct);
+                }
+                // Fetch related products separately
+                const { products: relatedProducts } = await fetchProducts({ sort: 'newest', limit: 4 });
+                setInitialProducts(relatedProducts);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setFetching(false);
             }
-            // Fetch related products separately
-            const { products: relatedProducts } = await fetchProducts({ sort: 'newest', limit: 4 });
-            setInitialProducts(relatedProducts);
         };
         found();
     }, [id]);
 
-    if (!product) return (
+    if (fetching) return (
         <div className="min-h-screen flex items-center justify-center bg-brand-warm">
-            <div className="w-12 h-12 border-4 border-brand-gold border-t-transparent animate-spin"></div>
+            <NexusLoader />
         </div>
     );
+
+    if (!product) return null;
 
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();

@@ -1748,6 +1748,8 @@ export namespace Prisma {
     addressId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    resetToken: string | null
+    resetTokenExpire: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1759,6 +1761,8 @@ export namespace Prisma {
     addressId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    resetToken: string | null
+    resetTokenExpire: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1770,6 +1774,8 @@ export namespace Prisma {
     addressId: number
     createdAt: number
     updatedAt: number
+    resetToken: number
+    resetTokenExpire: number
     _all: number
   }
 
@@ -1783,6 +1789,8 @@ export namespace Prisma {
     addressId?: true
     createdAt?: true
     updatedAt?: true
+    resetToken?: true
+    resetTokenExpire?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1794,6 +1802,8 @@ export namespace Prisma {
     addressId?: true
     createdAt?: true
     updatedAt?: true
+    resetToken?: true
+    resetTokenExpire?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1805,6 +1815,8 @@ export namespace Prisma {
     addressId?: true
     createdAt?: true
     updatedAt?: true
+    resetToken?: true
+    resetTokenExpire?: true
     _all?: true
   }
 
@@ -1889,6 +1901,8 @@ export namespace Prisma {
     addressId: string | null
     createdAt: Date
     updatedAt: Date
+    resetToken: string | null
+    resetTokenExpire: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1917,6 +1931,8 @@ export namespace Prisma {
     addressId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    resetToken?: boolean
+    resetTokenExpire?: boolean
     cartItems?: boolean | User$cartItemsArgs<ExtArgs>
     wishlist?: boolean | User$wishlistArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -1934,6 +1950,8 @@ export namespace Prisma {
     addressId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    resetToken?: boolean
+    resetTokenExpire?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1945,6 +1963,8 @@ export namespace Prisma {
     addressId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    resetToken?: boolean
+    resetTokenExpire?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1956,9 +1976,11 @@ export namespace Prisma {
     addressId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    resetToken?: boolean
+    resetTokenExpire?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "addressId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "addressId" | "createdAt" | "updatedAt" | "resetToken" | "resetTokenExpire", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cartItems?: boolean | User$cartItemsArgs<ExtArgs>
     wishlist?: boolean | User$wishlistArgs<ExtArgs>
@@ -1988,6 +2010,8 @@ export namespace Prisma {
       addressId: string | null
       createdAt: Date
       updatedAt: Date
+      resetToken: string | null
+      resetTokenExpire: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2424,6 +2448,8 @@ export namespace Prisma {
     readonly addressId: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly resetToken: FieldRef<"User", 'String'>
+    readonly resetTokenExpire: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -11064,7 +11090,9 @@ export namespace Prisma {
     role: 'role',
     addressId: 'addressId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    resetToken: 'resetToken',
+    resetTokenExpire: 'resetTokenExpire'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -11320,6 +11348,8 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    resetToken?: StringNullableFilter<"User"> | string | null
+    resetTokenExpire?: DateTimeNullableFilter<"User"> | Date | string | null
     cartItems?: CartItemListRelationFilter
     wishlist?: WishlistItemListRelationFilter
     orders?: OrderListRelationFilter
@@ -11336,6 +11366,8 @@ export namespace Prisma {
     addressId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    resetToken?: SortOrderInput | SortOrder
+    resetTokenExpire?: SortOrderInput | SortOrder
     cartItems?: CartItemOrderByRelationAggregateInput
     wishlist?: WishlistItemOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
@@ -11355,6 +11387,8 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    resetToken?: StringNullableFilter<"User"> | string | null
+    resetTokenExpire?: DateTimeNullableFilter<"User"> | Date | string | null
     cartItems?: CartItemListRelationFilter
     wishlist?: WishlistItemListRelationFilter
     orders?: OrderListRelationFilter
@@ -11371,6 +11405,8 @@ export namespace Prisma {
     addressId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    resetToken?: SortOrderInput | SortOrder
+    resetTokenExpire?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -11388,6 +11424,8 @@ export namespace Prisma {
     addressId?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    resetToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    resetTokenExpire?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type ProductWhereInput = {
@@ -11947,6 +11985,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -11963,6 +12003,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -11979,6 +12021,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -11995,6 +12039,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -12011,6 +12057,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -12022,6 +12070,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -12033,6 +12083,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductCreateInput = {
@@ -12656,6 +12708,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type CartItemListRelationFilter = {
     every?: CartItemWhereInput
     some?: CartItemWhereInput
@@ -12720,6 +12783,8 @@ export namespace Prisma {
     addressId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpire?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -12731,6 +12796,8 @@ export namespace Prisma {
     addressId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpire?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -12742,6 +12809,8 @@ export namespace Prisma {
     addressId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpire?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -12802,6 +12871,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -13326,6 +13409,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type CartItemUpdateManyWithoutUserNestedInput = {
@@ -13975,6 +14062,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14053,6 +14151,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedFloatFilter<$PrismaModel = never> = {
@@ -14619,6 +14731,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     wishlist?: WishlistItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -14634,6 +14748,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -14718,6 +14834,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -14733,6 +14851,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -14807,6 +14927,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -14822,6 +14944,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -14906,6 +15030,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -14921,6 +15047,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -14995,6 +15123,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -15010,6 +15140,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -15098,6 +15230,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -15113,6 +15247,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -15359,6 +15495,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -15374,6 +15512,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -15458,6 +15598,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -15473,6 +15615,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -15547,6 +15691,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -15562,6 +15708,8 @@ export namespace Prisma {
     addressId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    resetToken?: string | null
+    resetTokenExpire?: Date | string | null
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -15627,6 +15775,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -15642,6 +15792,8 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpire?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput

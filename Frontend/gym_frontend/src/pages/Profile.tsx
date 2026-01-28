@@ -3,6 +3,7 @@ import { User, Package, LogOut, ChevronRight, Calendar, Shield, Loader2 } from '
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { toast } from 'sonner';
+import NexusLoader from '../components/NexusLoader';
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -25,6 +26,7 @@ const Profile: React.FC = () => {
   }, [user]);
 
   const fetchOrders = async () => {
+    setLoadingOrders(true);
     try {
       const res = await axios.get(`${API_URL}/orders`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -152,9 +154,8 @@ const Profile: React.FC = () => {
               <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Current Order Deployments</h3>
               <div className="space-y-6">
                 {loadingOrders ? (
-                  <div className="p-20 text-center">
-                    <Loader2 className="w-12 h-12 animate-spin text-brand mx-auto mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">Syncing Deployment Data...</p>
+                  <div className="p-20 text-center flex justify-center">
+                    <NexusLoader />
                   </div>
                 ) : orders.length === 0 ? (
                   <div className="p-20 text-center bg-white border border-black/5">
