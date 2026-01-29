@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -13,174 +7,151 @@ datasource db {
   provider = "postgresql"
 }
 
-
-enum Role{
-ADMIN
-CUSTOMER
-}
-
-
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role
-  addressId    String?  
-  cartItems CartItem[]  
-  wishlist  WishlistItem[]
-  orders    Order[]
-  reviews   Review[]   // 👈 user-written reviews
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  addresses Address[]
-  
-  resetToken String?
+  id               String         @id @default(uuid())
+  name             String
+  email            String         @unique
+  password         String
+  role             Role
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  addressId        String?
+  resetToken       String?
   resetTokenExpire DateTime?
+  addresses        Address[]
+  cartItems        CartItem[]
+  orders           Order[]
+  reviews          Review[]
+  wishlist         WishlistItem[]
 }
-
-
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String         @id @default(uuid())
   name        String
   brand       String?
   category    String
   subCategory String?
-
   price       Float
   size        String?
   stock       Int
-
   description String?
   warnings    String[]
   directions  String?
-  variants    String[]
   images      String[]
-
-  rating       Float    @default(0)   
-  reviewCount  Int      @default(0)   
-
-  isActive    Boolean  @default(true)
-
-  reviews     Review[]
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  rating      Float          @default(0)
+  reviewCount Int            @default(0)
+  variants    String[]
   cartItems   CartItem[]
-  wishlist    WishlistItem[]
   orderItems  OrderItem[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  reviews     Review[]
+  wishlist    WishlistItem[]
 }
 
 model CartItem {
   id        String   @id @default(uuid())
-
   userId    String
   productId String
-
   quantity  Int
-  price     Int   // price snapshot
-
-  user      User    @relation(fields: [userId], references: [id],onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
-
+  price     Int
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
 
 model WishlistItem {
-  id        String @id @default(uuid())
-
+  id        String   @id @default(uuid())
   userId    String
   productId String
-
-  user      User    @relation(fields: [userId], references: [id],onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id],onDelete: Cascade)
-
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
 
-enum Status{
-PENDING
-PROCESSING
-SHIPPED
-DELIVERED
-CANCELLED
+model Order {
+  id            String        @id @default(uuid())
+  userId        String
+  total         Int
+  createdAt     DateTime      @default(now())
+  addressId     String
+  status        Status        @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+  paymentStatus String        @default("PENDING")
+  receipt       String?
+  adress        Address       @relation(fields: [addressId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String?
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  fullName  String
+  phone     String
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders    Order[]
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  type      String
+  title     String
+  message   String
+  orderId   String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum Status {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  PROCESSING
 }
 
 enum PaymentMethod {
   COD
   ONLINE
 }
-
-
-model Order {
-  id        String   @id @default(uuid())
-  userId    String
-  total     Int
-  status    Status   @default(PENDING)
-  paymentMethod PaymentMethod @default(COD)
-  paymentStatus String        @default("PENDING")
-  receipt       String?       
-  addressId String
-  user      User       @relation(fields: [userId], references: [id])
-  items     OrderItem[]
-  adress    Address    @relation(fields: [addressId], references: [id])
-  createdAt DateTime @default(now())
-}
-
-model OrderItem {
-  id        String @id @default(uuid())
-
-  orderId  String
-  productId String
-
-  quantity Int
-  price    Int
-
-  order    Order   @relation(fields: [orderId], references: [id])
-  product  Product @relation(fields: [productId], references: [id])
-}
-
-
-model Review {
-  id        String  @id @default(uuid())
-
-  rating    Int     // 1–5
-  comment   String?
-
-  userId    String
-  productId String
-
-  user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@unique([userId, productId]) // one review per user per product
-}
-
-model Address {
-  id         String  @id @default(uuid())
-  userId     String
-  fullName   String
-  phone      String
-  street     String
-  city       String
-  state      String
-  zipCode    String
-  country    String
-
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orders     Order[] 
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-

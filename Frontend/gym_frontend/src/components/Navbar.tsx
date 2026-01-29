@@ -27,13 +27,13 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-brand-matte border-b border-brand-gold/30 py-1 shadow-2xl' : 'bg-brand-matte/90 border-b border-brand-gold/30 backdrop-blur-md py-3'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-white/80 border-b border-black/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-white border-b border-black/5 backdrop-blur-md py-3'}`}>
       <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center gap-3 group">
             <img src={logo} alt="Nexus Logo" className="h-10 w-auto object-contain transition-luxury group-hover:scale-110" />
-            <span className="text-3xl font-black tracking-tighter uppercase text-white">
+            <span className="text-3xl  tracking-tighter uppercase text-brand font-brand ">
               NEXUS
             </span>
           </Link>
@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.label}
                 to={item.path}
-                className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-white/70 hover:text-brand-gold"
+                className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold"
               >
                 {item.label}
               </Link>
@@ -55,7 +55,7 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-8">
-            <button className="p-2 transition-luxury text-white/50 hover:text-brand-gold">
+            <button className="p-2 transition-luxury text-brand-matte hover:text-brand-gold">
               <Search className="w-5 h-5 stroke-[1.5px]" />
             </button>
 
@@ -64,9 +64,9 @@ const Navbar: React.FC = () => {
                 {isAdmin ? (
                   <Link
                     to="/admin"
-                    className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-luxury"
+                    className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border-2 border-brand-matte/10 hover:border-brand-gold/50 transition-luxury"
                   >
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/70 hidden sm:block">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-brand-matte/70 hidden sm:block">
                       {user.name.split(' ')[0]}
                     </span>
                     <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center border border-brand-gold/30">
@@ -74,8 +74,8 @@ const Navbar: React.FC = () => {
                     </div>
                   </Link>
                 ) : (
-                  <button className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border border-white/10 hover:border-brand-gold/50 transition-luxury">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/70 hidden sm:block">
+                  <button className="flex items-center gap-3 p-1 pl-3 rounded-full bg-white/5 border border-brand-matte/10 hover:border-brand-gold/50 transition-luxury">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-brand-matte/70 hidden sm:block">
                       {user.name.split(' ')[0]}
                     </span>
                     <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center border border-brand-gold/30">
@@ -117,10 +117,10 @@ const Navbar: React.FC = () => {
               </Link>
             )}
 
-            <Link to="/wishlist" className="p-2 transition-luxury text-white/50 hover:text-brand-gold">
+            <Link to="/wishlist" className="p-2 transition-luxury text-black hover:text-brand-gold">
               <Heart className="w-5 h-5 stroke-[1.5px]" />
             </Link>
-            <Link to="/cart" className="relative p-2 transition-luxury text-white/50 hover:text-brand-gold">
+            <Link to="/cart" className="relative p-2 transition-luxury text-black hover:text-brand-gold">
               <ShoppingCart className="w-5 h-5 stroke-[1.5px]" />
               {cartCount > 0 && (
                 <span className="absolute top-1 right-0 bg-brand text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-brand-matte">

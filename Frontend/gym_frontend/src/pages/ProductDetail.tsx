@@ -30,6 +30,12 @@ const ProductDetail: React.FC = () => {
                 if (id) {
                     const fetchedProduct = await fetchProductById(id);
                     setProduct(fetchedProduct);
+
+                    // Select a random variant on initial load
+                    if (fetchedProduct.variants && fetchedProduct.variants.length > 0) {
+                        const randomIdx = Math.floor(Math.random() * fetchedProduct.variants.length);
+                        setSelectedVariant(fetchedProduct.variants[randomIdx]);
+                    }
                 }
                 // Fetch related products separately
                 const { products: relatedProducts } = await fetchProducts({ sort: 'newest', limit: 4 });
@@ -55,10 +61,10 @@ const ProductDetail: React.FC = () => {
         e.preventDefault();
         e.stopPropagation();
 
-        // if (!selectedVariant) {  
-        //     toast.error("Please select a variant");
-        //     return;
-        // }
+        if (product.variants && product.variants.length > 0 && !selectedVariant) {
+            toast.error("Please select a protocol variant");
+            return;
+        }
 
         if (!localStorage.getItem("token")) {
             toast.error("Login required");
@@ -77,11 +83,17 @@ const ProductDetail: React.FC = () => {
     const handleBuyNow = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (product.variants && product.variants.length > 0 && !selectedVariant) {
+            toast.error("Please select a protocol variant");
+            return;
+        }
+
         if (!localStorage.getItem("token")) {
             toast.error("Login required");
             return;
         }
-        navigate('/checkout', { state: { singleItem: { product, quantity } } });
+        navigate('/checkout', { state: { singleItem: { product, quantity, variant: selectedVariant } } });
     };
 
     const isNew = (product: Product) => {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Users, ShoppingBag, DollarSign, TrendingUp,
   ArrowUpRight, ArrowDownRight, Package,
-  Settings, LogOut, ChevronRight, Bell
+  Settings, LogOut, ChevronRight, Bell, X
 } from 'lucide-react';
 import { MOCK_ORDERS, MOCK_PRODUCTS } from '../../mockData.ts';
 import axios from 'axios';
@@ -13,6 +13,16 @@ import NexusLoader from '../../components/NexusLoader';
 const API_URL = import.meta.env.VITE_API_URL;
 
 import logo from '../../assets/nexus_logo.jpg';
+
+interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  orderId?: string;
+  isRead: boolean;
+  createdAt: string;
+}
 
 const AdminDashboard: React.FC = () => {
   const { token } = useAuth();
@@ -24,6 +34,43 @@ const AdminDashboard: React.FC = () => {
   } | null>(null);
   const [recentOrders, setRecentOrders] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [notifications, setNotifications] = React.useState<Notification[]>([]);
+  const [showNotifications, setShowNotifications] = React.useState(false);
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/admin/notifications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success) {
+        setNotifications(res.data.notifications);
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const deleteNotification = async (notificationId: string) => {
+    try {
+      await axios.delete(`${API_URL}/admin/notifications/${notificationId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+    } catch (error) {
+      console.error("Error deleting notification:", error);
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    try {
+      await axios.delete(`${API_URL}/admin/notifications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications([]);
+    } catch (error) {
+      console.error("Error clearing notifications:", error);
+    }
+  };
 
   React.useEffect(() => {
 
@@ -54,6 +101,7 @@ const AdminDashboard: React.FC = () => {
 
     if (token) {
       fetchData();
+      fetchNotifications();
     }
   }, [token]);
 
@@ -156,10 +204,87 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
           <div className="flex gap-4">
-            <button className="bg-white/5 p-4 border border-white/10 relative hover:border-brand-gold transition-colors">
-              <Bell className="w-6 h-6 text-white/40" />
-              <span className="absolute top-4 right-4 w-2 h-2 bg-brand rounded-full"></span>
-            </button>
+            {/* Notification Bell with Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="bg-white/5 p-4 border border-white/10 relative hover:border-brand-gold transition-colors"
+              >
+                <Bell className="w-6 h-6 text-white/40" />
+                {notifications.length > 0 && (
+                  <span className="absolute top-3 right-3 min-w-[18px] h-[18px] bg-brand rounded-full flex items-center justify-center text-[9px] font-black text-white">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Notification Dropdown */}
+              {showNotifications && (
+                <div className="absolute right-0 top-full mt-2 w-[380px] bg-black border border-white/10 shadow-2xl z-50">
+                  <div className="flex items-center justify-between p-4 border-b border-white/10">
+                    <h4 className="text-xs font-black text-white uppercase tracking-widest">Notifications</h4>
+                    {notifications.length > 0 && (
+                      <button
+                        onClick={clearAllNotifications}
+                        className="text-[9px] font-black text-brand-gold hover:text-white uppercase tracking-widest transition-colors"
+                      >
+                        Clear All
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                    {notifications.length === 0 ? (
+                      <div className="p-8 text-center">
+                        <Bell className="w-8 h-8 text-white/10 mx-auto mb-3" />
+                        <p className="text-[10px] font-black text-white/30 uppercase tracking-widest">No notifications</p>
+                      </div>
+                    ) : (
+                      notifications.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className="p-4 border-b border-white/5 hover:bg-white/5 transition-colors group"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-grow">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="px-2 py-0.5 bg-brand/20 text-brand text-[8px] font-black uppercase tracking-wider">
+                                  {notification.type.replace('_', ' ')}
+                                </span>
+                                <span className="text-[8px] font-bold text-white/20">
+                                  {new Date(notification.createdAt).toLocaleString()}
+                                </span>
+                              </div>
+                              <h5 className="text-xs font-black text-white mb-1">{notification.title}</h5>
+                              <p className="text-[10px] text-white/50">{notification.message}</p>
+                              {notification.orderId && (
+                                <Link
+                                  to="/admin/orders"
+                                  className="inline-block mt-2 text-[9px] font-black text-brand-gold hover:text-white uppercase tracking-widest transition-colors"
+                                  onClick={() => {
+                                    deleteNotification(notification.id);
+                                    setShowNotifications(false);
+                                  }}
+                                >
+                                  View Order →
+                                </Link>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => deleteNotification(notification.id)}
+                              className="p-1 text-white/20 hover:text-brand transition-colors opacity-0 group-hover:opacity-100"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button className="btn-luxury px-10 py-5 text-[10px]">
               Archive Report
             </button>
@@ -283,6 +408,19 @@ const AdminDashboard: React.FC = () => {
           border-color: #FFF;
           box-shadow: 0 0 20px rgba(201, 162, 77, 0.4);
           transform: translateY(-2px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #0E0E0E;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #7B0F17;
+          border-radius: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #C9A24D;
         }
       `}</style>
     </div>

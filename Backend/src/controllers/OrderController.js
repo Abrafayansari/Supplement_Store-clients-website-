@@ -131,6 +131,16 @@ export const createOrder = async (req, res) => {
       });
     }
 
+    // 7. Create notification for admin
+    await prisma.notification.create({
+      data: {
+        type: "NEW_ORDER",
+        title: "New Order Received",
+        message: `New order #${order.id.slice(0, 8)} from ${user.name} for Rs. ${total}`,
+        orderId: order.id,
+      },
+    });
+
     return res.status(201).json({
       message: "Order created successfully",
       order,

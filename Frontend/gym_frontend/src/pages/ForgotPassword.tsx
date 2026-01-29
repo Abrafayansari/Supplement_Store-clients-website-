@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
+const storedToken = localStorage.getItem('token');
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -17,7 +18,14 @@ const ForgotPassword: React.FC = () => {
         setLoading(true);
 
         try {
-            await axios.post(`${API_URL}/forgotpassword`, { email });
+            await axios.post(`${API_URL}/forgotpassword`, { email },
+                {
+                    headers: {
+                        Authorization: `Bearer ${storedToken}`
+                    }
+
+                }
+            );
             setSent(true);
             toast.success('Reset link sent to your email!');
         } catch (error: any) {

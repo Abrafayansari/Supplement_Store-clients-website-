@@ -6,6 +6,7 @@ import { adminOnly } from "../middlewares/authorization.js";
 import { createProduct, getallproducts, getCategories, uploadbulkproducts, getProductById, updateProduct, deleteProduct } from "../controllers/ProductController.js";
 import upload from "../middlewares/uploads.js";
 import { getAdminStats } from "../controllers/AdminController.js";
+import { getNotifications, getUnreadCount, markAsReadAndDelete, deleteAllNotifications } from "../controllers/NotificationController.js";
 
 
 export const router = express.Router();
@@ -49,3 +50,9 @@ router.put("/profile", authenticate, updateProfile);
 router.get("/admin/stats", authenticate, adminOnly, getAdminStats);
 router.get("/admin/orders", authenticate, adminOnly, getAllOrders);
 router.put("/admin/orders/:orderId/status", authenticate, adminOnly, updateOrderStatus);
+
+// Admin Notification Routes
+router.get("/admin/notifications", authenticate, adminOnly, getNotifications);
+router.get("/admin/notifications/unread-count", authenticate, adminOnly, getUnreadCount);
+router.delete("/admin/notifications/:notificationId", authenticate, adminOnly, markAsReadAndDelete);
+router.delete("/admin/notifications", authenticate, adminOnly, deleteAllNotifications);

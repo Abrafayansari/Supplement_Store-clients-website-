@@ -23,6 +23,7 @@ interface LocationState {
   singleItem?: {
     product: Product;
     quantity: number;
+    variant?: string;
   }
 }
 
@@ -422,7 +423,15 @@ const Checkout: React.FC = () => {
                 </div>
                 <div className="flex-grow min-w-0">
                   <h4 className="text-[11px] font-black text-white uppercase tracking-widest truncate">{item.product.name}</h4>
-                  <p className="text-[9px] text-zinc-600 font-black uppercase mt-1 italic">{item.product.category}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-[9px] text-zinc-600 font-bold uppercase italic">{item.product.category}</p>
+                    {isSingleItem && state.singleItem?.variant && (
+                      <>
+                        <span className="w-1 h-1 bg-brand rounded-full"></span>
+                        <p className="text-[9px] text-brand-gold font-black uppercase tracking-widest">{state.singleItem.variant}</p>
+                      </>
+                    )}
+                  </div>
                 </div>
                 <span className="text-[11px] font-black text-brand italic">${(item.product.price * item.quantity).toFixed(2)}</span>
               </div>

@@ -130,8 +130,11 @@ const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
             </div>
 
             <div
-              className={`absolute right-3 top-3 flex flex-col gap-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
-                }`}
+              className={`absolute right-3 top-3 flex flex-col gap-2 transition-all duration-300 
+                opacity-100 translate-x-0
+                lg:opacity-0 lg:translate-x-4
+                ${isHovered ? 'lg:opacity-100 lg:translate-x-0' : ''}
+              `}
             >
               <button
                 onClick={handleAddToWishlist}
@@ -160,8 +163,11 @@ const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
             {mode === 'default' ? (
               <button
                 onClick={handleAddToCart}
-                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'
-                  }`}
+                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                  translate-y-0
+                  lg:translate-y-full
+                  ${isHovered ? 'lg:translate-y-0' : ''}
+                `}
               >
                 <ShoppingCart className="w-4 h-4" />
                 ADD TO CART
@@ -169,8 +175,11 @@ const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
             ) : (
               <button
                 onClick={handleBuyNow}
-                className={`absolute bottom-0 left-0 right-0 bg-brand-gold text-brand-matte py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'
-                  }`}
+                className={`absolute bottom-0 left-0 right-0 bg-brand-gold text-brand-matte py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                  translate-y-0
+                  lg:translate-y-full
+                  ${isHovered ? 'lg:translate-y-0' : ''}
+                `}
               >
                 <CreditCard className="w-4 h-4" />
                 BUY NOW
