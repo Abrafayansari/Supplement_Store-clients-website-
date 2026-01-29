@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { prisma } from "../config/db.js";
 import Product from "../classes/Product.js";
+import SibApiV3Sdk from "sib-api-v3-sdk";
+
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
@@ -565,70 +567,131 @@ export const getProfile = async (req, res) => {
 
 
 // Forgot Password
+// export const forgotPassword = async (req, res) => {
+//   const { email } = req.body;
+
+//   try {
+//     const user = await prisma.user.findUnique({ where: { email } });
+
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     // Generate token
+//     const resetToken = crypto.randomBytes(32).toString("hex");
+//     const resetTokenHash = crypto
+//       .createHash("sha256")
+//       .update(resetToken)
+//       .digest("hex");
+
+//     const resetTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+//     await prisma.user.update({
+//       where: { email },
+//       data: {
+//         resetToken: resetTokenHash,
+//         resetTokenExpire: resetTokenExpire,
+//       },
+//     });
+
+//     // Create reset URL
+//     // Assuming frontend runs on localhost:5173 or typically configured frontend URL
+//     // In production, use env var for frontend URL
+//     const frontendUrl =
+//       process.env.FRONTEND_URL ||
+//       "http://localhost:3000";
+//     const resetUrl = `${frontendUrl}/#/reset-password/${resetToken}`;
+
+//     const message = `
+//       <h1>You have requested a password reset</h1>
+//       <p>Please go to this link to reset your password:</p>
+//       <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+//     `;
+
+//     // Send Email
+//     console.log({
+//       EMAIL_HOST: process.env.EMAIL_HOST,
+//       EMAIL_PORT: process.env.EMAIL_PORT,
+//       EMAIL_USERNAME: process.env.EMAIL_USERNAME,
+//       HAS_PASSWORD: !!process.env.EMAIL_PASSWORD,
+//     });
+
+//     const transporter = nodemailer.createTransport({
+
+//       host: process.env.EMAIL_HOST,
+//       port: Number(process.env.EMAIL_PORT),
+//       secure: false,
+//       auth: {
+//         user: process.env.EMAIL_USERNAME,
+//         pass: process.env.EMAIL_PASSWORD,
+//       },
+//       tls: {
+//         rejectUnauthorized: false,
+//       },
+//     });
+
+//     await transporter.verify();
+//     console.log("SMTP connection OK");
+
+
+//     await transporter.sendMail({
+//       from: process.env.EMAIL_FROM || "noreply@gymstore.com",
+//       to: user.email,
+//       subject: "Password Reset Request",
+//       html: message,
+//     });
+
+//     res.status(200).json({ success: true, data: "Email Sent" });
+//   } catch (err) {
+//     console.error(err);
+//     // Clean up on error
+//     await prisma.user.update({
+//       where: { email },
+//       data: { resetToken: null, resetTokenExpire: null },
+//     });
+//     res.status(500).json({ error: "Email could not be sent" });
+//   }
+// };
+
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     // Generate token
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenHash = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
-
+    const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
     const resetTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await prisma.user.update({
       where: { email },
-      data: {
-        resetToken: resetTokenHash,
-        resetTokenExpire: resetTokenExpire,
-      },
+      data: { resetToken: resetTokenHash, resetTokenExpire },
     });
 
     // Create reset URL
-    // Assuming frontend runs on localhost:5173 or typically configured frontend URL
-    // In production, use env var for frontend URL
-    const frontendUrl =
-      process.env.FRONTEND_URL ||
-      "http://localhost:3000";
-    const resetUrl = `${frontendUrl}/#/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/#/reset-password/${resetToken}`;
 
-    const message = `
-      <h1>You have requested a password reset</h1>
-      <p>Please go to this link to reset your password:</p>
-      <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
-    `;
+    // Brevo API setup
+    const client = SibApiV3Sdk.ApiClient.instance;
+    client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
-    // Send Email
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: Number(process.env.EMAIL_PORT),
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || "noreply@gymstore.com",
-      to: user.email,
+    await tranEmailApi.sendTransacEmail({
+      sender: { email: process.env.EMAIL_FROM },
+      to: [{ email: user.email }],
       subject: "Password Reset Request",
-      html: message,
+      htmlContent: `
+        <h1>Password Reset</h1>
+        <p>Click this link to reset your password:</p>
+        <a href="${resetUrl}">${resetUrl}</a>
+      `,
     });
 
     res.status(200).json({ success: true, data: "Email Sent" });
   } catch (err) {
     console.error(err);
-    // Clean up on error
     await prisma.user.update({
       where: { email },
       data: { resetToken: null, resetTokenExpire: null },
@@ -638,44 +701,66 @@ export const forgotPassword = async (req, res) => {
 };
 
 // Reset Password
+// export const resetPassword = async (req, res) => {
+//   const resetToken = crypto
+//     .createHash("sha256")
+//     .update(req.params.resetToken)
+//     .digest("hex");
+
+//   try {
+//     const user = await prisma.user.findFirst({
+//       where: {
+//         resetToken,
+//         resetTokenExpire: {
+//           gt: new Date(),
+//         },
+//       },
+//     });
+
+//     if (!user) {
+//       return res.status(400).json({ error: "Invalid Token" });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+//     await prisma.user.update({
+//       where: { id: user.id },
+//       data: {
+//         password: hashedPassword,
+//         resetToken: null,
+//         resetTokenExpire: null,
+//       },
+//     });
+
+//     res.status(201).json({
+//       success: true,
+//       data: "Password Updated Success",
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Server Error" });
+//   }
+// };
+
 export const resetPassword = async (req, res) => {
-  const resetToken = crypto
-    .createHash("sha256")
-    .update(req.params.resetToken)
-    .digest("hex");
+  const resetToken = crypto.createHash("sha256").update(req.params.resetToken).digest("hex");
 
   try {
     const user = await prisma.user.findFirst({
-      where: {
-        resetToken,
-        resetTokenExpire: {
-          gt: new Date(),
-        },
-      },
+      where: { resetToken, resetTokenExpire: { gt: new Date() } },
     });
 
-    if (!user) {
-      return res.status(400).json({ error: "Invalid Token" });
-    }
+    if (!user) return res.status(400).json({ error: "Invalid Token" });
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
     await prisma.user.update({
       where: { id: user.id },
-      data: {
-        password: hashedPassword,
-        resetToken: null,
-        resetTokenExpire: null,
-      },
+      data: { password: hashedPassword, resetToken: null, resetTokenExpire: null },
     });
 
-    res.status(201).json({
-      success: true,
-      data: "Password Updated Success",
-    });
+    res.status(201).json({ success: true, data: "Password Updated Success" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server Error" });
   }
 };
-
