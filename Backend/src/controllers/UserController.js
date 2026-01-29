@@ -608,12 +608,15 @@ export const forgotPassword = async (req, res) => {
 
     // Send Email
     const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE || 'gmail',
+      host: process.env.EMAIL_HOST,
+      port: Number(process.env.EMAIL_PORT),
+      secure: false,
       auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
       },
     });
+
 
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || "noreply@gymstore.com",
