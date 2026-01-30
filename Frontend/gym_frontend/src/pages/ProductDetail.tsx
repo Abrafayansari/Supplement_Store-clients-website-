@@ -365,7 +365,7 @@ const ProductDetail: React.FC = () => {
                                                 </div>
                                                 <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-loose">
                                                     Strict adherence to cGMP standards ensures no cross-contamination or unlabeled biological fillers. Tested for potency and purity.
-                                                </div>
+                                                </p>
                                             </div>
                                             <div className="space-y-4 p-8 bg-zinc-900 border border-zinc-800">
                                                 <div className="flex items-center gap-3 text-brand-gold">
