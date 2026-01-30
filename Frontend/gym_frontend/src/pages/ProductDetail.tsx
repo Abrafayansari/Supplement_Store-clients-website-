@@ -17,7 +17,7 @@ const ProductDetail: React.FC = () => {
     const { addToCart } = useCart();
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState(1);
-    const [activeTab, setActiveTab] = useState<'details' | 'usage' | 'reviews'>('details');
+    const [activeTab, setActiveTab] = useState<'details' | 'warnings' | 'directions' | 'reviews'>('details');
     const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
     const [selectedSize, setSelectedSize] = useState<string>('');
     const [selectedFlavor, setSelectedFlavor] = useState<string>('');
@@ -72,7 +72,7 @@ const ProductDetail: React.FC = () => {
     const availableFlavors = Array.from(new Set(product?.variants?.filter(v => v.size === selectedSize).map(v => v.flavor).filter(Boolean) || []));
 
     if (fetching) return (
-        <div className="min-h-screen flex items-center justify-center bg-brand-warm">
+        <div className="min-h-screen flex items-center justify-center bg-brand-matte">
             <NexusLoader />
         </div>
     );
@@ -127,23 +127,20 @@ const ProductDetail: React.FC = () => {
 
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] text-white pb-40 selection:bg-red-600 selection:text-white font-sans">
+        <div className="min-h-screen bg-brand-matte selection:bg-brand selection:text-white font-sans">
             <div className="max-w-[1440px] mx-auto px-6 pt-32">
 
                 {/* HEADER / BREADCRUMB */}
                 <div className="flex justify-between items-center mb-12">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-red-600 transition-all group"
+                        className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-brand transition-all group"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-all" /> Return to Archive
                     </button>
                     <div className="flex gap-4">
-                        <button className="w-10 h-10 flex items-center justify-center bg-zinc-900 border border-zinc-800 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all shadow-xl">
+                        <button className="w-10 h-10 flex items-center justify-center bg-zinc-900 border border-zinc-800 hover:bg-brand hover:text-white hover:border-brand transition-all shadow-xl">
                             <Heart className="w-4 h-4" />
-                        </button>
-                        <button className="w-10 h-10 flex items-center justify-center bg-zinc-900 border border-zinc-800 hover:bg-[#c5a059] hover:text-black hover:border-[#c5a059] transition-all shadow-xl">
-                            <Share2 className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -162,7 +159,7 @@ const ProductDetail: React.FC = () => {
                                 <button
                                     key={i}
                                     onClick={() => setActiveImageIdx(i)}
-                                    className={`w-20 h-20 p-2 transition-all duration-300 ${activeImageIdx === i ? 'bg-[#1a1a1a] border-[#c5a059] border-2 shadow-2xl' : 'bg-zinc-900 border-zinc-800 border hover:border-[#c5a059]/50'}`}
+                                    className={`w-20 h-20 p-2 transition-all duration-300 ${activeImageIdx === i ? 'bg-[#1a1a1a] border-brand-gold border-2 shadow-2xl' : 'bg-zinc-900 border-zinc-800 border hover:border-brand-gold/50'}`}
                                 >
                                     <img src={img} alt="preview" className="w-full h-full object-contain" />
                                 </button>
@@ -188,8 +185,8 @@ const ProductDetail: React.FC = () => {
                             </AnimatePresence>
 
                             <div className="absolute top-8 left-8 flex flex-col gap-2 z-20">
-                                <Badge className="bg-[#c5a059] text-black px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-none shadow-lg border-none">ISO CERTIFIED</Badge>
-                                {isNew(product) && <Badge className="bg-red-600 text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] border-none rounded-none">V-77 NEW</Badge>}
+                                <Badge className="bg-brand-gold text-black px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-none shadow-lg border-none">ISO CERTIFIED</Badge>
+                                {isNew(product) && <Badge className="bg-brand text-white px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] border-none rounded-none">V-77 NEW</Badge>}
                             </div>
                         </div>
                     </motion.div>
@@ -202,14 +199,14 @@ const ProductDetail: React.FC = () => {
                     >
                         <div className="space-y-6">
                             <div className="flex items-center gap-4">
-                                <div className="h-[2px] w-12 bg-red-600"></div>
-                                <span className="text-[13px] font-black uppercase tracking-[0.6em] text-red-600">{product.brand}</span>
+                                <div className="h-[2px] w-12 bg-brand"></div>
+                                <span className="text-[13px] font-black uppercase tracking-[0.6em] text-brand">{product.brand}</span>
                             </div>
 
                             <div className="space-y-4">
                                 <h1 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter leading-[0.9]">{product.name}</h1>
                                 <div className="flex items-center gap-4">
-                                    <div className="flex text-[#c5a059]">
+                                    <div className="flex text-brand-gold">
                                         {[...Array(5)].map((_, i) => (
                                             <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-zinc-800'}`} />
                                         ))}
@@ -219,24 +216,24 @@ const ProductDetail: React.FC = () => {
                             </div>
 
                             <div className="flex items-end gap-6 border-b border-zinc-800 pb-8">
-                                <p className="text-5xl font-black text-red-600 italic tracking-tighter leading-none">
+                                <p className="text-5xl font-black text-brand italic tracking-tighter leading-none">
                                     ${(selectedVariant ? selectedVariant.price : product.price).toFixed(2)}
                                 </p>
                                 {selectedVariant && (
-                                    <span className="text-[10px] font-black text-[#c5a059] uppercase tracking-[0.4em] mb-2">
+                                    <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.4em] mb-2">
                                         / PROTOCOL: {selectedVariant.size} {selectedVariant.flavor && `- ${selectedVariant.flavor}`}
                                     </span>
                                 )}
                             </div>
                         </div>
 
-                        <p className="text-lg text-zinc-400 font-medium leading-relaxed italic border-l-4 border-[#c5a059] pl-6">
+                        <p className="text-lg text-zinc-400 font-medium leading-relaxed italic border-l-4 border-brand-gold pl-6">
                             {product.description}
                         </p>
 
                         {/* SELECTOR CARD */}
                         <div className="bg-[#111111] p-8 shadow-2xl border border-zinc-800 space-y-8 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-red-600"></div>
+                            <div className="absolute top-0 left-0 w-1 h-full bg-brand"></div>
 
                             {product.variants && product.variants.length > 0 && (
                                 <div className="space-y-6">
@@ -244,7 +241,7 @@ const ProductDetail: React.FC = () => {
                                     <div className="space-y-4">
                                         <div className="flex justify-between">
                                             <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-zinc-500">{product.variantType || 'Protocol Variant'}</h4>
-                                            <span className="text-[10px] font-bold text-[#c5a059] uppercase tracking-widest">Archive Selection</span>
+                                            <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">Archive Selection</span>
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {uniqueSizes.map((sz: any) => (
@@ -253,8 +250,8 @@ const ProductDetail: React.FC = () => {
                                                     onClick={() => setSelectedSize(sz)}
                                                     className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
                                                         ${selectedSize === sz
-                                                            ? 'bg-[#c5a059] text-black border-[#c5a059]'
-                                                            : 'bg-[#0a0a0a] text-zinc-500 border-zinc-800 hover:border-[#c5a059]'
+                                                            ? 'bg-brand-gold text-black border-brand-gold'
+                                                            : 'bg-brand-matte text-zinc-500 border-zinc-800 hover:border-brand-gold'
                                                         }`}
                                                 >
                                                     {sz}
@@ -276,8 +273,8 @@ const ProductDetail: React.FC = () => {
                                                         onClick={() => setSelectedFlavor(fl)}
                                                         className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
                                                             ${selectedFlavor === fl
-                                                                ? 'bg-red-600 text-white border-red-600'
-                                                                : 'bg-[#0a0a0a] text-zinc-500 border-zinc-800 hover:border-red-600'
+                                                                ? 'bg-brand text-white border-brand'
+                                                                : 'bg-brand-matte text-zinc-500 border-zinc-800 hover:border-brand'
                                                             }`}
                                                     >
                                                         {fl}
@@ -290,17 +287,17 @@ const ProductDetail: React.FC = () => {
                             )}
 
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <div className="flex items-center bg-[#0a0a0a] border border-zinc-800 shrink-0">
-                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-5 py-4 hover:text-red-600 transition-all"><Minus size={14} /></button>
+                                <div className="flex items-center bg-brand-matte border border-zinc-800 shrink-0">
+                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-5 py-4 hover:text-brand transition-all"><Minus size={14} /></button>
                                     <span className="w-10 text-center font-black text-lg tabular-nums text-white">{quantity}</span>
-                                    <button onClick={() => setQuantity(quantity + 1)} className="px-5 py-4 hover:text-red-600 transition-all"><Plus size={14} /></button>
+                                    <button onClick={() => setQuantity(quantity + 1)} className="px-5 py-4 hover:text-brand transition-all"><Plus size={14} /></button>
                                 </div>
 
                                 <button
                                     onClick={handleAddToCart}
                                     disabled={loading}
                                     className={`flex-grow bg-white text-black py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl transition-all
-                                        ${loading ? 'cursor-not-allowed opacity-80 bg-zinc-400' : 'hover:bg-red-600 hover:text-white cursor-pointer'}
+                                        ${loading ? 'cursor-not-allowed opacity-80 bg-zinc-400' : 'hover:bg-brand hover:text-white cursor-pointer'}
                                     `}
                                 >
                                     {loading ? (
@@ -316,63 +313,36 @@ const ProductDetail: React.FC = () => {
 
                                 <button
                                     onClick={handleBuyNow}
-                                    className="flex-grow bg-[#c5a059] text-black py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-black hover:text-[#c5a059] transition-all"
+                                    className="flex-grow bg-brand-gold text-black py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-black hover:text-brand-gold transition-all"
                                 >
                                     <CreditCard className="w-4 h-4" /> Buy Now
                                 </button>
                             </div>
 
                             <div className="flex items-center gap-2 pt-2 text-[9px] font-bold text-zinc-600 uppercase tracking-widest justify-center sm:justify-start">
-                                <ShieldCheck className="w-3.5 h-3.5 text-red-600" /> 100% Authentic Guarantee
+                                <ShieldCheck className="w-3.5 h-3.5 text-brand" /> 100% Authentic Guarantee
                             </div>
                         </div>
                     </motion.div>
                 </div>
             </div>
 
-            {/* SPECS SECTION - MIXED THEME */}
-            <section className="mt-32 border-t border-zinc-800 bg-[#050505]">
+            {/* SPECS SECTION - FULL WIDTH */}
+            <section className="mt-32 border-t border-zinc-800 bg-brand-matte">
                 <div className="max-w-[1440px] mx-auto">
-                    <div className="flex flex-col lg:flex-row">
+                    <div className="flex flex-col">
 
-                        {/* DARK SIDEBAR */}
-                        <aside className="lg:w-1/3 bg-[#0a0a0a] text-white p-12 lg:p-20 space-y-12 border-r border-zinc-800">
-                            <div className="space-y-4">
-                                <h3 className="text-3xl font-black uppercase tracking-tighter leading-none">Technical <br />Analysis</h3>
-                                <div className="h-1 w-14 bg-red-600"></div>
-                            </div>
-                            <div className="space-y-0.5">
-                                {[
-                                    { label: 'Category', val: product.category },
-                                    { label: 'Series ID', val: product.subCategory || 'Master' },
-                                    { label: 'Deployment', val: product.stock > 0 ? 'ACTIVE' : 'DEPLETED' },
-                                ].map((spec, i) => (
-                                    <div key={i} className="flex justify-between py-4 border-b border-zinc-800 text-[11px] font-bold uppercase tracking-widest">
-                                        <span className="text-zinc-500">{spec.label}</span>
-                                        <span className={`font-black ${spec.val === 'ACTIVE' ? 'text-[#c5a059]' : (spec.val === 'DEPLETED' ? 'text-red-600' : 'text-white')}`}>{spec.val}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="p-6 bg-zinc-900 border border-zinc-800 space-y-4 backdrop-blur-sm">
-                                <FileText className="w-8 h-8 text-[#c5a059]" />
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.3em]">Batch COA Available</p>
-                                    <p className="text-zinc-500 text-[9px] leading-relaxed uppercase font-bold tracking-widest mt-1">Full spectrographic analysis report.</p>
-                                </div>
-                            </div>
-                        </aside>
-
-                        {/* LIGHT CONTENT */}
-                        <main className="lg:w-2/3 p-12 lg:p-20 bg-[#0f0f0f]">
-                            <div className="flex gap-10 border-b border-zinc-800 mb-12">
-                                {['details', 'usage', 'reviews'].map(tab => (
+                        {/* CONTENT */}
+                        <main className="w-full p-12 lg:p-20">
+                            <div className="flex flex-wrap gap-10 border-b border-zinc-800 mb-12">
+                                {['details', 'warnings', 'directions', 'reviews'].map(tab => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab as any)}
-                                        className={`pb-5 text-[12px] font-black uppercase tracking-[0.4em] transition-all relative ${activeTab === tab ? 'text-red-600' : 'text-zinc-600 hover:text-white'}`}
+                                        className={`pb-5 text-[12px] font-black uppercase tracking-[0.4em] transition-all relative ${activeTab === tab ? 'text-brand' : 'text-zinc-600 hover:text-white'}`}
                                     >
                                         {tab}
-                                        {activeTab === tab && <motion.div layoutId="tab-underline-spec" className="absolute bottom-0 left-0 right-0 h-[3px] bg-red-600" />}
+                                        {activeTab === tab && <motion.div layoutId="tab-underline-spec" className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand" />}
                                     </button>
                                 ))}
                             </div>
@@ -380,68 +350,105 @@ const ProductDetail: React.FC = () => {
                             <div className="min-h-[300px]">
                                 {activeTab === 'details' && (
                                     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div className="space-y-6">
+                                            <h3 className="text-3xl font-black uppercase tracking-tighter leading-none">Product Intelligence</h3>
+                                            <div className="h-1 w-14 bg-brand"></div>
+                                        </div>
                                         <p className="text-2xl md:text-3xl text-zinc-400 leading-snug italic font-light">
-                                            {product.description?.substring(0, 150)}... Optimized biological availability for peak physical response.
+                                            {product.description}
                                         </p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <div className="space-y-4 p-8 bg-zinc-900 border border-zinc-800">
-                                                <div className="flex items-center gap-3 text-red-600">
-                                                    <AlertTriangle className="w-5 h-5" />
-                                                    <h4 className="text-sm font-black uppercase tracking-widest">Safety Warnings</h4>
-                                                </div>
-                                                <ul className="space-y-2">
-                                                    {(product.warnings && product.warnings.length > 0 ? product.warnings : ['Consult professional advice before use']).map((w, i) => (
-                                                        <li key={i} className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest list-disc ml-4">{w}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                            <div className="space-y-4 p-8 bg-zinc-900 border border-zinc-800">
-                                                <div className="flex items-center gap-3 text-[#c5a059]">
-                                                    <FlaskConical className="w-5 h-5" />
+                                                <div className="flex items-center gap-3 text-brand-gold">
+                                                    <ShieldCheck className="w-5 h-5" />
                                                     <h4 className="text-sm font-black uppercase tracking-widest">Molecular Integrity</h4>
                                                 </div>
                                                 <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-loose">
                                                     Strict adherence to cGMP standards ensures no cross-contamination or unlabeled biological fillers. Tested for potency and purity.
-                                                </p>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-4 p-8 bg-zinc-900 border border-zinc-800">
+                                                <div className="flex items-center gap-3 text-brand-gold">
+                                                    <Target className="w-5 h-5" />
+                                                    <h4 className="text-sm font-black uppercase tracking-widest">Deployment Category</h4>
+                                                </div>
+                                                <div className="flex justify-between items-center text-[11px] font-bold text-zinc-500 uppercase tracking-widest">
+                                                    <span>Category</span>
+                                                    <span className="text-white">{product.category}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-[11px] font-bold text-zinc-500 uppercase tracking-widest">
+                                                    <span>Series ID</span>
+                                                    <span className="text-white">{product.subCategory || 'Master'}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 )}
-                                {activeTab === 'usage' && (
-                                    <div className="space-y-8 bg-[#111111] p-10 border-l-4 border-[#c5a059] border border-zinc-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                        <div className="flex items-center gap-4">
-                                            <PlayCircle className="text-red-600 w-8 h-8" />
-                                            <h4 className="text-2xl font-black uppercase tracking-tighter text-white">Operational Directions</h4>
+                                {activeTab === 'warnings' && (
+                                    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div className="space-y-6">
+                                            <div className="flex items-center gap-3 text-brand">
+                                                <AlertTriangle className="w-8 h-8" />
+                                                <h3 className="text-3xl font-black uppercase tracking-tighter leading-none">Safety Protocols</h3>
+                                            </div>
+                                            <div className="h-1 w-14 bg-brand"></div>
                                         </div>
-                                        <p className="text-lg text-zinc-400 leading-relaxed font-medium italic pl-12">
-                                            {product.directions || 'No specific directions provided. Consult label for precise dosage and administration.'}
-                                        </p>
+                                        <div className="bg-zinc-900 p-10 border-l-4 border-brand border border-zinc-800">
+                                            <ul className="space-y-6">
+                                                {(product.warnings && product.warnings.length > 0 ? product.warnings : ['Consult professional advice before use']).map((w, i) => (
+                                                    <li key={i} className="flex gap-4 items-start text-lg text-zinc-400 font-medium italic leading-relaxed">
+                                                        <span className="text-brand font-black mt-1">/</span>
+                                                        {w}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
+                                {activeTab === 'directions' && (
+                                    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div className="space-y-6">
+                                            <div className="flex items-center gap-4">
+                                                <PlayCircle className="text-brand-gold w-8 h-8" />
+                                                <h3 className="text-3xl font-black uppercase tracking-tighter leading-none text-white">Operational Directions</h3>
+                                            </div>
+                                            <div className="h-1 w-14 bg-brand-gold"></div>
+                                        </div>
+                                        <div className="bg-zinc-900 p-10 border-l-4 border-brand-gold border border-zinc-800">
+                                            <p className="text-lg text-zinc-400 leading-relaxed font-medium italic">
+                                                {product.directions || 'No specific directions provided. Consult label for precise dosage and administration.'}
+                                            </p>
+                                        </div>
                                     </div>
                                 )}
                                 {activeTab === 'reviews' && (
                                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div className="space-y-6">
+                                            <h3 className="text-3xl font-black uppercase tracking-tighter leading-none">Deployment Logs</h3>
+                                            <div className="h-1 w-14 bg-brand"></div>
+                                        </div>
                                         {product.reviews && product.reviews.length > 0 ? (
-                                            <div className="space-y-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                 {product.reviews.map((review: any, i: number) => (
-                                                    <div key={i} className="border-b border-zinc-800 pb-6">
-                                                        <div className="flex items-center gap-2 mb-2">
-                                                            <div className="flex text-[#c5a059]">
+                                                    <div key={i} className="bg-zinc-900 p-8 border border-zinc-800 space-y-4">
+                                                        <div className="flex justify-between items-start">
+                                                            <div className="flex text-brand-gold">
                                                                 {[...Array(5)].map((_, stars) => (
-                                                                    <Star key={stars} className={`w-3 h-3 ${stars < review.rating ? 'fill-current' : 'text-zinc-800'}`} />
+                                                                    <Star key={stars} className={`w-3.5 h-3.5 ${stars < review.rating ? 'fill-current' : 'text-zinc-800'}`} />
                                                                 ))}
                                                             </div>
                                                             <span className="text-[10px] font-bold uppercase text-zinc-500">{new Date(review.createdAt || Date.now()).toLocaleDateString()}</span>
                                                         </div>
-                                                        <p className="text-zinc-300 italic">"{review.comment}"</p>
-                                                        {review.user && <p className="text-[10px] font-black uppercase tracking-widest text-red-600 mt-2">- {review.user.name || 'Verified User'}</p>}
+                                                        <p className="text-zinc-300 italic text-lg leading-relaxed">"{review.comment}"</p>
+                                                        {review.user && <p className="text-[11px] font-black uppercase tracking-[0.3em] text-brand mt-4">Verified Operative: {review.user.name || 'Anonymous'}</p>}
                                                     </div>
                                                 ))}
                                             </div>
                                         ) : (
-                                            <div className="py-20 border-2 border-dashed border-zinc-800 text-center space-y-6 bg-[#111111]">
+                                            <div className="py-24 border-2 border-dashed border-zinc-800 text-center space-y-6 bg-zinc-900/50">
                                                 <Beaker className="w-12 h-12 text-zinc-800 mx-auto" />
                                                 <p className="text-[11px] font-black uppercase tracking-[0.3em] text-zinc-600">Registry Intelligence Pending Verification</p>
-                                                <button onClick={() => navigate(`/product/${product.id}/review`)} className="text-red-600 font-black uppercase tracking-widest text-[11px] border-b-2 border-red-600 pb-2 hover:text-[#c5a059] hover:border-[#c5a059] transition-colors">Submit Deployment Log</button>
+                                                <button onClick={() => navigate(`/product/${product.id}/review`)} className="text-brand font-black uppercase tracking-widest text-[11px] border-b-2 border-brand pb-2 hover:text-brand-gold hover:border-brand-gold transition-all">Submit Deployment Log</button>
                                             </div>
                                         )}
                                     </div>
@@ -456,24 +463,24 @@ const ProductDetail: React.FC = () => {
             <section className="mt-32 max-w-[1440px] mx-auto px-6">
                 <div className="flex justify-between items-end mb-12">
                     <div className="space-y-2">
-                        <span className="text-red-600 font-black uppercase tracking-[0.5em] text-[11px]">Recommended Protocols</span>
+                        <span className="text-brand font-black uppercase tracking-[0.5em] text-[11px]">Recommended Protocols</span>
                         <h3 className="text-4xl font-black text-white uppercase tracking-tighter">Complementary Stacks</h3>
                     </div>
-                    <button onClick={() => navigate('/products')} className="text-[11px] font-black uppercase tracking-widest border-b-2 border-[#c5a059]/40 text-zinc-500 pb-2 hover:border-red-600 hover:text-red-600 transition-all">Full Archive</button>
+                    <button onClick={() => navigate('/products')} className="text-[11px] font-black uppercase tracking-widest border-b-2 border-brand-gold/40 text-zinc-500 pb-2 hover:border-brand hover:text-brand transition-all">Full Archive</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                     {initialProducts.filter(p => p.id !== product.id).slice(0, 4).map(p => (
                         <div
                             key={p.id}
                             onClick={() => { navigate(`/product/${p.id}`); window.scrollTo(0, 0); }}
-                            className="bg-zinc-900 p-8 text-center space-y-6 group cursor-pointer hover:shadow-2xl transition-all border border-zinc-800 hover:border-[#c5a059]/30"
+                            className="bg-zinc-900 p-8 text-center space-y-6 group cursor-pointer hover:shadow-2xl transition-all border border-zinc-800 hover:border-brand-gold/30"
                         >
-                            <div className="h-52 flex items-center justify-center p-6 bg-[#0a0a0a] overflow-hidden">
+                            <div className="h-52 flex items-center justify-center p-6 bg-brand-matte overflow-hidden">
                                 <img src={p.image || p.images?.[0]} alt={p.name} className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" />
                             </div>
                             <div className="space-y-2">
-                                <h4 className="text-[11px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-red-600 leading-tight truncate transition-colors">{p.name}</h4>
-                                <p className="text-xl font-black text-[#c5a059] italic tracking-tighter">${p.price.toFixed(2)}</p>
+                                <h4 className="text-[11px] font-black uppercase tracking-widest text-zinc-400 group-hover:text-brand leading-tight truncate transition-colors">{p.name}</h4>
+                                <p className="text-xl font-black text-brand-gold italic tracking-tighter">${p.price.toFixed(2)}</p>
                             </div>
                         </div>
                     ))}
