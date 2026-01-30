@@ -845,3 +845,52 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 };
+
+export const enrollPlan = async (req, res) => {
+  try {
+    const { planName } = req.body;
+    const userId = req.user.userId;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Brevo API setup
+    const client = SibApiV3Sdk.ApiClient.instance;
+    client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+    const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+    // Send email to admin
+    await tranEmailApi.sendTransacEmail({
+      sender: { email: process.env.EMAIL_FROM },
+      to: [{ email: process.env.EMAIL_FROM }], // Recipient is the admin (sender in this case)
+      subject: `New Plan Enrollment Request: ${planName}`,
+      htmlContent: `
+        <div style="font-family: sans-serif; padding: 20px; color: #333;">
+          <h1 style="color: #ed2124;">New Enrollment Request</h1>
+          <p>A user has requested to enroll in a strategic training plan.</p>
+          <hr />
+          <p><strong>User Detail:</strong></p>
+          <ul>
+            <li><strong>Name:</strong> ${user.name}</li>
+            <li><strong>Email:</strong> ${user.email}</li>
+            <li><strong>User ID:</strong> ${user.id}</li>
+          </ul>
+          <p><strong>Plan Requested:</strong> <span style="font-weight: bold; color: #000;">${planName}</span></p>
+          <hr />
+          <p>Please contact the user to initialize the enrollment protocols.</p>
+          <p style="font-size: 10px; color: #999;">This is an automated notification from Nexus Command.</p>
+        </div>
+      `,
+    });
+
+    res.status(200).json({ success: true, message: "Enrollment request sent" });
+  } catch (err) {
+    console.error("Enroll plan error:", err);
+    res.status(500).json({ error: "Failed to send enrollment request" });
+  }
+};

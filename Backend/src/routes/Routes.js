@@ -1,5 +1,5 @@
 import express from "express"
-import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile, forgotPassword, resetPassword } from "../controllers/UserController.js"
+import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile, forgotPassword, resetPassword, enrollPlan } from "../controllers/UserController.js"
 import { createAddress, createOrder, getAllOrders, getUserAddresses, getUserOrders, updateAddress, updateOrderStatus } from "../controllers/OrderController.js";
 import { authenticate } from "../middlewares/auth.js";
 import { adminOnly } from "../middlewares/authorization.js";
@@ -8,6 +8,7 @@ import upload from "../middlewares/uploads.js";
 import { getAdminStats } from "../controllers/AdminController.js";
 import { getNotifications, getUnreadCount, markAsReadAndDelete, deleteAllNotifications } from "../controllers/NotificationController.js";
 import { getBanners, createBanner, deleteBanner } from "../controllers/BannerController.js";
+import { createBundle, getBundles, getBundleById, updateBundle, deleteBundle } from "../controllers/BundleController.js";
 
 
 export const router = express.Router();
@@ -46,6 +47,7 @@ router.post("/orders", authenticate, upload.single("receipt"), createOrder);
 router.get("/orders", authenticate, getUserOrders);
 router.get("/getprofile", authenticate, getProfile);
 router.put("/profile", authenticate, updateProfile);
+router.post("/enroll-plan", authenticate, enrollPlan);
 
 // Banner Routes
 router.get("/banners", getBanners);
@@ -62,3 +64,12 @@ router.get("/admin/notifications", authenticate, adminOnly, getNotifications);
 router.get("/admin/notifications/unread-count", authenticate, adminOnly, getUnreadCount);
 router.delete("/admin/notifications/:notificationId", authenticate, adminOnly, markAsReadAndDelete);
 router.delete("/admin/notifications", authenticate, adminOnly, deleteAllNotifications);
+
+// Bundle Routes (Public)
+router.get("/bundles", getBundles);
+router.get("/bundle/:id", getBundleById);
+
+// Bundle Routes (Admin)
+router.post("/admin/bundles", authenticate, adminOnly, upload.single("image"), createBundle);
+router.put("/admin/bundles/:id", authenticate, adminOnly, upload.single("image"), updateBundle);
+router.delete("/admin/bundles/:id", authenticate, adminOnly, deleteBundle);

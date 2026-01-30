@@ -20,9 +20,12 @@ import ProductManagement from './src/pages/Admin/ProductManagement';
 import OrderManagement from './src/pages/Admin/OrderManagement';
 import UserManagement from './src/pages/Admin/UserManagement';
 import BannerManagement from './src/pages/Admin/BannerManagement';
+import BundleManagement from './src/pages/Admin/BundleManagement';
 import Wishlist from './src/pages/Wishlist';
 import ForgotPassword from './src/pages/ForgotPassword';
 import ResetPassword from './src/pages/ResetPassword';
+import Plans from './src/pages/Plans';
+import Bundles from './src/pages/Bundles';
 import { CartProvider } from './src/contexts/CartContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import { WishlistProvider } from './src/contexts/WishlistContext';
@@ -62,6 +65,8 @@ const App: React.FC = () => {
                   <Route path="/contact" element={<Layout><Contact /></Layout>} />
                   <Route path="/products" element={<Layout><ProductList /></Layout>} />
                   <Route path="/product/:id" element={<Layout><ProductDetail /></Layout>} />
+                  <Route path="/plans" element={<Layout><Plans /></Layout>} />
+                  <Route path="/bundles" element={<Layout><Bundles /></Layout>} />
                   <Route path="/product/:id/review" element={<Layout><ProtectedRoute><AddReview /></ProtectedRoute></Layout>} />
                   <Route path="/cart" element={<Layout><Cart /></Layout>} />
                   <Route path="/checkout" element={<Layout><ProtectedRoute><Checkout /></ProtectedRoute></Layout>} />
@@ -79,6 +84,7 @@ const App: React.FC = () => {
                   <Route path="/admin/orders" element={<ProtectedRoute role="ADMIN"><OrderManagement /></ProtectedRoute>} />
                   <Route path="/admin/users" element={<ProtectedRoute role="ADMIN"><UserManagement /></ProtectedRoute>} />
                   <Route path="/admin/banners" element={<ProtectedRoute role="ADMIN"><BannerManagement /></ProtectedRoute>} />
+                  <Route path="/admin/bundles" element={<ProtectedRoute role="ADMIN"><BundleManagement /></ProtectedRoute>} />
 
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

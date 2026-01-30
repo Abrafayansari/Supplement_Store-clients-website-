@@ -9,6 +9,7 @@ import { fetchProducts } from '../../data/Product.tsx';
 import { MOCK_PRODUCTS } from '../../mockData.ts';
 import NexusLoader from '../../components/NexusLoader';
 import AutomaticBannerSlider from '../../components/AutomaticBannerSlider';
+import { Product } from '@/types.ts';
 
 const Home: React.FC = () => {
   const heroRef = React.useRef<HTMLDivElement>(null);
@@ -22,7 +23,7 @@ const Home: React.FC = () => {
   // Mouse position for interactive effects
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
 
-  const [initialProducts, setInitialProducts] = React.useState<Array<any>>([]);
+  const [initialProducts, setInitialProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [typedText, setTypedText] = React.useState('');
   const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -482,7 +483,7 @@ const Home: React.FC = () => {
                 }}
               />
 
-              <Slider />
+              <Slider products={initialProducts} loading={loading} />
 
               {/* Enhanced light pulse background */}
               <motion.div

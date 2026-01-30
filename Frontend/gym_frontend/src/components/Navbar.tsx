@@ -97,6 +97,8 @@ const Navbar: React.FC = () => {
               </div>
             </div>
 
+            <Link to="/plans" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Plans</Link>
+            <Link to="/bundles" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Bundles</Link>
             <Link to="/contact" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Contact</Link>
           </div>
 
@@ -189,6 +191,8 @@ const Navbar: React.FC = () => {
           </div>
           <Link to="/" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>The Index</Link>
           <Link to="/products" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Shop Elite</Link>
+          <Link to="/plans" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Plans</Link>
+          <Link to="/bundles" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Bundles</Link>
           <Link to="/contact" className="block text-4xl font-black text-white hover:text-brand-gold transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Contact</Link>
           {isAdmin && (
             <Link to="/admin" className="block text-4xl font-black text-brand-gold hover:text-white transition-luxury uppercase tracking-tighter" onClick={() => setIsMenuOpen(false)}>Admin Console</Link>

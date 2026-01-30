@@ -164,7 +164,8 @@ const AdminDashboard: React.FC = () => {
             { icon: <Package className="w-5 h-5" />, label: 'Products', to: '/admin/products' },
             { icon: <ShoppingBag className="w-5 h-5" />, label: 'Orders', to: '/admin/orders' },
             { icon: <Users className="w-5 h-5" />, label: 'Users', to: '/admin/users' },
-            { icon: <TrendingUp className="w-5 h-5" />, label: 'Banners', to: '/admin/banners' }, // Using TrendingUp as a placeholder icon for Banners
+            { icon: <Package className="w-5 h-5" />, label: 'Bundles', to: '/admin/bundles' },
+            { icon: <TrendingUp className="w-5 h-5" />, label: 'Banners', to: '/admin/banners' },
             { icon: <Settings className="w-5 h-5" />, label: 'Settings', to: '#' },
           ].map(item => (
             <Link
