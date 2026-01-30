@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, Minus, Plus, ShoppingBag, ArrowLeft, ShieldCheck, Zap, Beaker, FileText, Share2, Heart, FlaskConical, Target, Droplets, AlertTriangle, PlayCircle, CreditCard } from 'lucide-react';
+import { Star, Minus, Plus, ShoppingBag, ArrowLeft, ShieldCheck, Zap, Beaker, FileText, Share2, Heart, FlaskConical, Target, Droplets, AlertTriangle, PlayCircle, CreditCard, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchProducts, fetchProductById } from '../data/Product.tsx';
 import { useCart } from '../contexts/CartContext.tsx';
@@ -298,9 +298,20 @@ const ProductDetail: React.FC = () => {
 
                                 <button
                                     onClick={handleAddToCart}
-                                    className="flex-grow bg-white text-black py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-red-600 hover:text-white transition-all"
+                                    disabled={loading}
+                                    className={`flex-grow bg-white text-black py-4 px-6 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl transition-all
+                                        ${loading ? 'cursor-not-allowed opacity-80 bg-zinc-400' : 'hover:bg-red-600 hover:text-white cursor-pointer'}
+                                    `}
                                 >
-                                    <ShoppingBag className="w-4 h-4" /> Add Protocol
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" /> Adding...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ShoppingBag className="w-4 h-4" /> Add Protocol
+                                        </>
+                                    )}
                                 </button>
 
                                 <button

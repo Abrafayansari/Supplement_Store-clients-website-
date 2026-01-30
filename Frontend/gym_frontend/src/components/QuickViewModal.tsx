@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShoppingCart, Minus, Plus, ExternalLink, Star, ShieldCheck, Zap } from 'lucide-react';
+import { X, ShoppingCart, Minus, Plus, ExternalLink, Star, ShieldCheck, Zap, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types';
 import { useCart } from '../contexts/CartContext.tsx';
@@ -24,6 +24,7 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
   const [selectedSize, setSelectedSize] = useState<string>(product?.variants?.[0]?.size || '');
   const [selectedFlavor, setSelectedFlavor] = useState<string>(product?.variants?.[0]?.flavor || '');
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
@@ -46,11 +47,21 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
 
   if (!product) return null;
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity, selectedVariant?.id);
-    toast.success(`${quantity} × ${product.name} ${selectedVariant ? `(${selectedVariant.size}${selectedVariant.flavor ? ` - ${selectedVariant.flavor}` : ''})` : ''} added to cart!`);
-    setQuantity(1);
-    onClose();
+  const handleAddToCart = async () => {
+    if (loading) return;
+    if (!localStorage.getItem("token")) {
+      toast.error("Login required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await addToCart(product, quantity, selectedVariant?.id);
+      setQuantity(1);
+      onClose();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const navigateToDetails = () => {
@@ -266,13 +277,23 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
                   </button>
                 </div>
 
-                <Button
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                  className="flex-1 bg-brand hover:bg-brand-gold text-white font-black uppercase tracking-widest text-xs py-6 rounded-xl shadow-lg hover:shadow-brand/20 transition-all border-none"
-                >
-                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'} <ShoppingCart className="ml-2 w-4 h-4" />
-                </Button>
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={product.stock === 0 || loading}
+                    className={`flex-1 bg-brand hover:bg-brand-gold text-white font-black uppercase tracking-widest text-xs py-6 rounded-xl shadow-lg hover:shadow-brand/20 transition-all border-none
+                      ${loading ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
+                    `}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Adding...
+                      </>
+                    ) : (
+                      <>
+                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'} <ShoppingCart className="ml-2 w-4 h-4" />
+                      </>
+                    )}
+                  </Button>
               </div>
 
               <button

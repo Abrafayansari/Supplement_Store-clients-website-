@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye, CreditCard } from 'lucide-react';
+import { ShoppingCart, Heart, Eye, CreditCard, Loader2 } from 'lucide-react';
 import { useCart } from '../contexts/CartContext.tsx';
 import { toast } from 'sonner';
 import { Product } from '@/types.ts';
@@ -161,19 +161,30 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
               </button>
             </div>
 
-            {mode === 'default' ? (
-              <button
-                onClick={handleAddToCart}
-                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
-                  translate-y-0
-                  lg:translate-y-full
-                  ${isHovered ? 'lg:translate-y-0' : ''}
-                `}
-              >
-                <ShoppingCart className="w-4 h-4" />
-                ADD TO CART
-              </button>
-            ) : (
+              {mode === 'default' ? (
+                <button
+                  onClick={handleAddToCart}
+                  disabled={loading}
+                  className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                    translate-y-0
+                    lg:translate-y-full
+                    ${isHovered ? 'lg:translate-y-0' : ''}
+                    ${loading ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
+                  `}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      ADDING...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-4 h-4" />
+                      ADD TO CART
+                    </>
+                  )}
+                </button>
+              ) : (
               <button
                 onClick={handleBuyNow}
                 className={`absolute bottom-0 left-0 right-0 bg-brand-gold text-brand-matte py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
