@@ -18,7 +18,9 @@ const ProductDetail: React.FC = () => {
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState<'details' | 'usage' | 'reviews'>('details');
-    const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+    const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
+    const [selectedSize, setSelectedSize] = useState<string>('');
+    const [selectedFlavor, setSelectedFlavor] = useState<string>('');
     const [activeImageIdx, setActiveImageIdx] = useState(0);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
@@ -31,10 +33,11 @@ const ProductDetail: React.FC = () => {
                     const fetchedProduct = await fetchProductById(id);
                     setProduct(fetchedProduct);
 
-                    // Select a random variant on initial load
-                    if (fetchedProduct.variants && fetchedProduct.variants.length > 0) {
-                        const randomIdx = Math.floor(Math.random() * fetchedProduct.variants.length);
-                        setSelectedVariant(fetchedProduct.variants[randomIdx]);
+                    if (fetchedProduct?.variants && fetchedProduct.variants.length > 0) {
+                        const first = fetchedProduct.variants[0];
+                        setSelectedSize(first.size);
+                        setSelectedFlavor(first.flavor || '');
+                        setSelectedVariant(first);
                     }
                 }
                 // Fetch related products separately
@@ -48,6 +51,25 @@ const ProductDetail: React.FC = () => {
         };
         found();
     }, [id]);
+
+    useEffect(() => {
+        if (product && selectedSize) {
+            const matches = product.variants.filter(v => v.size === selectedSize && (v.flavor === selectedFlavor || !v.flavor));
+            if (matches.length > 0) {
+                // If current flavor doesn't exist for new size, pick first available
+                if (selectedFlavor && !matches.some(m => m.flavor === selectedFlavor)) {
+                    setSelectedFlavor(matches[0].flavor || '');
+                    setSelectedVariant(matches[0]);
+                } else {
+                    setSelectedVariant(matches.find(m => m.flavor === selectedFlavor) || matches[0]);
+                }
+            }
+        }
+    }, [selectedSize, selectedFlavor, product]);
+
+    // Helper to get unique sizes and flavors for filtering
+    const uniqueSizes = Array.from(new Set(product?.variants?.map(v => v.size) || []));
+    const availableFlavors = Array.from(new Set(product?.variants?.filter(v => v.size === selectedSize).map(v => v.flavor).filter(Boolean) || []));
 
     if (fetching) return (
         <div className="min-h-screen flex items-center justify-center bg-brand-warm">
@@ -75,7 +97,7 @@ const ProductDetail: React.FC = () => {
 
         try {
             setLoading(true);
-            await addToCart(product, quantity);
+            await addToCart(product, quantity, selectedVariant?.id);
         } finally {
             setLoading(false);
         }
@@ -93,7 +115,7 @@ const ProductDetail: React.FC = () => {
             toast.error("Login required");
             return;
         }
-        navigate('/checkout', { state: { singleItem: { product, quantity, variant: selectedVariant } } });
+        navigate('/checkout', { state: { singleItem: { product, quantity, variant: selectedVariant, variantId: selectedVariant?.id } } });
     };
 
     const isNew = (product: Product) => {
@@ -102,6 +124,7 @@ const ProductDetail: React.FC = () => {
         const diffInDays = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
         return diffInDays <= 30;
     };
+
 
     return (
         <div className="min-h-screen bg-brand-warm pb-40 selection:bg-brand selection:text-white">
@@ -196,7 +219,14 @@ const ProductDetail: React.FC = () => {
                             </div>
 
                             <div className="flex items-end gap-6 border-b border-brand-matte/5 pb-8">
-                                <p className="text-5xl font-black text-brand italic tracking-tighter leading-none">${product.price.toFixed(2)}</p>
+                                <p className="text-5xl font-black text-brand italic tracking-tighter leading-none">
+                                    ${(selectedVariant ? selectedVariant.price : product.price).toFixed(2)}
+                                </p>
+                                {selectedVariant && (
+                                    <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.4em] mb-2">
+                                        / PROTOCOL: {selectedVariant.size} {selectedVariant.flavor && `- ${selectedVariant.flavor}`}
+                                    </span>
+                                )}
                             </div>
                         </div>
 
@@ -209,26 +239,53 @@ const ProductDetail: React.FC = () => {
                             <div className="absolute top-0 left-0 w-1 h-full bg-brand"></div>
 
                             {product.variants && product.variants.length > 0 && (
-                                <div className="space-y-4">
-                                    <div className="flex justify-between">
-                                        <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte">Protocol Variant</h4>
-                                        <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">Required Field</span>
+                                <div className="space-y-6">
+                                    {/* Primary Attribute Selector */}
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between">
+                                            <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte">{product.variantType || 'Protocol Variant'}</h4>
+                                            <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest">Archive Selection</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {uniqueSizes.map((sz: any) => (
+                                                <button
+                                                    key={sz}
+                                                    onClick={() => setSelectedSize(sz)}
+                                                    className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
+                                                        ${selectedSize === sz
+                                                            ? 'bg-brand-matte text-white border-brand-matte'
+                                                            : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'
+                                                        }`}
+                                                >
+                                                    {sz}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {product.variants.map((variant: any, idx: number) => (
-                                            <button
-                                                key={idx}
-                                                onClick={() => setSelectedVariant(variant)}
-                                                className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
-                                                    ${selectedVariant === variant
-                                                        ? 'bg-brand-matte text-white border-brand-matte'
-                                                        : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'
-                                                    }`}
-                                            >
-                                                {variant}
-                                            </button>
-                                        ))}
-                                    </div>
+
+                                    {/* Secondary Attribute Selector (Flavor/Color) */}
+                                    {availableFlavors.length > 0 && (
+                                        <div className="space-y-4 animate-in fade-in duration-500">
+                                            <div className="flex justify-between">
+                                                <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte">{product.secondaryVariantName || 'Flavor Matrix'}</h4>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                {availableFlavors.map((fl: any) => (
+                                                    <button
+                                                        key={fl}
+                                                        onClick={() => setSelectedFlavor(fl)}
+                                                        className={`px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] border transition-all
+                                                            ${selectedFlavor === fl
+                                                                ? 'bg-brand-gold text-brand-matte border-brand-gold'
+                                                                : 'bg-brand-warm text-brand-matte/60 border-brand-matte/5 hover:border-brand-gold'
+                                                            }`}
+                                                    >
+                                                        {fl}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

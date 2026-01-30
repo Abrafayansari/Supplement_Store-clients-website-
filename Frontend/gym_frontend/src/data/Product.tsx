@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL
 
 
 export interface ProductQueryParams {
+  category?: string;
   subCategory?: string;
   search?: string;
   minPrice?: number;
@@ -37,12 +38,17 @@ export const fetchProducts = async (
     category: p.category,
     subCategory: p.subCategory,
     price: p.price,
-    size: p.size,
     stock: p.stock,
     description: p.description,
     warnings: p.warnings || [],
     directions: p.directions,
-    variants: p.variants || [],
+    variantType: p.variantType,
+    secondaryVariantName: p.secondaryVariantName,
+    variants: p.variants ? p.variants.map((v: any) => ({
+      ...v,
+      createdAt: new Date(v.createdAt),
+      updatedAt: new Date(v.updatedAt)
+    })) : [],
     images: p.images || [],
     rating: p.rating ?? 0,
     reviewCount: p.reviewCount ?? 0,
@@ -65,8 +71,8 @@ export const fetchProducts = async (
 
 
 export interface Category {
-  category: string;
-  subCategory: string;
+  name: string;
+  subCategories: string[];
 }
 
 
@@ -82,12 +88,17 @@ export const fetchProductById = async (id: string): Promise<Product | null> => {
       category: p.category,
       subCategory: p.subCategory,
       price: p.price,
-      size: p.size,
       stock: p.stock,
       description: p.description,
       warnings: p.warnings || [],
       directions: p.directions,
-      variants: p.variants || [],
+      variantType: p.variantType,
+      secondaryVariantName: p.secondaryVariantName,
+      variants: p.variants ? p.variants.map((v: any) => ({
+        ...v,
+        createdAt: new Date(v.createdAt),
+        updatedAt: new Date(v.updatedAt)
+      })) : [],
       images: p.images || [],
       rating: p.rating ?? 0,
       reviewCount: p.reviewCount ?? 0,

@@ -1,4 +1,15 @@
-// types/Product.ts
+export interface ProductVariant {
+  id: string;
+  productId: string;
+  size: string;
+  flavor?: string;
+  price: number;
+  stock: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -6,12 +17,13 @@ export interface Product {
   category: string;
   subCategory?: string;
   price: number;
-  size?: string;
   stock: number;
   description?: string;
   warnings: string[];
   directions?: string;
-  variants: string[];
+  variantType: VariantType;
+  secondaryVariantName?: string;
+  variants: ProductVariant[];
   images: string[];
   rating: number;
   reviewCount: number;
@@ -81,3 +93,4 @@ export interface WishlistItem {
   product: Product;
   createdAt: string;
 }
+export type VariantType = 'SIZE' | 'SERVINGS' | 'GRAMS' | 'TABLETS' | 'BARS' | 'SCOOPS' | 'CAPSULES' | 'VERSION' | 'OTHER';

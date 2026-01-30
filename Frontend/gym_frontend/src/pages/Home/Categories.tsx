@@ -36,22 +36,22 @@ const Categories = () => {
       <div className="max-w-[1700px] mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {categories.map((category) => {
-            const imageKey = category.subCategory.toLowerCase().replace(/\s+/g, '-'); // map to your keys
+            const imageKey = category.name.toLowerCase().replace(/\s+/g, '-'); // map to your keys
             return (
               <Link
-                key={category.subCategory}
-                to={`/products?category=${category.subCategory}`}
+                key={category.name}
+                to={`/products?category=${category.name}`}
                 className="group relative overflow-hidden rounded-none bg-brand-matte aspect-[4/5] hover-lift shadow-2xl transition-luxury"
               >
                 <img
                   src={categoryImages[imageKey] || 'https://source.unsplash.com/400x400/?supplement'}
-                  alt={category.subCategory}
+                  alt={category.name}
                   className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-110 transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-matte via-brand-matte/40 to-transparent" />
                 <div className="absolute inset-0 flex flex-col items-center justify-end p-8 text-center">
                   <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">
-                    {category.subCategory}
+                    {category.name}
                   </h3>
                   {/* Optional description if you have it */}
                   {/* {category.description && (

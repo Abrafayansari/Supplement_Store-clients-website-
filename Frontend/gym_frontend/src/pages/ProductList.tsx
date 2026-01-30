@@ -40,15 +40,16 @@ const ProductList: React.FC = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'name'>('newest');
     const [products, setProducts] = useState<Product[]>([]);
-    const [subcategories, setsubCategories] = useState<Array<any>>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const activeCategory = searchParams.get('category') || 'All';
+    const activeSubCategory = searchParams.get('subCategory') || 'All';
 
     useEffect(() => {
         setPage(1);
-    }, [activeCategory, searchQuery, maxPrice, sortBy]);
+    }, [activeCategory, activeSubCategory, searchQuery, maxPrice, sortBy]);
 
     useEffect(() => {
         const loadPageData = async () => {
@@ -57,7 +58,8 @@ const ProductList: React.FC = () => {
                 const [catsRes, productsRes] = await Promise.all([
                     getCategories(),
                     fetchProducts({
-                        subCategory: activeCategory !== "All" ? activeCategory : undefined,
+                        category: activeCategory !== "All" ? activeCategory : undefined,
+                        subCategory: activeSubCategory !== "All" ? activeSubCategory : undefined,
                         search: searchQuery || undefined,
                         maxPrice,
                         sort: sortBy,
@@ -66,7 +68,7 @@ const ProductList: React.FC = () => {
                         inStock: true,
                     })
                 ]);
-                setsubCategories(catsRes);
+                setCategories(catsRes);
                 setProducts(productsRes.products);
                 setTotalPages(productsRes.totalPages);
                 console.log('Fetched products:', productsRes.products);
@@ -78,7 +80,7 @@ const ProductList: React.FC = () => {
         };
 
         loadPageData();
-    }, [activeCategory, searchQuery, maxPrice, sortBy, page]);
+    }, [activeCategory, activeSubCategory, searchQuery, maxPrice, sortBy, page]);
 
     const isNew = (product: Product) => {
         const now = new Date();
@@ -94,6 +96,7 @@ const ProductList: React.FC = () => {
         setSearchParams(prev => {
             const params = new URLSearchParams(prev);
             params.delete('category');
+            params.delete('subCategory');
             return params;
         });
 
@@ -114,33 +117,51 @@ const ProductList: React.FC = () => {
                     <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
                     <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Protocol Series</h3>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-4">
                     <button
                         onClick={removeCategory}
-                        className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${activeCategory === 'All' ? 'bg-brand-matte text-white' : 'text-brand-matte/60 hover:bg-white hover:shadow-md'}`}
+                        className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${activeCategory === 'All' && activeSubCategory === 'All' ? 'bg-brand-matte text-white' : 'text-brand-matte/60 hover:bg-white hover:shadow-md'}`}
                     >
                         All Archive
                         <ChevronDown className={`w-3 h-3 transition-transform ${activeCategory === 'All' ? 'rotate-180' : ''}`} />
                     </button>
-                    {subcategories.map(cat => (
-                        <button
-                            key={cat.subCategory}
-                            onClick={() => {
-                                setSearchParams(prev => {
-                                    const params = new URLSearchParams(prev);
-                                    params.set('category', cat.subCategory);
-                                    return params;
-                                });
 
-                                setIsFilterOpen(false);
-                            }}
-                            className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${normalize(cat.subCategory ?? '') === normalize(activeCategory) ? 'bg-brand text-white' : 'text-brand-matte/60 hover:bg-white hover:text-brand-matte hover:shadow-md'}`}
-                        >
-                            {cat.subCategory} Series
-                            <Badge variant="outline" className={`text-[9px] border-black/10 text-inherit ${normalize(cat.subCategory ?? '') === normalize(activeCategory) ? 'border-white/20' : ''}`}>
-                                {products.filter(p => p.subCategory?.toLowerCase() === cat.subCategory.toLowerCase()).length}
-                            </Badge>
-                        </button>
+                    {categories.map(cat => (
+                        <div key={cat.name} className="space-y-2">
+                            <button
+                                onClick={() => {
+                                    setSearchParams(prev => {
+                                        const params = new URLSearchParams(prev);
+                                        params.set('category', cat.name);
+                                        params.delete('subCategory');
+                                        return params;
+                                    });
+                                    setIsFilterOpen(false);
+                                }}
+                                className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${normalize(activeCategory) === normalize(cat.name) ? 'border-brand text-brand' : 'border-transparent text-brand-matte/40 hover:text-brand-matte'}`}
+                            >
+                                {cat.name}
+                            </button>
+                            <div className="pl-4 space-y-1">
+                                {cat.subCategories.map(sub => (
+                                    <button
+                                        key={sub}
+                                        onClick={() => {
+                                            setSearchParams(prev => {
+                                                const params = new URLSearchParams(prev);
+                                                params.set('category', cat.name);
+                                                params.set('subCategory', sub);
+                                                return params;
+                                            });
+                                            setIsFilterOpen(false);
+                                        }}
+                                        className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${normalize(activeSubCategory) === normalize(sub) ? 'bg-brand text-white shadow-lg' : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'}`}
+                                    >
+                                        {sub}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>

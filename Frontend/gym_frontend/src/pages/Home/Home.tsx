@@ -8,6 +8,7 @@ import ProductCard from '../../components/ProductCard.tsx';
 import { fetchProducts } from '../../data/Product.tsx';
 import { MOCK_PRODUCTS } from '../../mockData.ts';
 import NexusLoader from '../../components/NexusLoader';
+import AutomaticBannerSlider from '../../components/AutomaticBannerSlider';
 
 const Home: React.FC = () => {
   const heroRef = React.useRef<HTMLDivElement>(null);
@@ -526,6 +527,8 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      <AutomaticBannerSlider />
 
       {/* 3. NEW ARRIVALS SECTION - Enhanced White */}
       <motion.section

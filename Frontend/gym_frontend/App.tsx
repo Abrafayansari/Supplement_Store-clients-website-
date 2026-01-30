@@ -19,6 +19,7 @@ import AdminDashboard from './src/pages/Admin/Dashboard';
 import ProductManagement from './src/pages/Admin/ProductManagement';
 import OrderManagement from './src/pages/Admin/OrderManagement';
 import UserManagement from './src/pages/Admin/UserManagement';
+import BannerManagement from './src/pages/Admin/BannerManagement';
 import Wishlist from './src/pages/Wishlist';
 import ForgotPassword from './src/pages/ForgotPassword';
 import ResetPassword from './src/pages/ResetPassword';
@@ -77,6 +78,7 @@ const App: React.FC = () => {
                   <Route path="/admin/products" element={<ProtectedRoute role="ADMIN"><ProductManagement /></ProtectedRoute>} />
                   <Route path="/admin/orders" element={<ProtectedRoute role="ADMIN"><OrderManagement /></ProtectedRoute>} />
                   <Route path="/admin/users" element={<ProtectedRoute role="ADMIN"><UserManagement /></ProtectedRoute>} />
+                  <Route path="/admin/banners" element={<ProtectedRoute role="ADMIN"><BannerManagement /></ProtectedRoute>} />
 
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

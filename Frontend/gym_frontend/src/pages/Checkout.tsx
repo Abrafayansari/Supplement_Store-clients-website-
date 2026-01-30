@@ -23,7 +23,8 @@ interface LocationState {
   singleItem?: {
     product: Product;
     quantity: number;
-    variant?: string;
+    variant?: any;
+    variantId?: string;
   }
 }
 
@@ -49,7 +50,7 @@ const Checkout: React.FC = () => {
   const itemsToProcess = isSingleItem ? [state.singleItem!] : cartItems;
 
   const subtotal = isSingleItem
-    ? state.singleItem!.product.price * state.singleItem!.quantity
+    ? (state.singleItem?.variant ? state.singleItem.variant.price : state.singleItem!.product.price) * state.singleItem!.quantity
     : cartTotalPrice;
 
   const shipping = subtotal > 50 || subtotal === 0 ? 0 : 300;
@@ -140,10 +141,11 @@ const Checkout: React.FC = () => {
       }
 
       // 2. Create Order using FormData for file upload
-      const orderItems = itemsToProcess.map(item => ({
+      const orderItems = itemsToProcess.map((item: any) => ({
         productId: item.product.id,
+        variantId: item.variant?.id || item.variantId || null,
         quantity: item.quantity,
-        price: item.product.price
+        price: item.variant ? item.variant.price : item.product.price
       }));
 
       const formDataPayload = new FormData();
@@ -425,15 +427,19 @@ const Checkout: React.FC = () => {
                   <h4 className="text-[11px] font-black text-white uppercase tracking-widest truncate">{item.product.name}</h4>
                   <div className="flex items-center gap-2 mt-1">
                     <p className="text-[9px] text-zinc-600 font-bold uppercase italic">{item.product.category}</p>
-                    {isSingleItem && state.singleItem?.variant && (
+                    {item.variant && (
                       <>
                         <span className="w-1 h-1 bg-brand rounded-full"></span>
-                        <p className="text-[9px] text-brand-gold font-black uppercase tracking-widest">{state.singleItem.variant}</p>
+                        <p className="text-[9px] text-brand-gold font-black uppercase tracking-widest">
+                          {item.variant.size} {item.variant.flavor && ` / ${item.variant.flavor}`}
+                        </p>
                       </>
                     )}
                   </div>
                 </div>
-                <span className="text-[11px] font-black text-brand italic">${(item.product.price * item.quantity).toFixed(2)}</span>
+                <span className="text-[11px] font-black text-brand italic">
+                  Rs. {((item.variant ? item.variant.price : item.product.price) * item.quantity).toFixed(2)}
+                </span>
               </div>
             ))}
           </div>
@@ -441,7 +447,7 @@ const Checkout: React.FC = () => {
           <div className="space-y-4 border-t border-zinc-900 pt-8">
             <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-zinc-500">
               <span>Subtotal</span>
-              <span className="text-white">${subtotal.toFixed(2)}</span>
+              <span className="text-white">Rs. {subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-zinc-500">
               <span>Logistics</span>

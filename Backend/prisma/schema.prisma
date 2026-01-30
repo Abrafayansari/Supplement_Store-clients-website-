@@ -26,41 +26,59 @@ model User {
 }
 
 model Product {
-  id          String         @id @default(uuid())
+  id          String           @id @default(uuid())
   name        String
   brand       String?
   category    String
   subCategory String?
-  price       Float
-  size        String?
-  stock       Int
+  price       Float            @default(0) // Representative price
+  stock       Int              @default(0) // Total stock
   description String?
   warnings    String[]
   directions  String?
   images      String[]
-  isActive    Boolean        @default(true)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  rating      Float          @default(0)
-  reviewCount Int            @default(0)
-  variants    String[]
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  rating      Float            @default(0)
+  reviewCount Int              @default(0)
+  variantType    VariantType      @default(SIZE)
+  secondaryVariantName String?   @default("Flavor")
+  variants    ProductVariant[]
   cartItems   CartItem[]
   orderItems  OrderItem[]
   reviews     Review[]
   wishlist    WishlistItem[]
 }
 
+model ProductVariant {
+  id        String      @id @default(uuid())
+  productId String
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  flavor    String?
+  price     Float
+  stock     Int
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  cartItems CartItem[]
+  orderItems OrderItem[]
+}
+
 model CartItem {
-  id        String   @id @default(uuid())
+  id        String          @id @default(uuid())
   userId    String
   productId String
+  variantId String?
   quantity  Int
-  price     Int
-  createdAt DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  price     Float           // Changed to Float to match Product price
+  createdAt DateTime        @default(now())
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, productId])
+  @@unique([userId, productId, variantId])
 }
 
 model WishlistItem {
@@ -77,7 +95,7 @@ model WishlistItem {
 model Order {
   id            String        @id @default(uuid())
   userId        String
-  total         Int
+  total         Float         // Changed to Float
   createdAt     DateTime      @default(now())
   addressId     String
   status        Status        @default(PENDING)
@@ -90,13 +108,15 @@ model Order {
 }
 
 model OrderItem {
-  id        String  @id @default(uuid())
+  id        String          @id @default(uuid())
   orderId   String
   productId String
+  variantId String?
   quantity  Int
-  price     Int
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  price     Float           // Changed to Float
+  order     Order           @relation(fields: [orderId], references: [id])
+  product   Product         @relation(fields: [productId], references: [id])
+  variant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
 }
 
 model Review {
@@ -151,7 +171,29 @@ enum Status {
   PROCESSING
 }
 
+enum VariantType {
+  SIZE
+  SERVINGS
+  GRAMS
+  TABLETS
+  BARS
+  SCOOPS
+  CAPSULES
+  VERSION
+  OTHER
+}
+
 enum PaymentMethod {
   COD
   ONLINE
+}
+
+model Banner {
+  id        String   @id @default(uuid())
+  image     String
+  title     String?
+  link      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

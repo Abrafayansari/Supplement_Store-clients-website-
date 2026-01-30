@@ -18,6 +18,8 @@ export const createProduct = async (req, res) => {
       description,
       warnings = [],
       directions,
+      variantType,
+      secondaryVariantName = "Flavor",
       variants = [],
     } = req.body;
 
@@ -41,21 +43,50 @@ export const createProduct = async (req, res) => {
 
     const imageUrls = await Promise.all(imageUploadPromises);
 
+    // Parse variants if they come as a JSON string
+    let parsedVariants = [];
+    if (variants) {
+      parsedVariants = typeof variants === 'string' ? JSON.parse(variants) : variants;
+    }
+
+    // Ensure numeric values
+    parsedVariants = parsedVariants.map(v => ({
+      size: v.size,
+      flavor: v.flavor || null,
+      price: Number(v.price),
+      stock: Number(v.stock)
+    }));
+
+    // Minimum price for the product overview
+    const basePrice = parsedVariants.length > 0
+      ? Math.min(...parsedVariants.map(v => v.price))
+      : Number(price);
+
+    const totalStock = parsedVariants.length > 0
+      ? parsedVariants.reduce((sum, v) => sum + v.stock, 0)
+      : Number(stock);
+
     const product = await prisma.product.create({
       data: {
         name,
         brand,
         category,
         subCategory,
-        price: Number(price),
-        size,
-        stock: Number(stock),
+        price: basePrice,
+        stock: totalStock,
         description,
         warnings: Array.isArray(warnings) ? warnings : [warnings],
         directions,
-        variants: typeof variants === 'string' ? JSON.parse(variants) : (Array.isArray(variants) ? variants : []),
         images: imageUrls,
+        variantType: variantType || 'SIZE',
+        secondaryVariantName,
+        variants: {
+          create: parsedVariants
+        }
       },
+      include: {
+        variants: true
+      }
     });
 
     return res.status(201).json({
@@ -128,25 +159,67 @@ export const uploadbulkproducts = async (req, res) => {
         }
       }
 
+      // Parse variants: format "size:price:stock|size:price:stock"
+      const variantData = row.variants
+        ? row.variants.split("|").map(v => {
+          const parts = v.split(":");
+          if (parts.length === 4) {
+            // size:flavor:price:stock
+            return {
+              size: parts[0].trim(),
+              flavor: parts[1].trim(),
+              price: parseFloat(parts[2]),
+              stock: parseInt(parts[3])
+            };
+          } else {
+            // size:price:stock
+            const [size, price, stock] = parts;
+            return {
+              size: size.trim(),
+              flavor: null,
+              price: parseFloat(price),
+              stock: parseInt(stock)
+            };
+          }
+        })
+        : [];
+
+      const basePrice = variantData.length > 0
+        ? Math.min(...variantData.map(v => v.price))
+        : parseFloat(row.price || 0);
+
+      const totalStock = variantData.length > 0
+        ? variantData.reduce((sum, v) => sum + v.stock, 0)
+        : parseInt(row.stock || 0);
+
       products.push({
         name: row.name,
         brand: row.brand || null,
         category: row.category,
         subCategory: row.subCategory || null,
-        price: parseFloat(row.price),
-        size: row.size || null,
-        stock: parseInt(row.stock),
+        price: basePrice,
+        stock: totalStock,
         description: row.description || null,
         warnings: row.warnings ? row.warnings.split("|") : [],
         directions: row.directions || null,
-        variants: row.variants ? row.variants.split("|") : [],
         images: productImages,
+        variantType: row.variantType ? row.variantType.toUpperCase() : 'SIZE',
+        secondaryVariantName: row.secondaryVariantName || 'Flavor',
+        variants: variantData
       });
     }
 
-    // 5️⃣ Insert into DB (one by one to handle JSON properly)
+    // 5️⃣ Insert into DB
     for (const product of products) {
-      await prisma.product.create({ data: product });
+      const { variants, ...productData } = product;
+      await prisma.product.create({
+        data: {
+          ...productData,
+          variants: {
+            create: variants
+          }
+        }
+      });
     }
 
     res.json({ message: `Successfully uploaded ${products.length} products` });
@@ -170,6 +243,7 @@ export const uploadbulkproducts = async (req, res) => {
 export const getallproducts = async (req, res) => {
   try {
     const {
+      category,
       subCategory,
       search,
       minPrice,
@@ -184,6 +258,10 @@ export const getallproducts = async (req, res) => {
     const where = {
       isActive: true,
     };
+
+    if (category) {
+      where.category = category;
+    }
 
     if (subCategory) {
       where.subCategory = subCategory;
@@ -226,6 +304,9 @@ export const getallproducts = async (req, res) => {
         orderBy,
         skip,
         take: Number(limit),
+        include: {
+          variants: true
+        }
       }),
       prisma.product.count({ where }),
     ]);
@@ -249,6 +330,7 @@ export const getProductById = async (req, res) => {
     const product = await prisma.product.findUnique({
       where: { id },
       include: {
+        variants: true,
         reviews: {
           include: {
             user: {
@@ -272,14 +354,27 @@ export const getProductById = async (req, res) => {
 
 export const getCategories = async (req, res) => {
   try {
-    // Fetch unique categories or subCategories from products
-    const categories = await prisma.product.findMany({
+    const products = await prisma.product.findMany({
       where: { isActive: true },
-      select: { subCategory: true, category: true },
-      distinct: ['subCategory'], // get unique subCategories
+      select: { category: true, subCategory: true },
     });
 
-    res.json({ categories }); // array of { subCategory, category }
+    const categoryMap = {};
+    products.forEach(p => {
+      if (!categoryMap[p.category]) {
+        categoryMap[p.category] = new Set();
+      }
+      if (p.subCategory) {
+        categoryMap[p.category].add(p.subCategory);
+      }
+    });
+
+    const result = Object.keys(categoryMap).map(cat => ({
+      name: cat,
+      subCategories: Array.from(categoryMap[cat])
+    }));
+
+    res.json({ categories: result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to fetch categories' });
@@ -300,6 +395,8 @@ export const updateProduct = async (req, res) => {
       description,
       warnings,
       directions,
+      variantType,
+      secondaryVariantName,
       variants,
       existingImages // Array of image URLs to keep
     } = req.body;
@@ -326,6 +423,37 @@ export const updateProduct = async (req, res) => {
       imageUrls = [...imageUrls, ...newImageUrls];
     }
 
+    // Handle variants update: easiest is to delete and recreate for this simplified flow
+    // A more complex update would diff them.
+    let variantUpdate = {};
+    if (variants) {
+      const parsedVariants = typeof variants === 'string' ? JSON.parse(variants) : variants;
+
+      const basePrice = parsedVariants.length > 0
+        ? Math.min(...parsedVariants.map(v => Number(v.price)))
+        : undefined;
+
+      const totalStock = parsedVariants.length > 0
+        ? parsedVariants.reduce((sum, v) => sum + Number(v.stock), 0)
+        : undefined;
+
+      variantUpdate = {
+        price: basePrice,
+        stock: totalStock,
+        variantType: variantType,
+        secondaryVariantName: secondaryVariantName,
+        variants: {
+          deleteMany: {}, // Wipe existing variants
+          create: parsedVariants.map(v => ({
+            size: v.size,
+            flavor: v.flavor || null,
+            price: Number(v.price),
+            stock: Number(v.stock)
+          }))
+        }
+      };
+    }
+
     const updatedProduct = await prisma.product.update({
       where: { id },
       data: {
@@ -333,15 +461,15 @@ export const updateProduct = async (req, res) => {
         brand,
         category,
         subCategory,
-        price: price ? Number(price) : undefined,
-        size,
-        stock: stock ? Number(stock) : undefined,
         description,
         warnings: warnings ? (Array.isArray(warnings) ? warnings : JSON.parse(warnings)) : undefined,
         directions,
-        variants: variants ? (Array.isArray(variants) ? variants : JSON.parse(variants)) : undefined,
         images: imageUrls.length > 0 ? imageUrls : undefined,
+        ...variantUpdate
       },
+      include: {
+        variants: true
+      }
     });
 
     res.json({ message: "Product updated successfully", product: updatedProduct });

@@ -5,13 +5,28 @@ import { useCart } from '../contexts/CartContext.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { ToastContainer } from 'react-toast';
 import logo from '../assets/nexus_logo.jpg';
+import { getCategories, Category } from '../data/Product';
+import { ChevronDown } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const { totalItems } = useCart();
   const { user, logout, isAdmin } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const cats = await getCategories();
+        setCategories(cats);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+    fetchCats();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -27,7 +42,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-white/80 border-b border-black/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-white border-b border-black/5 backdrop-blur-md py-3'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-gray-100/90 border-b border-black/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-gray-100/90 border-b border-black/5 backdrop-blur-md py-3'}`}>
       <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -38,20 +53,51 @@ const Navbar: React.FC = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-12">
-            {[
-              { label: 'Home', path: '/' },
-              { label: 'Shop', path: '/products' },
-              { label: 'Contact', path: '/contact' }
-            ].map((item) => (
+          <div className="hidden lg:flex items-center space-x-12">
+            <Link to="/" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Home</Link>
+
+            {/* Shop Dropdown */}
+            <div className="relative group/shop-dropdown">
               <Link
-                key={item.label}
-                to={item.path}
-                className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold"
+                to="/products"
+                className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold"
               >
-                {item.label}
+                Shop <ChevronDown className="w-3 h-3 group-hover/shop-dropdown:rotate-180 transition-transform" />
               </Link>
-            ))}
+
+              <div className="absolute left-0 mt-2 w-[600px] opacity-0 translate-y-2 pointer-events-none group-hover/shop-dropdown:opacity-100 group-hover/shop-dropdown:translate-y-0 group-hover/shop-dropdown:pointer-events-auto transition-all duration-300 z-[70]">
+                <div className="bg-white border border-brand-matte/10 shadow-2xl p-8 grid grid-cols-3 gap-8 backdrop-blur-xl">
+                  {categories.map((cat) => (
+                    <div key={cat.name} className="space-y-4">
+                      <Link
+                        to={`/products?category=${cat.name}`}
+                        className="text-[10px] font-black uppercase tracking-[0.2em] text-brand border-b border-brand/10 pb-2 block"
+                      >
+                        {cat.name}
+                      </Link>
+                      <div className="space-y-2">
+                        {cat.subCategories.map((sub) => (
+                          <Link
+                            key={sub}
+                            to={`/products?subCategory=${sub}`}
+                            className="block text-[10px] font-bold text-brand-matte/60 hover:text-brand-gold uppercase tracking-widest transition-colors"
+                          >
+                            {sub}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  {categories.length === 0 && (
+                    <div className="col-span-3 text-center py-4 text-brand-matte/40 text-[10px] uppercase font-black tracking-widest">
+                      Initializing Catalog Protocols...
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <Link to="/contact" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Contact</Link>
           </div>
 
           <div className="flex items-center space-x-8">

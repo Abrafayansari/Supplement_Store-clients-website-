@@ -9,10 +9,11 @@ import { useWishlist } from '../contexts/WishlistContext.tsx';
 
 interface ProductCardProps {
   product: Product;
+  variant?: any;
   mode?: 'default' | 'buyNow';
 }
 
-const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
+const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const { addToCart } = useCart();
@@ -54,7 +55,7 @@ const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
       toast.error("Login required");
       return;
     }
-    navigate('/checkout', { state: { singleItem: { product, quantity: 1 } } });
+    navigate('/checkout', { state: { singleItem: { product, quantity: 1, variant, variantId: variant?.id } } });
   };
 
 
@@ -193,14 +194,15 @@ const ProductCard = ({ product, mode = 'default' }: ProductCardProps) => {
                 {product.category}
               </p>
               <h3 className="text-xs md:text-sm font-black text-brand-matte uppercase tracking-tight line-clamp-2 leading-tight group-hover:text-brand transition-colors">
-                {product.name}
+                {product.name} {variant && <span className="text-brand-gold">({variant.size})</span>}
               </h3>
             </div>
 
             <div className="flex items-center justify-between mt-auto pt-2">
               <div className="flex flex-col">
                 <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">
-                  Rs. {product.price.toFixed(2)}
+                  {!variant && product.variants.length > 1 && <span className="text-[10px] font-bold not-italic mr-1 text-brand-matte/40 uppercase tracking-widest">From</span>}
+                  Rs. {(variant ? variant.price : product.price).toFixed(2)}
                 </span>
                 {/* {product.originalPrice && (
                   <span className="text-[10px] text-brand-matte/30 line-through font-bold">

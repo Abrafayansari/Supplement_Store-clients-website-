@@ -7,6 +7,7 @@ import { createProduct, getallproducts, getCategories, uploadbulkproducts, getPr
 import upload from "../middlewares/uploads.js";
 import { getAdminStats } from "../controllers/AdminController.js";
 import { getNotifications, getUnreadCount, markAsReadAndDelete, deleteAllNotifications } from "../controllers/NotificationController.js";
+import { getBanners, createBanner, deleteBanner } from "../controllers/BannerController.js";
 
 
 export const router = express.Router();
@@ -45,6 +46,11 @@ router.post("/orders", authenticate, upload.single("receipt"), createOrder);
 router.get("/orders", authenticate, getUserOrders);
 router.get("/getprofile", authenticate, getProfile);
 router.put("/profile", authenticate, updateProfile);
+
+// Banner Routes
+router.get("/banners", getBanners);
+router.post("/admin/banners", authenticate, adminOnly, upload.single("image"), createBanner);
+router.delete("/admin/banners/:id", authenticate, adminOnly, deleteBanner);
 
 // Admin Routes
 router.get("/admin/stats", authenticate, adminOnly, getAdminStats);

@@ -45,6 +45,7 @@ export const createOrder = async (req, res) => {
     for (const item of items) {
       const product = await prisma.product.findUnique({
         where: { id: item.productId },
+        include: { variants: true }
       });
       if (!product) {
         return res.status(404).json({
@@ -52,19 +53,32 @@ export const createOrder = async (req, res) => {
         });
       }
 
-      if (product.stock < item.quantity) {
+      let price = product.price;
+      let stock = product.stock;
+
+      if (item.variantId) {
+        const variant = product.variants.find(v => v.id === item.variantId);
+        if (!variant) {
+          return res.status(404).json({ error: `Variant ${item.variantId} not found for product ${product.name}` });
+        }
+        price = variant.price;
+        stock = variant.stock;
+      }
+
+      if (stock < item.quantity) {
         return res.status(400).json({
-          error: `Insufficient stock for product ${product.name}`
+          error: `Insufficient stock for product ${product.name}${item.variantId ? ` (Variant: ${product.variants.find(v => v.id === item.variantId).size})` : ''}`
         });
       }
 
-      const itemPrice = product.price * item.quantity;
+      const itemPrice = price * item.quantity;
       total += itemPrice;
 
       orderItemsData.push({
         productId: item.productId,
+        variantId: item.variantId || null,
         quantity: item.quantity,
-        price: product.price,
+        price: price,
       });
     }
 
@@ -106,6 +120,7 @@ export const createOrder = async (req, res) => {
         items: {
           include: {
             product: true,
+            variant: true,
           },
         },
         adress: true,
@@ -119,8 +134,19 @@ export const createOrder = async (req, res) => {
       },
     });
 
-    // 6. Update product stock
+    // 6. Update product and variant stock
     for (const item of items) {
+      if (item.variantId) {
+        await prisma.productVariant.update({
+          where: { id: item.variantId },
+          data: {
+            stock: {
+              decrement: item.quantity,
+            },
+          },
+        });
+      }
+
       await prisma.product.update({
         where: { id: item.productId },
         data: {
@@ -258,6 +284,7 @@ export const getUserOrders = async (req, res) => {
         items: {
           include: {
             product: true,
+            variant: true,
           },
         },
         adress: true,
@@ -282,6 +309,7 @@ export const getAllOrders = async (req, res) => {
         items: {
           include: {
             product: true,
+            variant: true,
           },
         },
         adress: true,
@@ -318,6 +346,7 @@ export const updateOrderStatus = async (req, res) => {
         items: {
           include: {
             product: true,
+            variant: true,
           },
         },
         adress: true,

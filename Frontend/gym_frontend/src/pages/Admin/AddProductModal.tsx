@@ -19,20 +19,20 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
-    // Manual Form State
     const [formData, setFormData] = useState({
         name: '',
         brand: '',
         category: '',
         subCategory: '',
-        price: '',
-        size: '',
-        stock: '',
         description: '',
         warnings: '',
         directions: '',
-        variants: ''
+        variantType: 'SIZE',
+        secondaryVariantName: 'Flavor',
     });
+    const [variants, setVariants] = useState<Array<{ size: string; flavor: string; price: string; stock: string }>>([
+        { size: '', flavor: '', price: '', stock: '' }
+    ]);
     const [images, setImages] = useState<File[]>([]);
 
     // Bulk Upload State
@@ -46,14 +46,22 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                 brand: product.brand || '',
                 category: product.category || '',
                 subCategory: product.subCategory || '',
-                price: product.price?.toString() || '',
-                size: product.size || '',
-                stock: product.stock?.toString() || '',
                 description: product.description || '',
                 warnings: Array.isArray(product.warnings) ? product.warnings.join(', ') : '',
                 directions: product.directions || '',
-                variants: Array.isArray(product.variants) ? product.variants.join(', ') : ''
+                variantType: product.variantType || 'SIZE',
+                secondaryVariantName: product.secondaryVariantName || 'Flavor',
             });
+            if (product.variants && Array.isArray(product.variants) && product.variants.length > 0) {
+                setVariants(product.variants.map((v: any) => ({
+                    size: v.size || '',
+                    flavor: v.flavor || '',
+                    price: v.price?.toString() || '',
+                    stock: v.stock?.toString() || ''
+                })));
+            } else {
+                setVariants([{ size: '', flavor: '', price: '', stock: '' }]);
+            }
             // We don't set files, but we might want to track existing images if we want to delete them
             // For now, we'll just clear new image selection when editing
             setImages([]);
@@ -64,14 +72,13 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                 brand: '',
                 category: '',
                 subCategory: '',
-                price: '',
-                size: '',
-                stock: '',
                 description: '',
                 warnings: '',
                 directions: '',
-                variants: ''
+                variantType: 'SIZE',
+                secondaryVariantName: 'Flavor',
             });
+            setVariants([{ size: '', flavor: '', price: '', stock: '' }]);
             setImages([]);
             setActiveTab('manual'); // Default to manual for new product
         }
@@ -89,12 +96,16 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
 
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
-            if (key === 'warnings' || key === 'variants') {
+            if (key === 'warnings' || key === 'directions') {
                 data.append(key, JSON.stringify(value.split(',').map(s => s.trim()).filter(s => s !== '')));
             } else {
                 data.append(key, value);
             }
         });
+
+        // Filter out empty variants (must have size, price, and stock)
+        const validVariants = variants.filter(v => v.size && v.price && v.stock);
+        data.append('variants', JSON.stringify(validVariants));
 
         images.forEach(image => {
             data.append('images', image);
@@ -234,16 +245,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                         className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
                                     />
                                 </div>
-                                <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Brand Identity</label>
-                                    <input
-                                        required
-                                        value={formData.brand}
-                                        onChange={e => setFormData({ ...formData, brand: e.target.value })}
-                                        placeholder="E.G. NEXUS"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
-                                    />
-                                </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
                                         <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Category</label>
@@ -265,37 +266,118 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                         />
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-3 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Brand Identity</label>
+                                    <input
+                                        required
+                                        value={formData.brand}
+                                        onChange={e => setFormData({ ...formData, brand: e.target.value })}
+                                        placeholder="E.G. NEXUS"
+                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Price ($)</label>
-                                        <input
-                                            required
-                                            type="number"
-                                            value={formData.price}
-                                            onChange={e => setFormData({ ...formData, price: e.target.value })}
-                                            placeholder="0.00"
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
-                                        />
+                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Variant Type (Size/Serving)</label>
+                                        <select
+                                            value={formData.variantType}
+                                            onChange={e => setFormData({ ...formData, variantType: e.target.value })}
+                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-xs font-black text-white focus:border-brand outline-none transition uppercase"
+                                        >
+                                            {['SIZE', 'SERVINGS', 'GRAMS', 'TABLETS', 'BARS', 'SCOOPS', 'CAPSULES', 'VERSION', 'OTHER'].map(v => (
+                                                <option key={v} value={v} className="bg-zinc-950">{v}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Size</label>
+                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Secondary Label (E.G. Flavor)</label>
                                         <input
-                                            value={formData.size}
-                                            onChange={e => setFormData({ ...formData, size: e.target.value })}
-                                            placeholder="5 LBS"
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                            value={formData.secondaryVariantName}
+                                            onChange={e => setFormData({ ...formData, secondaryVariantName: e.target.value })}
+                                            placeholder="FLAVOR / COLOR"
+                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition uppercase"
                                         />
                                     </div>
-                                    <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Stock</label>
-                                        <input
-                                            required
-                                            type="number"
-                                            value={formData.stock}
-                                            onChange={e => setFormData({ ...formData, stock: e.target.value })}
-                                            placeholder="100"
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
-                                        />
+                                </div>
+                                <div className="space-y-4 pt-4 border-t border-zinc-800">
+                                    <div className="flex items-center justify-between ml-1">
+                                        <label className="text-[10px] font-black text-brand uppercase tracking-widest italic">Matrix Configurations (Variants)</label>
+                                        <button
+                                            type="button"
+                                            onClick={() => setVariants([...variants, { size: '', flavor: '', price: '', stock: '' }])}
+                                            className="text-[9px] font-black text-white bg-brand/20 px-3 py-1 rounded-full uppercase tracking-widest hover:bg-brand hover:text-white transition"
+                                        >
+                                            + Add Variant
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {variants.map((v, i) => (
+                                            <div key={i} className="grid grid-cols-12 gap-2 items-end bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800/50">
+                                                <div className="col-span-3 space-y-1">
+                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">{formData.variantType}</label>
+                                                    <input
+                                                        value={v.size}
+                                                        onChange={e => {
+                                                            const newV = [...variants];
+                                                            newV[i].size = e.target.value;
+                                                            setVariants(newV);
+                                                        }}
+                                                        placeholder="30 SERVINGS"
+                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                    />
+                                                </div>
+                                                <div className="col-span-3 space-y-1">
+                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">{formData.secondaryVariantName || 'Flavor'}</label>
+                                                    <input
+                                                        value={v.flavor}
+                                                        onChange={e => {
+                                                            const newV = [...variants];
+                                                            newV[i].flavor = e.target.value;
+                                                            setVariants(newV);
+                                                        }}
+                                                        placeholder="CHOCOLATE"
+                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2 space-y-1">
+                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">Price</label>
+                                                    <input
+                                                        type="number"
+                                                        value={v.price}
+                                                        onChange={e => {
+                                                            const newV = [...variants];
+                                                            newV[i].price = e.target.value;
+                                                            setVariants(newV);
+                                                        }}
+                                                        placeholder="0.00"
+                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2 space-y-1">
+                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">Stock</label>
+                                                    <input
+                                                        type="number"
+                                                        value={v.stock}
+                                                        onChange={e => {
+                                                            const newV = [...variants];
+                                                            newV[i].stock = e.target.value;
+                                                            setVariants(newV);
+                                                        }}
+                                                        placeholder="10"
+                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                    />
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setVariants(variants.filter((_, idx) => idx !== i))}
+                                                    disabled={variants.length === 1}
+                                                    className="col-span-2 p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition disabled:opacity-20"
+                                                >
+                                                    <X size={14} className="mx-auto" />
+                                                </button>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -342,29 +424,20 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                     )}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Warnings (Comma Separated)</label>
+                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Notice Protocol (Safety Warnings)</label>
                                     <input
                                         value={formData.warnings}
                                         onChange={e => setFormData({ ...formData, warnings: e.target.value })}
-                                        placeholder="Do not exceed dose, consult doctor"
+                                        placeholder="E.G. DO NOT EXCEED DOSE, CONSULT DOCTOR"
                                         className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Directions (Comma Separated)</label>
+                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Execution Path (Directions)</label>
                                     <input
                                         value={formData.directions}
                                         onChange={e => setFormData({ ...formData, directions: e.target.value })}
-                                        placeholder="Take 1 scoop daily, mix with water"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
-                                    />
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Variants (Comma Separated)</label>
-                                    <input
-                                        value={formData.variants}
-                                        onChange={e => setFormData({ ...formData, variants: e.target.value })}
-                                        placeholder="Vanilla, Chocolate, Strawberry"
+                                        placeholder="E.G. TAKE 1 SCOOP DAILY, MIX WITH WATER"
                                         className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
                                     />
                                 </div>

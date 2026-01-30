@@ -20,15 +20,35 @@ interface QuickViewModalProps {
 }
 
 const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
+  const [selectedVariant, setSelectedVariant] = useState<any>(product?.variants?.[0] || null);
+  const [selectedSize, setSelectedSize] = useState<string>(product?.variants?.[0]?.size || '');
+  const [selectedFlavor, setSelectedFlavor] = useState<string>(product?.variants?.[0]?.flavor || '');
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
+  const uniqueSizes = Array.from(new Set(product?.variants?.map((v: any) => v.size) || []));
+  const availableFlavors = Array.from(new Set(product?.variants?.filter((v: any) => v.size === selectedSize).map((v: any) => v.flavor).filter(Boolean) || []));
+
+  React.useEffect(() => {
+    if (product?.variants?.length) {
+      const matches = product.variants.filter((v: any) => v.size === selectedSize && (v.flavor === selectedFlavor || !v.flavor));
+      if (matches.length > 0) {
+        if (selectedFlavor && !matches.some((m: any) => m.flavor === selectedFlavor)) {
+          setSelectedFlavor(matches[0].flavor || '');
+          setSelectedVariant(matches[0]);
+        } else {
+          setSelectedVariant(matches.find((m: any) => m.flavor === selectedFlavor) || matches[0]);
+        }
+      }
+    }
+  }, [selectedSize, selectedFlavor, product]);
+
   if (!product) return null;
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
-    toast.success(`${quantity} × ${product.name} added to cart!`);
+    addToCart(product, quantity, selectedVariant?.id);
+    toast.success(`${quantity} × ${product.name} ${selectedVariant ? `(${selectedVariant.size}${selectedVariant.flavor ? ` - ${selectedVariant.flavor}` : ''})` : ''} added to cart!`);
     setQuantity(1);
     onClose();
   };
@@ -133,8 +153,12 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
                   transition={{ delay: 0.2 }}
                   className="flex items-baseline gap-4"
                 >
-                  <span className="text-3xl font-bold text-brand-gold">${product.price.toFixed(2)}</span>
-                  {/* Mock original price for visuals if we had it, omitting for now */}
+                  <span className="text-3xl font-bold text-brand-gold">Rs. {(selectedVariant ? selectedVariant.price : product.price).toFixed(2)}</span>
+                  {selectedVariant && (
+                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">
+                      / {selectedVariant.size} {selectedVariant.flavor && `- ${selectedVariant.flavor}`}
+                    </span>
+                  )}
                 </motion.div>
               </div>
 
@@ -146,6 +170,58 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
               >
                 {product.description || "Experience peak performance with our scientifically formulated supplement protocol."}
               </motion.p>
+
+              {/* Variant Selection */}
+              {product.variants && product.variants.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="space-y-4"
+                >
+                  {/* Primary Attribute */}
+                  <div className="space-y-2">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">{product.variantType || 'Select Variant'}</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {uniqueSizes.map((sz: any) => (
+                        <button
+                          key={sz}
+                          onClick={() => setSelectedSize(sz)}
+                          className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all rounded-lg
+                            ${selectedSize === sz
+                              ? 'bg-brand text-white border-brand'
+                              : 'bg-white/5 text-white/40 border-white/10 hover:border-white/20'
+                            }`}
+                        >
+                          {sz}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Secondary Attribute (Flavor) */}
+                  {availableFlavors.length > 0 && (
+                    <div className="space-y-2 animate-in fade-in duration-500">
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">{product.secondaryVariantName || 'Select Flavor'}</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {availableFlavors.map((fl: any) => (
+                          <button
+                            key={fl}
+                            onClick={() => setSelectedFlavor(fl)}
+                            className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all rounded-lg
+                              ${selectedFlavor === fl
+                                ? 'bg-brand-gold text-brand-matte border-brand-gold'
+                                : 'bg-white/5 text-white/40 border-white/10 hover:border-white/20'
+                              }`}
+                          >
+                            {fl}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
 
               {/* Features Grid */}
               <motion.div
@@ -183,7 +259,7 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
                   </button>
                   <span className="w-8 text-center text-white font-bold text-sm">{quantity}</span>
                   <button
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    onClick={() => setQuantity(Math.min(selectedVariant ? selectedVariant.stock : product.stock, quantity + 1))}
                     className="p-3 hover:bg-white/5 transition-colors text-white/60 hover:text-white"
                   >
                     <Plus className="w-4 h-4" />
