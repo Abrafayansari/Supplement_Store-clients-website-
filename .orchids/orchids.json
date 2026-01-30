@@ -2,7 +2,7 @@
   "projectId": "a7be604d-2ce3-4545-99b5-dfaf625fa076",
   "createdAt": 1769807891422,
   "startupCommands": [
-    "cd Backend && bun run dev",
-    "cd Frontend/gym_frontend && bun run dev"
+    "cd Backend; bun run dev",
+    "cd Frontend/gym_frontend; bun run dev"
   ]
 }
