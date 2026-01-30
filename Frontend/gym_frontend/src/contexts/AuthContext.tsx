@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import api from '../lib/api';
 import axios from 'axios';
 
 import { User } from '../../types';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface AuthContextType {
   user: User | null;
@@ -35,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (parsedUser) {
           setUser(parsedUser);
           setToken(storedToken);
-          fetchProfile(storedToken);
+          fetchProfile();
         } else {
           logout();
         }
@@ -49,11 +48,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   }, []);
 
-  const fetchProfile = async (currentToken: string) => {
+  const fetchProfile = async () => {
     try {
-      const res = await axios.get(`${API_URL}/getprofile`, {
-        headers: { Authorization: `Bearer ${currentToken}` }
-      });
+      const res = await api.get('/getprofile');
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
     } catch (err) {
@@ -68,7 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = async (email: string, password: string) => {
-    const res = await axios.post(`${API_URL}/login`, { email, password });
+    const res = await api.post('/login', { email, password });
     console.log(res.data);
 
     setUser(res.data.user);
@@ -84,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     password: string,
     role: 'ADMIN' | 'CUSTOMER'
   ) => {
-    const res = await axios.post(`${API_URL}/signup`, {
+    const res = await api.post('/signup', {
       name,
       email,
       password,
@@ -99,11 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateProfile = async (name: string, email: string) => {
-    const res = await axios.put(`${API_URL}/profile`, { name, email }, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const res = await api.put('/profile', { name, email });
     setUser(res.data.user);
     localStorage.setItem('user', JSON.stringify(res.data.user));
   };

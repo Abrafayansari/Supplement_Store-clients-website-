@@ -4,10 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { CreditCard, Truck, ShieldCheck, CheckCircle, ArrowLeft, Lock, Loader2, Banknote, QrCode, UploadCloud, ChevronRight, PlusCircle, MapPin } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import api from '../lib/api';
 import { Product } from '@/types';
-
-const API_URL = import.meta.env.VITE_API_URL
+import { toast } from 'sonner';
 
 const PAKISTAN_PROVINCES = [
   'Punjab',
@@ -66,12 +65,10 @@ const Checkout: React.FC = () => {
     country: 'Pakistan'
   });
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const res = await axios.get(`${API_URL}/addresses`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await api.get('/addresses');
         setAddresses(res.data.addresses);
         if (res.data.addresses.length > 0) {
           setSelectedAddressId(res.data.addresses[0].id);
@@ -81,7 +78,6 @@ const Checkout: React.FC = () => {
         }
       } catch (err) {
         console.error("Failed to fetch addresses:", err);
-      } finally {
       }
     };
 
@@ -114,28 +110,25 @@ const Checkout: React.FC = () => {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !token) {
-      setError("You must be logged in to place an order.");
+      toast.error("You must be logged in to place an order.");
       return;
     }
 
     if (itemsToProcess.length === 0) {
-      setError("Your protocol is empty. Add items to authorize deployment.");
+      toast.error("Your protocol is empty. Add items to authorize deployment.");
       return;
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       let addressId = selectedAddressId;
 
       // 1. Create or Update Address if new form is shown
       if (showNewAddressForm || !addressId) {
-        const addrRes = await axios.post(`${API_URL}/address`, {
+        const addrRes = await api.post('/address', {
           ...formData,
           userId: user.id
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
         });
         addressId = addrRes.data.address.id;
       }
@@ -157,9 +150,8 @@ const Checkout: React.FC = () => {
         formDataPayload.append('receipt', receiptFile);
       }
 
-      await axios.post(`${API_URL}/orders`, formDataPayload, {
+      await api.post('/orders', formDataPayload, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
@@ -174,11 +166,11 @@ const Checkout: React.FC = () => {
 
     } catch (err: any) {
       console.error("Checkout error:", err);
-      setError(err.response?.data?.error || "Failed to process order. Please check your details.");
     } finally {
       setIsLoading(false);
     }
   };
+
 
   if (isOrdered) {
     return (

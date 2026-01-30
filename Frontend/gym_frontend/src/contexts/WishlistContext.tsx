@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { WishlistItem } from '@/types';
-import axios from 'axios';
+import api from '../lib/api';
 import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
-
-const API_URL = import.meta.env.VITE_API_URL
 
 interface WishlistContextType {
     items: WishlistItem[];
@@ -27,9 +25,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
             return;
         }
         try {
-            const res = await axios.get(`${API_URL}/wishlist`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.get('/wishlist');
             setItems(res.data.wishlist);
         } catch (err) {
             console.error("Failed to fetch wishlist", err);
@@ -43,18 +39,10 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
                 toast.error("Please login to add items to wishlist.");
                 return;
             }
-            await axios.post(`${API_URL}/wishlist`,
-                { productId },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            toast.success("Added to wishlist");
+            await api.post('/wishlist', { productId });
             showWishlist();
         } catch (err: any) {
-            if (err.response?.status === 400 && err.response?.data?.message === "Product already in wishlist") {
-                toast.info("Product already in wishlist");
-            } else {
-                toast.error("Failed to add to wishlist");
-            }
+            console.error("Add to wishlist error:", err);
         }
     };
 
@@ -63,14 +51,11 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
             const token = localStorage.getItem("token");
             if (!token) return;
 
-            await axios.delete(`${API_URL}/wishlist/${productId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/wishlist/${productId}`);
 
             setItems(prev => prev.filter(item => item.productId !== productId && item.product.id !== productId));
-            toast.success("Removed from wishlist");
         } catch (err: any) {
-            toast.error("Failed to remove from wishlist");
+            console.error("Remove from wishlist error:", err);
         }
     };
 
@@ -78,9 +63,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
         const token = localStorage.getItem("token");
         if (!token) return false;
         try {
-            const res = await axios.get(`${API_URL}/wishlist/exists/${productId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.get(`/wishlist/exists/${productId}`);
             return res.data.exists;
         } catch (err) {
             return false;

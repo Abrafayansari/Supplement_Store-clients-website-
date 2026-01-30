@@ -20,40 +20,33 @@ const Auth: React.FC<AuthProps> = ({ mode }) => {
     mode === 'admin-login' ? 'ADMIN' : 'CUSTOMER'
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
 
-    try {
-      if (mode === 'signup') {
-        await signup(name, email, password, role);
-        toast.success('Account created successfully!');
-      } else {
-        await login(email, password);
-        toast.success('Welcome back!');
+      try {
+        if (mode === 'signup') {
+          await signup(name, email, password, role);
+        } else {
+          await login(email, password);
+        }
+
+        const targetRole = role === 'ADMIN' ? 'ADMIN' : 'CUSTOMER';
+        
+        if (mode === 'admin-login' || targetRole === 'ADMIN') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+
+      } catch (error: any) {
+        // Errors are handled globally by the api interceptor
+        console.error('Authentication error:', error);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      // ✅ Redirect based on role  
-      // Note: We need to check the user state after a short delay or rely on the updated state if available immediately, 
-      // but usually the auth context should update. For now reusing existing logic but checking if user is available might be tricky if state update is async.
-      // Assuming login/signup throws if failed, so we are good to redirect.
-      // We will default to standard redirect and let the ProtectedRoute handle checks if needed, 
-      // but the original code had a manual check. We'll try to use the likely role.
-      
-      const targetRole = role === 'ADMIN' ? 'ADMIN' : 'CUSTOMER'; // fall back to selected role for immediate redirect logic if user is null
-      
-      if (mode === 'admin-login' || targetRole === 'ADMIN') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
-
-    } catch (error: any) {
-      toast.error(error.message || 'Authentication failed');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const title = mode === 'login' ? 'Welcome Back' : mode === 'signup' ? 'Create Account' : 'Admin Portal';
   const subtitle = mode === 'login' 

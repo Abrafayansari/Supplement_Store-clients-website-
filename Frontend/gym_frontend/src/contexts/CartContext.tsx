@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 import { toast } from 'sonner';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 import { Product, ProductVariant } from '@/types.ts';
 
@@ -45,55 +43,35 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addToCart = async (product: Product, quantity = 1, variantId?: string) => {
     try {
-      const res = await axios.post(`${API_URL}/addtocart`, {
+      await api.post('/addtocart', {
         productId: product.id,
         variantId: variantId,
         quantity: quantity
-      }
-        , {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        }
-      );
+      });
 
       const variant = variantId ? product.variants.find(v => v.id === variantId) : null;
       toast.success(`${product.name} ${variant ? `(${variant.size}${variant.flavor ? ` - ${variant.flavor}` : ''})` : ''} added to protocol.`);
       await showCart(); // Refresh cart from server
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        toast.error("Please login to add items to cart.");
-        return;
-      }
-      toast.error(err.response?.data?.error || "Failed to add item to cart.");
+      console.error("Add to cart error:", err);
     }
   };
+
   const removeFromCart = async (itemId: string) => {
     try {
-      await axios.delete(`${API_URL}/removecart/${itemId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
-
+      await api.delete(`/removecart/${itemId}`);
       setItems(prev => prev.filter(item => item.id !== itemId));
-      toast.success("Item removed from cart");
     } catch (err: any) {
-      toast.error("Failed to remove item from cart");
+      console.error("Remove from cart error:", err);
     }
   };
 
 
   const updateQuantity = async (itemId: string, quantity: number, productId: string, variantId?: string) => {
     try {
-      await axios.post(
-        `${API_URL}/updatecart`,
-        { productId, variantId, quantity },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        }
+      await api.post(
+        '/updatecart',
+        { productId, variantId, quantity }
       );
 
       if (quantity <= 0) {
@@ -108,23 +86,17 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         );
       }
     } catch (err: any) {
-      toast.error("Failed to update cart");
+      console.error("Update quantity error:", err);
     }
   };
 
 
   const clearCart = async () => {
     try {
-      await axios.delete(`${API_URL}/clearcart`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
-
+      await api.delete('/clearcart');
       setItems([]);
-      toast.success("Cart cleared");
     } catch (err: any) {
-      toast.error("Failed to clear cart");
+      console.error("Clear cart error:", err);
     }
   };
 
@@ -134,11 +106,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!token) return false;
 
     try {
-      const res = await axios.get(`${API_URL}/showcart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get('/showcart');
 
       const cartItems: CartItem[] = res.data.cartItems.map((ci: any) => ({
         id: ci.id,

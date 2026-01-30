@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { User, Package, LogOut, ChevronRight, Calendar, Shield, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import api from '../lib/api';
 import { toast } from 'sonner';
 import NexusLoader from '../components/NexusLoader';
-
-const API_URL = import.meta.env.VITE_API_URL
 
 const Profile: React.FC = () => {
   const { user, logout, token, updateProfile } = useAuth();
@@ -28,9 +26,7 @@ const Profile: React.FC = () => {
   const fetchOrders = async () => {
     setLoadingOrders(true);
     try {
-      const res = await axios.get(`${API_URL}/orders`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get('/orders');
       setOrders(res.data.orders);
     } catch (err) {
       console.error("Failed to fetch orders:", err);
@@ -44,9 +40,8 @@ const Profile: React.FC = () => {
     setUpdating(true);
     try {
       await updateProfile(name, email);
-      toast.success('Profile Intelligence Updated Successfully');
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'Failed to update credentials');
+      console.error('Update profile error:', err);
     } finally {
       setUpdating(false);
     }
