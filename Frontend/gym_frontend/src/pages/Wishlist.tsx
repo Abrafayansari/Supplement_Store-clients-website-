@@ -39,39 +39,39 @@ const Wishlist: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="bg-brand-matte min-h-screen pt-12 pb-24 flex items-center justify-center">
+            <div className="bg-brand-warm min-h-screen pt-12 pb-24 flex items-center justify-center">
                 <NexusLoader />
             </div>
         );
     }
 
     return (
-        <div className="bg-brand-matte min-h-screen pt-12 pb-24">
+        <div className="bg-brand-warm min-h-screen pt-32 pb-40">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-12">
-                    Your <span className="text-brand-gold italic">Wishlist</span>
+                <h1 className="text-5xl font-black text-brand-matte uppercase tracking-tighter mb-12">
+                    Your <span className="text-brand italic">Wishlist</span>
                 </h1>
 
                 {items.length === 0 ? (
-                    <div className="text-center py-20">
-                        <Heart className="w-16 h-16 text-brand-gold/20 mx-auto mb-6" />
-                        <h2 className="text-2xl font-black text-white/50 uppercase tracking-widest mb-4">Your wishlist is empty</h2>
-                        <Link to="/products" className="inline-block bg-brand hover:bg-brand-gold text-white font-black uppercase tracking-widest py-3 px-8 transition-luxury">
+                    <div className="text-center py-20 bg-white border border-brand-matte/5 p-12 shadow-sm">
+                        <Heart className="w-16 h-16 text-brand/20 mx-auto mb-6" />
+                        <h2 className="text-2xl font-black text-brand-matte/50 uppercase tracking-tighter mb-4">Your wishlist is empty</h2>
+                        <Link to="/products" className="inline-block bg-brand hover:bg-brand-matte text-white font-black uppercase tracking-widest py-4 px-10 transition-all shadow-xl shadow-brand/10 text-[12px]">
                             Start Shopping
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {items.map(item => (
-                            <div key={item.id} className="group relative bg-brand-matte/5 border border-brand-matte/10 rounded-none overflow-hidden transition-luxury hover:shadow-2xl flex flex-col h-[440px]">
-                                <Link to={`/product/${item.product.id}`} className="block h-[280px] overflow-hidden relative">
+                            <div key={item.id} className="group relative bg-white border border-brand-matte/5 rounded-none overflow-hidden transition-all duration-500 hover:shadow-2xl flex flex-col h-[440px] shadow-sm">
+                                <Link to={`/product/${item.product.id}`} className="block h-[280px] overflow-hidden relative bg-brand-warm/30">
                                     <img
                                         src={item.product.images[0]}
                                         alt={item.product.name}
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                     <div className="absolute top-3 left-3 flex flex-col gap-2">
-                                        <span className="bg-brand-gold/90 text-brand-matte text-[10px] font-black px-2 py-1 uppercase tracking-wider backdrop-blur-sm">
+                                        <span className="bg-brand-gold text-brand-matte text-[10px] font-black px-2 py-1 uppercase tracking-wider shadow-sm">
                                             Saved
                                         </span>
                                     </div>
@@ -80,7 +80,7 @@ const Wishlist: React.FC = () => {
                                             e.preventDefault();
                                             handleRemove(item.product.id);
                                         }}
-                                        className="absolute top-3 right-3 p-2 bg-white/90 text-brand-matte hover:text-red-500 hover:bg-white transition-colors rounded-none shadow-sm z-10"
+                                        className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-white text-brand-matte hover:text-white hover:bg-red-500 transition-all shadow-md z-10"
                                         title="Remove from Wishlist"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -91,7 +91,7 @@ const Wishlist: React.FC = () => {
                                             e.preventDefault();
                                             handleAddToCart(item.product);
                                         }}
-                                        className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${'translate-y-full group-hover:translate-y-0'}`}
+                                        className={`absolute bottom-0 left-0 right-0 bg-brand-matte text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 translate-y-full group-hover:translate-y-0 hover:bg-brand`}
                                     >
                                         <ShoppingCart className="w-4 h-4" />
                                         ADD TO CART

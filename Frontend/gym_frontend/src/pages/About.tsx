@@ -26,7 +26,7 @@ const About: React.FC = () => {
             <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none">
               OUR <span className="text-brand">PHILOSOPHY</span>
             </h1>
-            <p className="text-brand-gold text-[12px] font-black uppercase tracking-[0.6em]">Engineering Human Dominance Since 2023</p>
+            <p className="text-brand-gold text-[12px] font-black uppercase tracking-[0.6em]">Optimizing Human Performance Since 2023</p>
           </motion.div>
         </div>
       </section>
@@ -36,28 +36,28 @@ const About: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <div className="space-y-12">
             <div className="space-y-4">
-              <span className="text-brand font-black uppercase tracking-[0.4em] text-[11px]">The Prime Directive</span>
+              <span className="text-brand font-black uppercase tracking-[0.4em] text-[11px]">Our Core Mission</span>
               <h2 className="text-5xl font-black text-brand-matte uppercase tracking-tighter leading-tight">
                 SCIENCE OVER <span className="text-brand-gold italic">SPECULATION</span>
               </h2>
             </div>
             <p className="text-lg text-brand-matte/60 leading-relaxed font-light">
-              Nexus was born from a singular frustration: the supplement industry's obsession with marketing over molecules. We dismantled the traditional model to build a brand centered on transparency, pharmaceutical-grade isolation, and biological efficacy.
+              Nexus was born from a singular frustration: the supplement industry's obsession with marketing over results. We dismantled the traditional model to build a brand centered on transparency, high-quality ingredients, and proven results.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="space-y-4">
                 <div className="w-12 h-12 bg-brand-matte text-brand-gold flex items-center justify-center">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h4 className="font-black uppercase tracking-widest text-sm">Purity Protocol</h4>
-                <p className="text-xs text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Every batch is verified through third-party molecular analysis.</p>
+                <h4 className="font-black uppercase tracking-widest text-sm">Purity Standards</h4>
+                <p className="text-xs text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Every batch is verified through third-party lab analysis.</p>
               </div>
               <div className="space-y-4">
                 <div className="w-12 h-12 bg-brand-matte text-brand-gold flex items-center justify-center">
                   <Zap className="w-6 h-6" />
                 </div>
-                <h4 className="font-black uppercase tracking-widest text-sm">Peak Bio-Yield</h4>
-                <p className="text-xs text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Optimized absorption rates for immediate biological response.</p>
+                <h4 className="font-black uppercase tracking-widest text-sm">Maximum Absorption</h4>
+                <p className="text-xs text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Optimized absorption rates for immediate results.</p>
               </div>
             </div>
           </div>
@@ -79,12 +79,12 @@ const About: React.FC = () => {
             {
               icon: <Target className="w-12 h-12 text-brand" />,
               title: "PRECISION",
-              desc: "Targeted formulae designed for specific metabolic outcomes."
+              desc: "Targeted formulas designed for specific fitness goals."
             },
             {
               icon: <Award className="w-12 h-12 text-brand-gold" />,
               title: "ELITE STATUS",
-              desc: "Supplying the chemical foundation for world-class athletes."
+              desc: "Supplying the nutritional foundation for world-class athletes."
             },
             {
               icon: <ShieldCheck className="w-12 h-12 text-white" />,
@@ -109,7 +109,7 @@ const About: React.FC = () => {
             <div className="h-1 w-24 bg-brand-gold mx-auto"></div>
           </div>
           <p className="max-w-3xl mx-auto text-xl text-brand-matte/60 font-light leading-relaxed">
-            Our labs operate at ISO-9001 and cGMP standards, utilizing the latest in liquid chromatography and mass spectrometry to ensure every gram of powder meets our exact specifications.
+            Our labs operate at ISO-9001 and cGMP standards, utilizing advanced laboratory testing to ensure every gram of powder meets our exact specifications.
           </p>
           <div className="flex flex-wrap justify-center gap-20 opacity-30 grayscale">
             <div className="text-4xl font-black tracking-tighter uppercase">ISO-9001</div>

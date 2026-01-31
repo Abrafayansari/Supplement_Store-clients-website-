@@ -59,15 +59,15 @@ const Profile: React.FC = () => {
             </div>
             <div className="space-y-1">
               <h2 className="text-xl font-black text-white uppercase tracking-tight">{user.name}</h2>
-              <p className="text-brand-gold text-[10px] font-bold uppercase tracking-widest">{user.role} Status</p>
+              <p className="text-brand-gold text-[10px] font-bold uppercase tracking-widest">{user.role}</p>
             </div>
           </div>
 
           <nav className="bg-white border border-black/5 shadow-xl overflow-hidden">
             {[
-              { id: 'profile', icon: <User className="w-5 h-5" />, label: 'Profile Intelligence' },
-              { id: 'orders', icon: <Package className="w-5 h-5" />, label: 'Order Archive' },
-              { id: 'security', icon: <Shield className="w-5 h-5" />, label: 'Security Protocols' },
+              { id: 'profile', icon: <User className="w-5 h-5" />, label: 'Profile Information' },
+              { id: 'orders', icon: <Package className="w-5 h-5" />, label: 'Order History' },
+              { id: 'security', icon: <Shield className="w-5 h-5" />, label: 'Security' },
             ].map(item => (
               <button
                 key={item.id}
@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
               onClick={logout}
               className="w-full flex items-center gap-4 px-8 py-6 text-[10px] font-black uppercase tracking-widest text-brand hover:bg-brand-matte hover:text-white transition-luxury border-t border-black/5"
             >
-              <LogOut className="w-5 h-5" /> End Session
+              <LogOut className="w-5 h-5" /> Logout
             </button>
           </nav>
         </aside>
@@ -94,9 +94,9 @@ const Profile: React.FC = () => {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
                 {[
-                  { icon: <Calendar className="w-5 h-5 text-brand" />, label: 'Operative Since', value: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'OCT 2023' },
-                  { icon: <Package className="w-5 h-5 text-brand" />, label: 'Total Deployments', value: orders.length.toString() },
-                  { icon: <Shield className="w-5 h-5 text-brand" />, label: 'Clearance', value: 'AUTHORIZED' },
+                  { icon: <Calendar className="w-5 h-5 text-brand" />, label: 'Member Since', value: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'OCT 2023' },
+                  { icon: <Package className="w-5 h-5 text-brand" />, label: 'Total Orders', value: orders.length.toString() },
+                  { icon: <Shield className="w-5 h-5 text-brand" />, label: 'Status', value: 'ACTIVE' },
                 ].map((stat, i) => (
                   <div key={i} className="bg-white p-8 border border-black/5 flex items-center gap-6 shadow-sm">
                     <div className="w-14 h-14 bg-brand-matte text-brand-gold flex items-center justify-center shrink-0">
@@ -111,11 +111,11 @@ const Profile: React.FC = () => {
               </div>
 
               <section className="bg-white p-12 border border-black/5 shadow-sm space-y-12">
-                <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Account Intelligence</h3>
+                <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Account Information</h3>
                 <form onSubmit={handleUpdateProfile} className="space-y-12">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Full Operative Name</label>
+                      <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Full Name</label>
                       <input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -123,7 +123,7 @@ const Profile: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Digital Address</label>
+                      <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Email Address</label>
                       <input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -137,7 +137,7 @@ const Profile: React.FC = () => {
                     className="btn-luxury px-12 py-5 text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-2"
                   >
                     {updating && <Loader2 className="w-4 h-4 animate-spin" />}
-                    Update Credentials
+                    Update Profile
                   </button>
                 </form>
               </section>
@@ -146,7 +146,7 @@ const Profile: React.FC = () => {
 
           {activeTab === 'orders' && (
             <section className="space-y-8">
-              <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Current Order Deployments</h3>
+              <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Your Orders</h3>
               <div className="space-y-6">
                 {loadingOrders ? (
                   <div className="p-20 text-center flex justify-center">
@@ -154,7 +154,7 @@ const Profile: React.FC = () => {
                   </div>
                 ) : orders.length === 0 ? (
                   <div className="p-20 text-center bg-white border border-black/5">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">No Order Logs Found in Archive</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">No Orders Found</p>
                   </div>
                 ) : (
                   orders.map(order => (
@@ -170,19 +170,19 @@ const Profile: React.FC = () => {
                           </div>
                           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-brand-matte/40">
                             <div className="flex items-center gap-2"><Calendar className="w-4 h-4" /> {new Date(order.createdAt).toLocaleDateString()}</div>
-                            <div className="flex items-center gap-2"><Package className="w-4 h-4" /> {order.items?.length || 0} Units</div>
+                            <div className="flex items-center gap-2"><Package className="w-4 h-4" /> {order.items?.length || 0} Items</div>
                           </div>
                         </div>
                         <div className="flex md:flex-col items-end justify-between">
-                          <p className="text-3xl font-black text-brand italic tracking-tighter">${order.total}</p>
-                          <button className="text-brand-gold font-black uppercase text-[10px] tracking-widest hover:text-brand transition-luxury underline decoration-2 underline-offset-4">View Intelligence Log</button>
+                          <p className="text-3xl font-black text-brand italic tracking-tighter">Rs.{order.total}</p>
+                          <button className="text-brand-gold font-black uppercase text-[10px] tracking-widest hover:text-brand transition-luxury underline decoration-2 underline-offset-4">View Order Details</button>
                         </div>
                       </div>
 
                       {/* Tracking Visualizer */}
                       <div className="px-10 pb-10 border-t border-black/5 pt-10 bg-brand-warm/30">
                         <p className="text-[10px] font-black text-brand-matte uppercase tracking-widest mb-8 flex items-center gap-2">
-                          <Shield className="w-4 h-4 text-brand-gold" /> Logistics Tracking Status
+                          <Shield className="w-4 h-4 text-brand-gold" /> Shipping Status
                         </p>
                         <div className="relative">
                           <div className="absolute top-1/2 left-0 w-full h-0.5 bg-black/5 -translate-y-1/2"></div>
@@ -190,9 +190,9 @@ const Profile: React.FC = () => {
 
                           <div className="relative flex justify-between">
                             {[
-                              { label: 'Manifested', completed: true },
+                              { label: 'Confirmed', completed: true },
                               { label: 'In Transit', completed: order.status === 'SHIPPED' || order.status === 'DELIVERED' },
-                              { label: 'Deployed', completed: order.status === 'DELIVERED' }
+                              { label: 'Delivered', completed: order.status === 'DELIVERED' }
                             ].map((step, idx) => (
                               <div key={idx} className="flex flex-col items-center gap-3">
                                 <div className={`w-4 h-4 rounded-full border-2 transition-luxury ${step.completed ? 'bg-brand-gold border-brand-gold' : 'bg-white border-black/10'}`}></div>
@@ -203,7 +203,7 @@ const Profile: React.FC = () => {
                         </div>
                         <div className="mt-8 flex justify-end">
                           <button className="btn-luxury px-6 py-3 text-[9px] font-black uppercase tracking-widest border border-brand-gold/30 hover:bg-brand-gold hover:text-white transition-luxury">
-                            Live Tracking Feed
+                            Track Order
                           </button>
                         </div>
                       </div>
@@ -216,8 +216,8 @@ const Profile: React.FC = () => {
 
           {activeTab === 'security' && (
             <section className="bg-white p-12 border border-black/5 shadow-sm space-y-12">
-              <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Security Protocols</h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">Secure credential management coming soon.</p>
+              <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Security Settings</h3>
+              <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">Secure account management coming soon.</p>
             </section>
           )}
         </div>

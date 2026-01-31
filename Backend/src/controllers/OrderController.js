@@ -53,7 +53,7 @@ export const createOrder = async (req, res) => {
         });
       }
 
-      let price = product.price;
+      let price = product.discountPrice || product.price;
       let stock = product.stock;
 
       if (item.variantId) {
@@ -61,7 +61,7 @@ export const createOrder = async (req, res) => {
         if (!variant) {
           return res.status(404).json({ error: `Variant ${item.variantId} not found for product ${product.name}` });
         }
-        price = variant.price;
+        price = variant.discountPrice || variant.price;
         stock = variant.stock;
       }
 

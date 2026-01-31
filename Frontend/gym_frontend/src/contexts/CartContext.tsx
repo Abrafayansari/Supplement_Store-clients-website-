@@ -50,7 +50,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
 
       const variant = variantId ? product.variants.find(v => v.id === variantId) : null;
-      toast.success(`${product.name} ${variant ? `(${variant.size}${variant.flavor ? ` - ${variant.flavor}` : ''})` : ''} added to protocol.`);
+      toast.success(`${product.name} ${variant ? `(${variant.size}${variant.flavor ? ` - ${variant.flavor}` : ''})` : ''} added to cart.`);
       await showCart(); // Refresh cart from server
     } catch (err: any) {
       console.error("Add to cart error:", err);
@@ -125,7 +125,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce(
-    (sum, item) => sum + (item.variant ? item.variant.price : item.product.price) * item.quantity,
+    (sum, item) => {
+      const price = item.variant
+        ? (item.variant.discountPrice || item.variant.price)
+        : (item.product.discountPrice || item.product.price);
+      return sum + price * item.quantity;
+    },
     0
   );
 

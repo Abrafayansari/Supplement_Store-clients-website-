@@ -68,6 +68,11 @@ export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
  * 
  */
 export type Banner = $Result.DefaultSelection<Prisma.$BannerPayload>
+/**
+ * Model Bundle
+ * 
+ */
+export type Bundle = $Result.DefaultSelection<Prisma.$BundlePayload>
 
 /**
  * Enums
@@ -358,6 +363,16 @@ export class PrismaClient<
     * ```
     */
   get banner(): Prisma.BannerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bundle`: Exposes CRUD operations for the **Bundle** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Bundles
+    * const bundles = await prisma.bundle.findMany()
+    * ```
+    */
+  get bundle(): Prisma.BundleDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -802,7 +817,8 @@ export namespace Prisma {
     Review: 'Review',
     Address: 'Address',
     Notification: 'Notification',
-    Banner: 'Banner'
+    Banner: 'Banner',
+    Bundle: 'Bundle'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -818,7 +834,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "product" | "productVariant" | "cartItem" | "wishlistItem" | "order" | "orderItem" | "review" | "address" | "notification" | "banner"
+      modelProps: "user" | "product" | "productVariant" | "cartItem" | "wishlistItem" | "order" | "orderItem" | "review" | "address" | "notification" | "banner" | "bundle"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1636,6 +1652,80 @@ export namespace Prisma {
           }
         }
       }
+      Bundle: {
+        payload: Prisma.$BundlePayload<ExtArgs>
+        fields: Prisma.BundleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BundleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BundleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>
+          }
+          findFirst: {
+            args: Prisma.BundleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BundleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>
+          }
+          findMany: {
+            args: Prisma.BundleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>[]
+          }
+          create: {
+            args: Prisma.BundleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>
+          }
+          createMany: {
+            args: Prisma.BundleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BundleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>[]
+          }
+          delete: {
+            args: Prisma.BundleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>
+          }
+          update: {
+            args: Prisma.BundleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>
+          }
+          deleteMany: {
+            args: Prisma.BundleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BundleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BundleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>[]
+          }
+          upsert: {
+            args: Prisma.BundleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BundlePayload>
+          }
+          aggregate: {
+            args: Prisma.BundleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBundle>
+          }
+          groupBy: {
+            args: Prisma.BundleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BundleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BundleCountArgs<ExtArgs>
+            result: $Utils.Optional<BundleCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1755,6 +1845,7 @@ export namespace Prisma {
     address?: AddressOmit
     notification?: NotificationOmit
     banner?: BannerOmit
+    bundle?: BundleOmit
   }
 
   /* Types for Logging */
@@ -1907,6 +1998,7 @@ export namespace Prisma {
     orderItems: number
     reviews: number
     wishlist: number
+    bundles: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1915,6 +2007,7 @@ export namespace Prisma {
     orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
     reviews?: boolean | ProductCountOutputTypeCountReviewsArgs
     wishlist?: boolean | ProductCountOutputTypeCountWishlistArgs
+    bundles?: boolean | ProductCountOutputTypeCountBundlesArgs
   }
 
   // Custom InputTypes
@@ -1961,6 +2054,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountWishlistArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WishlistItemWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountBundlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BundleWhereInput
   }
 
 
@@ -2063,6 +2163,37 @@ export namespace Prisma {
    */
   export type AddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+
+  /**
+   * Count Type BundleCountOutputType
+   */
+
+  export type BundleCountOutputType = {
+    products: number
+  }
+
+  export type BundleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | BundleCountOutputTypeCountProductsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BundleCountOutputType without action
+   */
+  export type BundleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BundleCountOutputType
+     */
+    select?: BundleCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BundleCountOutputType without action
+   */
+  export type BundleCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
   }
 
 
@@ -3331,6 +3462,7 @@ export namespace Prisma {
 
   export type ProductAvgAggregateOutputType = {
     price: number | null
+    discountPrice: number | null
     stock: number | null
     rating: number | null
     reviewCount: number | null
@@ -3338,6 +3470,7 @@ export namespace Prisma {
 
   export type ProductSumAggregateOutputType = {
     price: number | null
+    discountPrice: number | null
     stock: number | null
     rating: number | null
     reviewCount: number | null
@@ -3350,6 +3483,7 @@ export namespace Prisma {
     category: string | null
     subCategory: string | null
     price: number | null
+    discountPrice: number | null
     stock: number | null
     description: string | null
     directions: string | null
@@ -3369,6 +3503,7 @@ export namespace Prisma {
     category: string | null
     subCategory: string | null
     price: number | null
+    discountPrice: number | null
     stock: number | null
     description: string | null
     directions: string | null
@@ -3388,6 +3523,7 @@ export namespace Prisma {
     category: number
     subCategory: number
     price: number
+    discountPrice: number
     stock: number
     description: number
     warnings: number
@@ -3406,6 +3542,7 @@ export namespace Prisma {
 
   export type ProductAvgAggregateInputType = {
     price?: true
+    discountPrice?: true
     stock?: true
     rating?: true
     reviewCount?: true
@@ -3413,6 +3550,7 @@ export namespace Prisma {
 
   export type ProductSumAggregateInputType = {
     price?: true
+    discountPrice?: true
     stock?: true
     rating?: true
     reviewCount?: true
@@ -3425,6 +3563,7 @@ export namespace Prisma {
     category?: true
     subCategory?: true
     price?: true
+    discountPrice?: true
     stock?: true
     description?: true
     directions?: true
@@ -3444,6 +3583,7 @@ export namespace Prisma {
     category?: true
     subCategory?: true
     price?: true
+    discountPrice?: true
     stock?: true
     description?: true
     directions?: true
@@ -3463,6 +3603,7 @@ export namespace Prisma {
     category?: true
     subCategory?: true
     price?: true
+    discountPrice?: true
     stock?: true
     description?: true
     warnings?: true
@@ -3571,6 +3712,7 @@ export namespace Prisma {
     category: string
     subCategory: string | null
     price: number
+    discountPrice: number | null
     stock: number
     description: string | null
     warnings: string[]
@@ -3611,6 +3753,7 @@ export namespace Prisma {
     category?: boolean
     subCategory?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     description?: boolean
     warnings?: boolean
@@ -3628,6 +3771,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     wishlist?: boolean | Product$wishlistArgs<ExtArgs>
+    bundles?: boolean | Product$bundlesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -3638,6 +3782,7 @@ export namespace Prisma {
     category?: boolean
     subCategory?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     description?: boolean
     warnings?: boolean
@@ -3659,6 +3804,7 @@ export namespace Prisma {
     category?: boolean
     subCategory?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     description?: boolean
     warnings?: boolean
@@ -3680,6 +3826,7 @@ export namespace Prisma {
     category?: boolean
     subCategory?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     description?: boolean
     warnings?: boolean
@@ -3694,13 +3841,14 @@ export namespace Prisma {
     secondaryVariantName?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "brand" | "category" | "subCategory" | "price" | "stock" | "description" | "warnings" | "directions" | "images" | "isActive" | "createdAt" | "updatedAt" | "rating" | "reviewCount" | "variantType" | "secondaryVariantName", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "brand" | "category" | "subCategory" | "price" | "discountPrice" | "stock" | "description" | "warnings" | "directions" | "images" | "isActive" | "createdAt" | "updatedAt" | "rating" | "reviewCount" | "variantType" | "secondaryVariantName", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     variants?: boolean | Product$variantsArgs<ExtArgs>
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     wishlist?: boolean | Product$wishlistArgs<ExtArgs>
+    bundles?: boolean | Product$bundlesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3714,6 +3862,7 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       wishlist: Prisma.$WishlistItemPayload<ExtArgs>[]
+      bundles: Prisma.$BundlePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3722,6 +3871,7 @@ export namespace Prisma {
       category: string
       subCategory: string | null
       price: number
+      discountPrice: number | null
       stock: number
       description: string | null
       warnings: string[]
@@ -4133,6 +4283,7 @@ export namespace Prisma {
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     wishlist<T extends Product$wishlistArgs<ExtArgs> = {}>(args?: Subset<T, Product$wishlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WishlistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    bundles<T extends Product$bundlesArgs<ExtArgs> = {}>(args?: Subset<T, Product$bundlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4168,6 +4319,7 @@ export namespace Prisma {
     readonly category: FieldRef<"Product", 'String'>
     readonly subCategory: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Float'>
+    readonly discountPrice: FieldRef<"Product", 'Float'>
     readonly stock: FieldRef<"Product", 'Int'>
     readonly description: FieldRef<"Product", 'String'>
     readonly warnings: FieldRef<"Product", 'String[]'>
@@ -4688,6 +4840,30 @@ export namespace Prisma {
   }
 
   /**
+   * Product.bundles
+   */
+  export type Product$bundlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    where?: BundleWhereInput
+    orderBy?: BundleOrderByWithRelationInput | BundleOrderByWithRelationInput[]
+    cursor?: BundleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BundleScalarFieldEnum | BundleScalarFieldEnum[]
+  }
+
+  /**
    * Product without action
    */
   export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4720,11 +4896,13 @@ export namespace Prisma {
 
   export type ProductVariantAvgAggregateOutputType = {
     price: number | null
+    discountPrice: number | null
     stock: number | null
   }
 
   export type ProductVariantSumAggregateOutputType = {
     price: number | null
+    discountPrice: number | null
     stock: number | null
   }
 
@@ -4734,6 +4912,7 @@ export namespace Prisma {
     size: string | null
     flavor: string | null
     price: number | null
+    discountPrice: number | null
     stock: number | null
     isActive: boolean | null
     createdAt: Date | null
@@ -4746,6 +4925,7 @@ export namespace Prisma {
     size: string | null
     flavor: string | null
     price: number | null
+    discountPrice: number | null
     stock: number | null
     isActive: boolean | null
     createdAt: Date | null
@@ -4758,6 +4938,7 @@ export namespace Prisma {
     size: number
     flavor: number
     price: number
+    discountPrice: number
     stock: number
     isActive: number
     createdAt: number
@@ -4768,11 +4949,13 @@ export namespace Prisma {
 
   export type ProductVariantAvgAggregateInputType = {
     price?: true
+    discountPrice?: true
     stock?: true
   }
 
   export type ProductVariantSumAggregateInputType = {
     price?: true
+    discountPrice?: true
     stock?: true
   }
 
@@ -4782,6 +4965,7 @@ export namespace Prisma {
     size?: true
     flavor?: true
     price?: true
+    discountPrice?: true
     stock?: true
     isActive?: true
     createdAt?: true
@@ -4794,6 +4978,7 @@ export namespace Prisma {
     size?: true
     flavor?: true
     price?: true
+    discountPrice?: true
     stock?: true
     isActive?: true
     createdAt?: true
@@ -4806,6 +4991,7 @@ export namespace Prisma {
     size?: true
     flavor?: true
     price?: true
+    discountPrice?: true
     stock?: true
     isActive?: true
     createdAt?: true
@@ -4905,6 +5091,7 @@ export namespace Prisma {
     size: string
     flavor: string | null
     price: number
+    discountPrice: number | null
     stock: number
     isActive: boolean
     createdAt: Date
@@ -4936,6 +5123,7 @@ export namespace Prisma {
     size?: boolean
     flavor?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -4952,6 +5140,7 @@ export namespace Prisma {
     size?: boolean
     flavor?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -4965,6 +5154,7 @@ export namespace Prisma {
     size?: boolean
     flavor?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -4978,13 +5168,14 @@ export namespace Prisma {
     size?: boolean
     flavor?: boolean
     price?: boolean
+    discountPrice?: boolean
     stock?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductVariantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "size" | "flavor" | "price" | "stock" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["productVariant"]>
+  export type ProductVariantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "size" | "flavor" | "price" | "discountPrice" | "stock" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["productVariant"]>
   export type ProductVariantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     cartItems?: boolean | ProductVariant$cartItemsArgs<ExtArgs>
@@ -5011,6 +5202,7 @@ export namespace Prisma {
       size: string
       flavor: string | null
       price: number
+      discountPrice: number | null
       stock: number
       isActive: boolean
       createdAt: Date
@@ -5446,6 +5638,7 @@ export namespace Prisma {
     readonly size: FieldRef<"ProductVariant", 'String'>
     readonly flavor: FieldRef<"ProductVariant", 'String'>
     readonly price: FieldRef<"ProductVariant", 'Float'>
+    readonly discountPrice: FieldRef<"ProductVariant", 'Float'>
     readonly stock: FieldRef<"ProductVariant", 'Int'>
     readonly isActive: FieldRef<"ProductVariant", 'Boolean'>
     readonly createdAt: FieldRef<"ProductVariant", 'DateTime'>
@@ -14770,6 +14963,1166 @@ export namespace Prisma {
 
 
   /**
+   * Model Bundle
+   */
+
+  export type AggregateBundle = {
+    _count: BundleCountAggregateOutputType | null
+    _avg: BundleAvgAggregateOutputType | null
+    _sum: BundleSumAggregateOutputType | null
+    _min: BundleMinAggregateOutputType | null
+    _max: BundleMaxAggregateOutputType | null
+  }
+
+  export type BundleAvgAggregateOutputType = {
+    price: number | null
+    originalPrice: number | null
+  }
+
+  export type BundleSumAggregateOutputType = {
+    price: number | null
+    originalPrice: number | null
+  }
+
+  export type BundleMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    price: number | null
+    originalPrice: number | null
+    image: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BundleMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    price: number | null
+    originalPrice: number | null
+    image: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BundleCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    price: number
+    originalPrice: number
+    image: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BundleAvgAggregateInputType = {
+    price?: true
+    originalPrice?: true
+  }
+
+  export type BundleSumAggregateInputType = {
+    price?: true
+    originalPrice?: true
+  }
+
+  export type BundleMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    price?: true
+    originalPrice?: true
+    image?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BundleMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    price?: true
+    originalPrice?: true
+    image?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BundleCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    price?: true
+    originalPrice?: true
+    image?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BundleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Bundle to aggregate.
+     */
+    where?: BundleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bundles to fetch.
+     */
+    orderBy?: BundleOrderByWithRelationInput | BundleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BundleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bundles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bundles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Bundles
+    **/
+    _count?: true | BundleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BundleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BundleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BundleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BundleMaxAggregateInputType
+  }
+
+  export type GetBundleAggregateType<T extends BundleAggregateArgs> = {
+        [P in keyof T & keyof AggregateBundle]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBundle[P]>
+      : GetScalarType<T[P], AggregateBundle[P]>
+  }
+
+
+
+
+  export type BundleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BundleWhereInput
+    orderBy?: BundleOrderByWithAggregationInput | BundleOrderByWithAggregationInput[]
+    by: BundleScalarFieldEnum[] | BundleScalarFieldEnum
+    having?: BundleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BundleCountAggregateInputType | true
+    _avg?: BundleAvgAggregateInputType
+    _sum?: BundleSumAggregateInputType
+    _min?: BundleMinAggregateInputType
+    _max?: BundleMaxAggregateInputType
+  }
+
+  export type BundleGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    price: number
+    originalPrice: number | null
+    image: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: BundleCountAggregateOutputType | null
+    _avg: BundleAvgAggregateOutputType | null
+    _sum: BundleSumAggregateOutputType | null
+    _min: BundleMinAggregateOutputType | null
+    _max: BundleMaxAggregateOutputType | null
+  }
+
+  type GetBundleGroupByPayload<T extends BundleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BundleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BundleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BundleGroupByOutputType[P]>
+            : GetScalarType<T[P], BundleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BundleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    originalPrice?: boolean
+    image?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    products?: boolean | Bundle$productsArgs<ExtArgs>
+    _count?: boolean | BundleCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bundle"]>
+
+  export type BundleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    originalPrice?: boolean
+    image?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["bundle"]>
+
+  export type BundleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    originalPrice?: boolean
+    image?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["bundle"]>
+
+  export type BundleSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    price?: boolean
+    originalPrice?: boolean
+    image?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BundleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "originalPrice" | "image" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["bundle"]>
+  export type BundleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | Bundle$productsArgs<ExtArgs>
+    _count?: boolean | BundleCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BundleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type BundleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $BundlePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Bundle"
+    objects: {
+      products: Prisma.$ProductPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      price: number
+      originalPrice: number | null
+      image: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["bundle"]>
+    composites: {}
+  }
+
+  type BundleGetPayload<S extends boolean | null | undefined | BundleDefaultArgs> = $Result.GetResult<Prisma.$BundlePayload, S>
+
+  type BundleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BundleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BundleCountAggregateInputType | true
+    }
+
+  export interface BundleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Bundle'], meta: { name: 'Bundle' } }
+    /**
+     * Find zero or one Bundle that matches the filter.
+     * @param {BundleFindUniqueArgs} args - Arguments to find a Bundle
+     * @example
+     * // Get one Bundle
+     * const bundle = await prisma.bundle.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BundleFindUniqueArgs>(args: SelectSubset<T, BundleFindUniqueArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Bundle that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BundleFindUniqueOrThrowArgs} args - Arguments to find a Bundle
+     * @example
+     * // Get one Bundle
+     * const bundle = await prisma.bundle.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BundleFindUniqueOrThrowArgs>(args: SelectSubset<T, BundleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Bundle that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleFindFirstArgs} args - Arguments to find a Bundle
+     * @example
+     * // Get one Bundle
+     * const bundle = await prisma.bundle.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BundleFindFirstArgs>(args?: SelectSubset<T, BundleFindFirstArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Bundle that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleFindFirstOrThrowArgs} args - Arguments to find a Bundle
+     * @example
+     * // Get one Bundle
+     * const bundle = await prisma.bundle.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BundleFindFirstOrThrowArgs>(args?: SelectSubset<T, BundleFindFirstOrThrowArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Bundles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Bundles
+     * const bundles = await prisma.bundle.findMany()
+     * 
+     * // Get first 10 Bundles
+     * const bundles = await prisma.bundle.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bundleWithIdOnly = await prisma.bundle.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BundleFindManyArgs>(args?: SelectSubset<T, BundleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Bundle.
+     * @param {BundleCreateArgs} args - Arguments to create a Bundle.
+     * @example
+     * // Create one Bundle
+     * const Bundle = await prisma.bundle.create({
+     *   data: {
+     *     // ... data to create a Bundle
+     *   }
+     * })
+     * 
+     */
+    create<T extends BundleCreateArgs>(args: SelectSubset<T, BundleCreateArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Bundles.
+     * @param {BundleCreateManyArgs} args - Arguments to create many Bundles.
+     * @example
+     * // Create many Bundles
+     * const bundle = await prisma.bundle.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BundleCreateManyArgs>(args?: SelectSubset<T, BundleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Bundles and returns the data saved in the database.
+     * @param {BundleCreateManyAndReturnArgs} args - Arguments to create many Bundles.
+     * @example
+     * // Create many Bundles
+     * const bundle = await prisma.bundle.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Bundles and only return the `id`
+     * const bundleWithIdOnly = await prisma.bundle.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BundleCreateManyAndReturnArgs>(args?: SelectSubset<T, BundleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Bundle.
+     * @param {BundleDeleteArgs} args - Arguments to delete one Bundle.
+     * @example
+     * // Delete one Bundle
+     * const Bundle = await prisma.bundle.delete({
+     *   where: {
+     *     // ... filter to delete one Bundle
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BundleDeleteArgs>(args: SelectSubset<T, BundleDeleteArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Bundle.
+     * @param {BundleUpdateArgs} args - Arguments to update one Bundle.
+     * @example
+     * // Update one Bundle
+     * const bundle = await prisma.bundle.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BundleUpdateArgs>(args: SelectSubset<T, BundleUpdateArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Bundles.
+     * @param {BundleDeleteManyArgs} args - Arguments to filter Bundles to delete.
+     * @example
+     * // Delete a few Bundles
+     * const { count } = await prisma.bundle.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BundleDeleteManyArgs>(args?: SelectSubset<T, BundleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Bundles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Bundles
+     * const bundle = await prisma.bundle.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BundleUpdateManyArgs>(args: SelectSubset<T, BundleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Bundles and returns the data updated in the database.
+     * @param {BundleUpdateManyAndReturnArgs} args - Arguments to update many Bundles.
+     * @example
+     * // Update many Bundles
+     * const bundle = await prisma.bundle.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Bundles and only return the `id`
+     * const bundleWithIdOnly = await prisma.bundle.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BundleUpdateManyAndReturnArgs>(args: SelectSubset<T, BundleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Bundle.
+     * @param {BundleUpsertArgs} args - Arguments to update or create a Bundle.
+     * @example
+     * // Update or create a Bundle
+     * const bundle = await prisma.bundle.upsert({
+     *   create: {
+     *     // ... data to create a Bundle
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Bundle we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BundleUpsertArgs>(args: SelectSubset<T, BundleUpsertArgs<ExtArgs>>): Prisma__BundleClient<$Result.GetResult<Prisma.$BundlePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Bundles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleCountArgs} args - Arguments to filter Bundles to count.
+     * @example
+     * // Count the number of Bundles
+     * const count = await prisma.bundle.count({
+     *   where: {
+     *     // ... the filter for the Bundles we want to count
+     *   }
+     * })
+    **/
+    count<T extends BundleCountArgs>(
+      args?: Subset<T, BundleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BundleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Bundle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BundleAggregateArgs>(args: Subset<T, BundleAggregateArgs>): Prisma.PrismaPromise<GetBundleAggregateType<T>>
+
+    /**
+     * Group by Bundle.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BundleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BundleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BundleGroupByArgs['orderBy'] }
+        : { orderBy?: BundleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BundleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBundleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Bundle model
+   */
+  readonly fields: BundleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Bundle.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BundleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    products<T extends Bundle$productsArgs<ExtArgs> = {}>(args?: Subset<T, Bundle$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Bundle model
+   */
+  interface BundleFieldRefs {
+    readonly id: FieldRef<"Bundle", 'String'>
+    readonly name: FieldRef<"Bundle", 'String'>
+    readonly description: FieldRef<"Bundle", 'String'>
+    readonly price: FieldRef<"Bundle", 'Float'>
+    readonly originalPrice: FieldRef<"Bundle", 'Float'>
+    readonly image: FieldRef<"Bundle", 'String'>
+    readonly isActive: FieldRef<"Bundle", 'Boolean'>
+    readonly createdAt: FieldRef<"Bundle", 'DateTime'>
+    readonly updatedAt: FieldRef<"Bundle", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Bundle findUnique
+   */
+  export type BundleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * Filter, which Bundle to fetch.
+     */
+    where: BundleWhereUniqueInput
+  }
+
+  /**
+   * Bundle findUniqueOrThrow
+   */
+  export type BundleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * Filter, which Bundle to fetch.
+     */
+    where: BundleWhereUniqueInput
+  }
+
+  /**
+   * Bundle findFirst
+   */
+  export type BundleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * Filter, which Bundle to fetch.
+     */
+    where?: BundleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bundles to fetch.
+     */
+    orderBy?: BundleOrderByWithRelationInput | BundleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Bundles.
+     */
+    cursor?: BundleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bundles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bundles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Bundles.
+     */
+    distinct?: BundleScalarFieldEnum | BundleScalarFieldEnum[]
+  }
+
+  /**
+   * Bundle findFirstOrThrow
+   */
+  export type BundleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * Filter, which Bundle to fetch.
+     */
+    where?: BundleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bundles to fetch.
+     */
+    orderBy?: BundleOrderByWithRelationInput | BundleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Bundles.
+     */
+    cursor?: BundleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bundles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bundles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Bundles.
+     */
+    distinct?: BundleScalarFieldEnum | BundleScalarFieldEnum[]
+  }
+
+  /**
+   * Bundle findMany
+   */
+  export type BundleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * Filter, which Bundles to fetch.
+     */
+    where?: BundleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bundles to fetch.
+     */
+    orderBy?: BundleOrderByWithRelationInput | BundleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Bundles.
+     */
+    cursor?: BundleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bundles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bundles.
+     */
+    skip?: number
+    distinct?: BundleScalarFieldEnum | BundleScalarFieldEnum[]
+  }
+
+  /**
+   * Bundle create
+   */
+  export type BundleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Bundle.
+     */
+    data: XOR<BundleCreateInput, BundleUncheckedCreateInput>
+  }
+
+  /**
+   * Bundle createMany
+   */
+  export type BundleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Bundles.
+     */
+    data: BundleCreateManyInput | BundleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Bundle createManyAndReturn
+   */
+  export type BundleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * The data used to create many Bundles.
+     */
+    data: BundleCreateManyInput | BundleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Bundle update
+   */
+  export type BundleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Bundle.
+     */
+    data: XOR<BundleUpdateInput, BundleUncheckedUpdateInput>
+    /**
+     * Choose, which Bundle to update.
+     */
+    where: BundleWhereUniqueInput
+  }
+
+  /**
+   * Bundle updateMany
+   */
+  export type BundleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Bundles.
+     */
+    data: XOR<BundleUpdateManyMutationInput, BundleUncheckedUpdateManyInput>
+    /**
+     * Filter which Bundles to update
+     */
+    where?: BundleWhereInput
+    /**
+     * Limit how many Bundles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Bundle updateManyAndReturn
+   */
+  export type BundleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * The data used to update Bundles.
+     */
+    data: XOR<BundleUpdateManyMutationInput, BundleUncheckedUpdateManyInput>
+    /**
+     * Filter which Bundles to update
+     */
+    where?: BundleWhereInput
+    /**
+     * Limit how many Bundles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Bundle upsert
+   */
+  export type BundleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Bundle to update in case it exists.
+     */
+    where: BundleWhereUniqueInput
+    /**
+     * In case the Bundle found by the `where` argument doesn't exist, create a new Bundle with this data.
+     */
+    create: XOR<BundleCreateInput, BundleUncheckedCreateInput>
+    /**
+     * In case the Bundle was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BundleUpdateInput, BundleUncheckedUpdateInput>
+  }
+
+  /**
+   * Bundle delete
+   */
+  export type BundleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+    /**
+     * Filter which Bundle to delete.
+     */
+    where: BundleWhereUniqueInput
+  }
+
+  /**
+   * Bundle deleteMany
+   */
+  export type BundleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Bundles to delete
+     */
+    where?: BundleWhereInput
+    /**
+     * Limit how many Bundles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Bundle.products
+   */
+  export type Bundle$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    cursor?: ProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * Bundle without action
+   */
+  export type BundleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bundle
+     */
+    select?: BundleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bundle
+     */
+    omit?: BundleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BundleInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14806,6 +16159,7 @@ export namespace Prisma {
     category: 'category',
     subCategory: 'subCategory',
     price: 'price',
+    discountPrice: 'discountPrice',
     stock: 'stock',
     description: 'description',
     warnings: 'warnings',
@@ -14829,6 +16183,7 @@ export namespace Prisma {
     size: 'size',
     flavor: 'flavor',
     price: 'price',
+    discountPrice: 'discountPrice',
     stock: 'stock',
     isActive: 'isActive',
     createdAt: 'createdAt',
@@ -14941,6 +16296,21 @@ export namespace Prisma {
   };
 
   export type BannerScalarFieldEnum = (typeof BannerScalarFieldEnum)[keyof typeof BannerScalarFieldEnum]
+
+
+  export const BundleScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    price: 'price',
+    originalPrice: 'originalPrice',
+    image: 'image',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BundleScalarFieldEnum = (typeof BundleScalarFieldEnum)[keyof typeof BundleScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15196,6 +16566,7 @@ export namespace Prisma {
     category?: StringFilter<"Product"> | string
     subCategory?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
+    discountPrice?: FloatNullableFilter<"Product"> | number | null
     stock?: IntFilter<"Product"> | number
     description?: StringNullableFilter<"Product"> | string | null
     warnings?: StringNullableListFilter<"Product">
@@ -15213,6 +16584,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     reviews?: ReviewListRelationFilter
     wishlist?: WishlistItemListRelationFilter
+    bundles?: BundleListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -15222,6 +16594,7 @@ export namespace Prisma {
     category?: SortOrder
     subCategory?: SortOrderInput | SortOrder
     price?: SortOrder
+    discountPrice?: SortOrderInput | SortOrder
     stock?: SortOrder
     description?: SortOrderInput | SortOrder
     warnings?: SortOrder
@@ -15239,6 +16612,7 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
     wishlist?: WishlistItemOrderByRelationAggregateInput
+    bundles?: BundleOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -15251,6 +16625,7 @@ export namespace Prisma {
     category?: StringFilter<"Product"> | string
     subCategory?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
+    discountPrice?: FloatNullableFilter<"Product"> | number | null
     stock?: IntFilter<"Product"> | number
     description?: StringNullableFilter<"Product"> | string | null
     warnings?: StringNullableListFilter<"Product">
@@ -15268,6 +16643,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     reviews?: ReviewListRelationFilter
     wishlist?: WishlistItemListRelationFilter
+    bundles?: BundleListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -15277,6 +16653,7 @@ export namespace Prisma {
     category?: SortOrder
     subCategory?: SortOrderInput | SortOrder
     price?: SortOrder
+    discountPrice?: SortOrderInput | SortOrder
     stock?: SortOrder
     description?: SortOrderInput | SortOrder
     warnings?: SortOrder
@@ -15306,6 +16683,7 @@ export namespace Prisma {
     category?: StringWithAggregatesFilter<"Product"> | string
     subCategory?: StringNullableWithAggregatesFilter<"Product"> | string | null
     price?: FloatWithAggregatesFilter<"Product"> | number
+    discountPrice?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     stock?: IntWithAggregatesFilter<"Product"> | number
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     warnings?: StringNullableListFilter<"Product">
@@ -15329,6 +16707,7 @@ export namespace Prisma {
     size?: StringFilter<"ProductVariant"> | string
     flavor?: StringNullableFilter<"ProductVariant"> | string | null
     price?: FloatFilter<"ProductVariant"> | number
+    discountPrice?: FloatNullableFilter<"ProductVariant"> | number | null
     stock?: IntFilter<"ProductVariant"> | number
     isActive?: BoolFilter<"ProductVariant"> | boolean
     createdAt?: DateTimeFilter<"ProductVariant"> | Date | string
@@ -15344,6 +16723,7 @@ export namespace Prisma {
     size?: SortOrder
     flavor?: SortOrderInput | SortOrder
     price?: SortOrder
+    discountPrice?: SortOrderInput | SortOrder
     stock?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -15362,6 +16742,7 @@ export namespace Prisma {
     size?: StringFilter<"ProductVariant"> | string
     flavor?: StringNullableFilter<"ProductVariant"> | string | null
     price?: FloatFilter<"ProductVariant"> | number
+    discountPrice?: FloatNullableFilter<"ProductVariant"> | number | null
     stock?: IntFilter<"ProductVariant"> | number
     isActive?: BoolFilter<"ProductVariant"> | boolean
     createdAt?: DateTimeFilter<"ProductVariant"> | Date | string
@@ -15377,6 +16758,7 @@ export namespace Prisma {
     size?: SortOrder
     flavor?: SortOrderInput | SortOrder
     price?: SortOrder
+    discountPrice?: SortOrderInput | SortOrder
     stock?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -15397,6 +16779,7 @@ export namespace Prisma {
     size?: StringWithAggregatesFilter<"ProductVariant"> | string
     flavor?: StringNullableWithAggregatesFilter<"ProductVariant"> | string | null
     price?: FloatWithAggregatesFilter<"ProductVariant"> | number
+    discountPrice?: FloatNullableWithAggregatesFilter<"ProductVariant"> | number | null
     stock?: IntWithAggregatesFilter<"ProductVariant"> | number
     isActive?: BoolWithAggregatesFilter<"ProductVariant"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ProductVariant"> | Date | string
@@ -15960,6 +17343,83 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Banner"> | Date | string
   }
 
+  export type BundleWhereInput = {
+    AND?: BundleWhereInput | BundleWhereInput[]
+    OR?: BundleWhereInput[]
+    NOT?: BundleWhereInput | BundleWhereInput[]
+    id?: StringFilter<"Bundle"> | string
+    name?: StringFilter<"Bundle"> | string
+    description?: StringNullableFilter<"Bundle"> | string | null
+    price?: FloatFilter<"Bundle"> | number
+    originalPrice?: FloatNullableFilter<"Bundle"> | number | null
+    image?: StringNullableFilter<"Bundle"> | string | null
+    isActive?: BoolFilter<"Bundle"> | boolean
+    createdAt?: DateTimeFilter<"Bundle"> | Date | string
+    updatedAt?: DateTimeFilter<"Bundle"> | Date | string
+    products?: ProductListRelationFilter
+  }
+
+  export type BundleOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    products?: ProductOrderByRelationAggregateInput
+  }
+
+  export type BundleWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BundleWhereInput | BundleWhereInput[]
+    OR?: BundleWhereInput[]
+    NOT?: BundleWhereInput | BundleWhereInput[]
+    name?: StringFilter<"Bundle"> | string
+    description?: StringNullableFilter<"Bundle"> | string | null
+    price?: FloatFilter<"Bundle"> | number
+    originalPrice?: FloatNullableFilter<"Bundle"> | number | null
+    image?: StringNullableFilter<"Bundle"> | string | null
+    isActive?: BoolFilter<"Bundle"> | boolean
+    createdAt?: DateTimeFilter<"Bundle"> | Date | string
+    updatedAt?: DateTimeFilter<"Bundle"> | Date | string
+    products?: ProductListRelationFilter
+  }, "id">
+
+  export type BundleOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BundleCountOrderByAggregateInput
+    _avg?: BundleAvgOrderByAggregateInput
+    _max?: BundleMaxOrderByAggregateInput
+    _min?: BundleMinOrderByAggregateInput
+    _sum?: BundleSumOrderByAggregateInput
+  }
+
+  export type BundleScalarWhereWithAggregatesInput = {
+    AND?: BundleScalarWhereWithAggregatesInput | BundleScalarWhereWithAggregatesInput[]
+    OR?: BundleScalarWhereWithAggregatesInput[]
+    NOT?: BundleScalarWhereWithAggregatesInput | BundleScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Bundle"> | string
+    name?: StringWithAggregatesFilter<"Bundle"> | string
+    description?: StringNullableWithAggregatesFilter<"Bundle"> | string | null
+    price?: FloatWithAggregatesFilter<"Bundle"> | number
+    originalPrice?: FloatNullableWithAggregatesFilter<"Bundle"> | number | null
+    image?: StringNullableWithAggregatesFilter<"Bundle"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Bundle"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Bundle"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Bundle"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -16078,6 +17538,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -16095,6 +17556,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemCreateNestedManyWithoutProductInput
+    bundles?: BundleCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -16104,6 +17566,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -16121,6 +17584,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    bundles?: BundleUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUpdateInput = {
@@ -16130,6 +17594,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -16147,6 +17612,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUpdateManyWithoutProductNestedInput
+    bundles?: BundleUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -16156,6 +17622,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -16173,6 +17640,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    bundles?: BundleUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -16182,6 +17650,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -16203,6 +17672,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -16224,6 +17694,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -16243,6 +17714,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -16258,6 +17730,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -16271,6 +17744,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16286,6 +17760,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16300,6 +17775,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -16311,6 +17787,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16323,6 +17800,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16891,6 +18369,94 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type BundleCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    image?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutBundlesInput
+  }
+
+  export type BundleUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    image?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutBundlesInput
+  }
+
+  export type BundleUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutBundlesNestedInput
+  }
+
+  export type BundleUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutBundlesNestedInput
+  }
+
+  export type BundleCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    image?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BundleUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BundleUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17129,6 +18695,17 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -17172,11 +18749,21 @@ export namespace Prisma {
     none?: OrderItemWhereInput
   }
 
+  export type BundleListRelationFilter = {
+    every?: BundleWhereInput
+    some?: BundleWhereInput
+    none?: BundleWhereInput
+  }
+
   export type ProductVariantOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type OrderItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BundleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17187,6 +18774,7 @@ export namespace Prisma {
     category?: SortOrder
     subCategory?: SortOrder
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     description?: SortOrder
     warnings?: SortOrder
@@ -17203,6 +18791,7 @@ export namespace Prisma {
 
   export type ProductAvgOrderByAggregateInput = {
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     rating?: SortOrder
     reviewCount?: SortOrder
@@ -17215,6 +18804,7 @@ export namespace Prisma {
     category?: SortOrder
     subCategory?: SortOrder
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     description?: SortOrder
     directions?: SortOrder
@@ -17234,6 +18824,7 @@ export namespace Prisma {
     category?: SortOrder
     subCategory?: SortOrder
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     description?: SortOrder
     directions?: SortOrder
@@ -17248,6 +18839,7 @@ export namespace Prisma {
 
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     rating?: SortOrder
     reviewCount?: SortOrder
@@ -17267,6 +18859,22 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -17314,6 +18922,7 @@ export namespace Prisma {
     size?: SortOrder
     flavor?: SortOrder
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -17322,6 +18931,7 @@ export namespace Prisma {
 
   export type ProductVariantAvgOrderByAggregateInput = {
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
   }
 
@@ -17331,6 +18941,7 @@ export namespace Prisma {
     size?: SortOrder
     flavor?: SortOrder
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -17343,6 +18954,7 @@ export namespace Prisma {
     size?: SortOrder
     flavor?: SortOrder
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -17351,6 +18963,7 @@ export namespace Prisma {
 
   export type ProductVariantSumOrderByAggregateInput = {
     price?: SortOrder
+    discountPrice?: SortOrder
     stock?: SortOrder
   }
 
@@ -17703,6 +19316,62 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ProductListRelationFilter = {
+    every?: ProductWhereInput
+    some?: ProductWhereInput
+    none?: ProductWhereInput
+  }
+
+  export type ProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BundleCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    image?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BundleAvgOrderByAggregateInput = {
+    price?: SortOrder
+    originalPrice?: SortOrder
+  }
+
+  export type BundleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    image?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BundleMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    image?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BundleSumOrderByAggregateInput = {
+    price?: SortOrder
+    originalPrice?: SortOrder
+  }
+
   export type AddressCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -17976,6 +19645,12 @@ export namespace Prisma {
     connect?: WishlistItemWhereUniqueInput | WishlistItemWhereUniqueInput[]
   }
 
+  export type BundleCreateNestedManyWithoutProductsInput = {
+    create?: XOR<BundleCreateWithoutProductsInput, BundleUncheckedCreateWithoutProductsInput> | BundleCreateWithoutProductsInput[] | BundleUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: BundleCreateOrConnectWithoutProductsInput | BundleCreateOrConnectWithoutProductsInput[]
+    connect?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+  }
+
   export type ProductVariantUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<ProductVariantCreateWithoutProductInput, ProductVariantUncheckedCreateWithoutProductInput> | ProductVariantCreateWithoutProductInput[] | ProductVariantUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductVariantCreateOrConnectWithoutProductInput | ProductVariantCreateOrConnectWithoutProductInput[]
@@ -18011,8 +19686,22 @@ export namespace Prisma {
     connect?: WishlistItemWhereUniqueInput | WishlistItemWhereUniqueInput[]
   }
 
+  export type BundleUncheckedCreateNestedManyWithoutProductsInput = {
+    create?: XOR<BundleCreateWithoutProductsInput, BundleUncheckedCreateWithoutProductsInput> | BundleCreateWithoutProductsInput[] | BundleUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: BundleCreateOrConnectWithoutProductsInput | BundleCreateOrConnectWithoutProductsInput[]
+    connect?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
@@ -18115,6 +19804,19 @@ export namespace Prisma {
     deleteMany?: WishlistItemScalarWhereInput | WishlistItemScalarWhereInput[]
   }
 
+  export type BundleUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<BundleCreateWithoutProductsInput, BundleUncheckedCreateWithoutProductsInput> | BundleCreateWithoutProductsInput[] | BundleUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: BundleCreateOrConnectWithoutProductsInput | BundleCreateOrConnectWithoutProductsInput[]
+    upsert?: BundleUpsertWithWhereUniqueWithoutProductsInput | BundleUpsertWithWhereUniqueWithoutProductsInput[]
+    set?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    disconnect?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    delete?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    connect?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    update?: BundleUpdateWithWhereUniqueWithoutProductsInput | BundleUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: BundleUpdateManyWithWhereWithoutProductsInput | BundleUpdateManyWithWhereWithoutProductsInput[]
+    deleteMany?: BundleScalarWhereInput | BundleScalarWhereInput[]
+  }
+
   export type ProductVariantUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<ProductVariantCreateWithoutProductInput, ProductVariantUncheckedCreateWithoutProductInput> | ProductVariantCreateWithoutProductInput[] | ProductVariantUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductVariantCreateOrConnectWithoutProductInput | ProductVariantCreateOrConnectWithoutProductInput[]
@@ -18183,6 +19885,19 @@ export namespace Prisma {
     update?: WishlistItemUpdateWithWhereUniqueWithoutProductInput | WishlistItemUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: WishlistItemUpdateManyWithWhereWithoutProductInput | WishlistItemUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: WishlistItemScalarWhereInput | WishlistItemScalarWhereInput[]
+  }
+
+  export type BundleUncheckedUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<BundleCreateWithoutProductsInput, BundleUncheckedCreateWithoutProductsInput> | BundleCreateWithoutProductsInput[] | BundleUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: BundleCreateOrConnectWithoutProductsInput | BundleCreateOrConnectWithoutProductsInput[]
+    upsert?: BundleUpsertWithWhereUniqueWithoutProductsInput | BundleUpsertWithWhereUniqueWithoutProductsInput[]
+    set?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    disconnect?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    delete?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    connect?: BundleWhereUniqueInput | BundleWhereUniqueInput[]
+    update?: BundleUpdateWithWhereUniqueWithoutProductsInput | BundleUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: BundleUpdateManyWithWhereWithoutProductsInput | BundleUpdateManyWithWhereWithoutProductsInput[]
+    deleteMany?: BundleScalarWhereInput | BundleScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutVariantsInput = {
@@ -18561,6 +20276,44 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
+  export type ProductCreateNestedManyWithoutBundlesInput = {
+    create?: XOR<ProductCreateWithoutBundlesInput, ProductUncheckedCreateWithoutBundlesInput> | ProductCreateWithoutBundlesInput[] | ProductUncheckedCreateWithoutBundlesInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBundlesInput | ProductCreateOrConnectWithoutBundlesInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutBundlesInput = {
+    create?: XOR<ProductCreateWithoutBundlesInput, ProductUncheckedCreateWithoutBundlesInput> | ProductCreateWithoutBundlesInput[] | ProductUncheckedCreateWithoutBundlesInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBundlesInput | ProductCreateOrConnectWithoutBundlesInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type ProductUpdateManyWithoutBundlesNestedInput = {
+    create?: XOR<ProductCreateWithoutBundlesInput, ProductUncheckedCreateWithoutBundlesInput> | ProductCreateWithoutBundlesInput[] | ProductUncheckedCreateWithoutBundlesInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBundlesInput | ProductCreateOrConnectWithoutBundlesInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutBundlesInput | ProductUpsertWithWhereUniqueWithoutBundlesInput[]
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutBundlesInput | ProductUpdateWithWhereUniqueWithoutBundlesInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutBundlesInput | ProductUpdateManyWithWhereWithoutBundlesInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type ProductUncheckedUpdateManyWithoutBundlesNestedInput = {
+    create?: XOR<ProductCreateWithoutBundlesInput, ProductUncheckedCreateWithoutBundlesInput> | ProductCreateWithoutBundlesInput[] | ProductUncheckedCreateWithoutBundlesInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBundlesInput | ProductCreateOrConnectWithoutBundlesInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutBundlesInput | ProductUpsertWithWhereUniqueWithoutBundlesInput[]
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutBundlesInput | ProductUpdateWithWhereUniqueWithoutBundlesInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutBundlesInput | ProductUpdateManyWithWhereWithoutBundlesInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18723,6 +20476,17 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -18749,6 +20513,22 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -19119,6 +20899,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -19132,6 +20913,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -19252,6 +21034,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type BundleCreateWithoutProductsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    image?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BundleUncheckedCreateWithoutProductsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    image?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BundleCreateOrConnectWithoutProductsInput = {
+    where: BundleWhereUniqueInput
+    create: XOR<BundleCreateWithoutProductsInput, BundleUncheckedCreateWithoutProductsInput>
+  }
+
   export type ProductVariantUpsertWithWhereUniqueWithoutProductInput = {
     where: ProductVariantWhereUniqueInput
     update: XOR<ProductVariantUpdateWithoutProductInput, ProductVariantUncheckedUpdateWithoutProductInput>
@@ -19277,6 +21088,7 @@ export namespace Prisma {
     size?: StringFilter<"ProductVariant"> | string
     flavor?: StringNullableFilter<"ProductVariant"> | string | null
     price?: FloatFilter<"ProductVariant"> | number
+    discountPrice?: FloatNullableFilter<"ProductVariant"> | number | null
     stock?: IntFilter<"ProductVariant"> | number
     isActive?: BoolFilter<"ProductVariant"> | boolean
     createdAt?: DateTimeFilter<"ProductVariant"> | Date | string
@@ -19359,6 +21171,37 @@ export namespace Prisma {
     data: XOR<WishlistItemUpdateManyMutationInput, WishlistItemUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type BundleUpsertWithWhereUniqueWithoutProductsInput = {
+    where: BundleWhereUniqueInput
+    update: XOR<BundleUpdateWithoutProductsInput, BundleUncheckedUpdateWithoutProductsInput>
+    create: XOR<BundleCreateWithoutProductsInput, BundleUncheckedCreateWithoutProductsInput>
+  }
+
+  export type BundleUpdateWithWhereUniqueWithoutProductsInput = {
+    where: BundleWhereUniqueInput
+    data: XOR<BundleUpdateWithoutProductsInput, BundleUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type BundleUpdateManyWithWhereWithoutProductsInput = {
+    where: BundleScalarWhereInput
+    data: XOR<BundleUpdateManyMutationInput, BundleUncheckedUpdateManyWithoutProductsInput>
+  }
+
+  export type BundleScalarWhereInput = {
+    AND?: BundleScalarWhereInput | BundleScalarWhereInput[]
+    OR?: BundleScalarWhereInput[]
+    NOT?: BundleScalarWhereInput | BundleScalarWhereInput[]
+    id?: StringFilter<"Bundle"> | string
+    name?: StringFilter<"Bundle"> | string
+    description?: StringNullableFilter<"Bundle"> | string | null
+    price?: FloatFilter<"Bundle"> | number
+    originalPrice?: FloatNullableFilter<"Bundle"> | number | null
+    image?: StringNullableFilter<"Bundle"> | string | null
+    isActive?: BoolFilter<"Bundle"> | boolean
+    createdAt?: DateTimeFilter<"Bundle"> | Date | string
+    updatedAt?: DateTimeFilter<"Bundle"> | Date | string
+  }
+
   export type ProductCreateWithoutVariantsInput = {
     id?: string
     name: string
@@ -19366,6 +21209,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -19382,6 +21226,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemCreateNestedManyWithoutProductInput
+    bundles?: BundleCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutVariantsInput = {
@@ -19391,6 +21236,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -19407,6 +21253,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    bundles?: BundleUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutVariantsInput = {
@@ -19486,6 +21333,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -19502,6 +21350,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUpdateManyWithoutProductNestedInput
+    bundles?: BundleUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutVariantsInput = {
@@ -19511,6 +21360,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -19527,6 +21377,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    bundles?: BundleUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutVariantInput = {
@@ -19568,6 +21419,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -19584,6 +21436,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemCreateNestedManyWithoutProductInput
+    bundles?: BundleCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutCartItemsInput = {
@@ -19593,6 +21446,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -19609,6 +21463,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    bundles?: BundleUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutCartItemsInput = {
@@ -19621,6 +21476,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -19635,6 +21491,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -19704,6 +21561,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -19720,6 +21578,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUpdateManyWithoutProductNestedInput
+    bundles?: BundleUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCartItemsInput = {
@@ -19729,6 +21588,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -19745,6 +21605,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    bundles?: BundleUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductVariantUpsertWithoutCartItemsInput = {
@@ -19763,6 +21624,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19777,6 +21639,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19836,6 +21699,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -19852,6 +21716,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    bundles?: BundleCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutWishlistInput = {
@@ -19861,6 +21726,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -19877,6 +21743,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    bundles?: BundleUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutWishlistInput = {
@@ -19941,6 +21808,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -19957,6 +21825,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    bundles?: BundleUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutWishlistInput = {
@@ -19966,6 +21835,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -19982,6 +21852,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    bundles?: BundleUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type UserUpsertWithoutWishlistInput = {
@@ -20263,6 +22134,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -20279,6 +22151,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemCreateNestedManyWithoutProductInput
+    bundles?: BundleCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -20288,6 +22161,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -20304,6 +22178,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    bundles?: BundleUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -20316,6 +22191,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -20330,6 +22206,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -20395,6 +22272,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -20411,6 +22289,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUpdateManyWithoutProductNestedInput
+    bundles?: BundleUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -20420,6 +22299,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -20436,6 +22316,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    bundles?: BundleUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductVariantUpsertWithoutOrderItemsInput = {
@@ -20454,6 +22335,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20468,6 +22350,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20482,6 +22365,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -20498,6 +22382,7 @@ export namespace Prisma {
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemCreateNestedManyWithoutProductInput
+    bundles?: BundleCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -20507,6 +22392,7 @@ export namespace Prisma {
     category: string
     subCategory?: string | null
     price?: number
+    discountPrice?: number | null
     stock?: number
     description?: string | null
     warnings?: ProductCreatewarningsInput | string[]
@@ -20523,6 +22409,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     wishlist?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+    bundles?: BundleUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -20587,6 +22474,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -20603,6 +22491,7 @@ export namespace Prisma {
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUpdateManyWithoutProductNestedInput
+    bundles?: BundleUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -20612,6 +22501,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     subCategory?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     warnings?: ProductUpdatewarningsInput | string[]
@@ -20628,6 +22518,7 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     wishlist?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+    bundles?: BundleUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type UserUpsertWithoutReviewsInput = {
@@ -20807,6 +22698,106 @@ export namespace Prisma {
   export type OrderUpdateManyWithWhereWithoutAdressInput = {
     where: OrderScalarWhereInput
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutAdressInput>
+  }
+
+  export type ProductCreateWithoutBundlesInput = {
+    id?: string
+    name: string
+    brand?: string | null
+    category: string
+    subCategory?: string | null
+    price?: number
+    discountPrice?: number | null
+    stock?: number
+    description?: string | null
+    warnings?: ProductCreatewarningsInput | string[]
+    directions?: string | null
+    images?: ProductCreateimagesInput | string[]
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rating?: number
+    reviewCount?: number
+    variantType?: $Enums.VariantType
+    secondaryVariantName?: string | null
+    variants?: ProductVariantCreateNestedManyWithoutProductInput
+    cartItems?: CartItemCreateNestedManyWithoutProductInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    wishlist?: WishlistItemCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutBundlesInput = {
+    id?: string
+    name: string
+    brand?: string | null
+    category: string
+    subCategory?: string | null
+    price?: number
+    discountPrice?: number | null
+    stock?: number
+    description?: string | null
+    warnings?: ProductCreatewarningsInput | string[]
+    directions?: string | null
+    images?: ProductCreateimagesInput | string[]
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rating?: number
+    reviewCount?: number
+    variantType?: $Enums.VariantType
+    secondaryVariantName?: string | null
+    variants?: ProductVariantUncheckedCreateNestedManyWithoutProductInput
+    cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    wishlist?: WishlistItemUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutBundlesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutBundlesInput, ProductUncheckedCreateWithoutBundlesInput>
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutBundlesInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutBundlesInput, ProductUncheckedUpdateWithoutBundlesInput>
+    create: XOR<ProductCreateWithoutBundlesInput, ProductUncheckedCreateWithoutBundlesInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutBundlesInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutBundlesInput, ProductUncheckedUpdateWithoutBundlesInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutBundlesInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutBundlesInput>
+  }
+
+  export type ProductScalarWhereInput = {
+    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    OR?: ProductScalarWhereInput[]
+    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    id?: StringFilter<"Product"> | string
+    name?: StringFilter<"Product"> | string
+    brand?: StringNullableFilter<"Product"> | string | null
+    category?: StringFilter<"Product"> | string
+    subCategory?: StringNullableFilter<"Product"> | string | null
+    price?: FloatFilter<"Product"> | number
+    discountPrice?: FloatNullableFilter<"Product"> | number | null
+    stock?: IntFilter<"Product"> | number
+    description?: StringNullableFilter<"Product"> | string | null
+    warnings?: StringNullableListFilter<"Product">
+    directions?: StringNullableFilter<"Product"> | string | null
+    images?: StringNullableListFilter<"Product">
+    isActive?: BoolFilter<"Product"> | boolean
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
+    rating?: FloatFilter<"Product"> | number
+    reviewCount?: IntFilter<"Product"> | number
+    variantType?: EnumVariantTypeFilter<"Product"> | $Enums.VariantType
+    secondaryVariantName?: StringNullableFilter<"Product"> | string | null
   }
 
   export type AddressCreateManyUserInput = {
@@ -21006,6 +22997,7 @@ export namespace Prisma {
     size: string
     flavor?: string | null
     price: number
+    discountPrice?: number | null
     stock: number
     isActive?: boolean
     createdAt?: Date | string
@@ -21048,6 +23040,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21061,6 +23054,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21074,6 +23068,7 @@ export namespace Prisma {
     size?: StringFieldUpdateOperationsInput | string
     flavor?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21171,6 +23166,42 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BundleUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BundleUncheckedUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BundleUncheckedUpdateManyWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    originalPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartItemCreateManyVariantInput = {
@@ -21317,6 +23348,82 @@ export namespace Prisma {
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
     paymentStatus?: StringFieldUpdateOperationsInput | string
     receipt?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProductUpdateWithoutBundlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    subCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    warnings?: ProductUpdatewarningsInput | string[]
+    directions?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: ProductUpdateimagesInput | string[]
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    variantType?: EnumVariantTypeFieldUpdateOperationsInput | $Enums.VariantType
+    secondaryVariantName?: NullableStringFieldUpdateOperationsInput | string | null
+    variants?: ProductVariantUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUpdateManyWithoutProductNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    wishlist?: WishlistItemUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutBundlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    subCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    warnings?: ProductUpdatewarningsInput | string[]
+    directions?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: ProductUpdateimagesInput | string[]
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    variantType?: EnumVariantTypeFieldUpdateOperationsInput | $Enums.VariantType
+    secondaryVariantName?: NullableStringFieldUpdateOperationsInput | string | null
+    variants?: ProductVariantUncheckedUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    wishlist?: WishlistItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutBundlesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    subCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    discountPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    warnings?: ProductUpdatewarningsInput | string[]
+    directions?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: ProductUpdateimagesInput | string[]
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewCount?: IntFieldUpdateOperationsInput | number
+    variantType?: EnumVariantTypeFieldUpdateOperationsInput | $Enums.VariantType
+    secondaryVariantName?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

@@ -23,6 +23,7 @@ export const fetchProducts = async (
 ): Promise<{
   products: Product[];
   total: number;
+  maxPrice: number;
   page: number;
   totalPages: number;
 }> => {
@@ -64,6 +65,7 @@ export const fetchProducts = async (
   return {
     products,
     total: res.data.total,
+    maxPrice: res.data.maxPrice,
     page: res.data.page,
     totalPages: res.data.totalPages,
   };

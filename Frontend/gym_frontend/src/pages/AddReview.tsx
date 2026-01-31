@@ -45,45 +45,50 @@ const AddReview: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-brand-warm pt-32 pb-40 px-6">
+        <div className="min-h-screen bg-brand-warm pt-40 pb-40 px-6">
             <div className="max-w-2xl mx-auto">
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte/40 hover:text-brand transition-luxury mb-12"
+                    className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte/40 hover:text-brand transition-all mb-12"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back to Product
                 </button>
 
                 <div className="bg-white p-12 shadow-2xl border border-brand-matte/5">
-                    <h1 className="text-3xl font-black text-brand-matte uppercase tracking-tighter mb-8">Deploy Report</h1>
+                    <h1 className="text-4xl font-black text-brand-matte uppercase tracking-tighter mb-4">Write a <span className="text-brand">Review</span></h1>
+                    <p className="text-brand-matte/40 text-[10px] font-black uppercase tracking-widest mb-12">Your feedback helps us maintain standard quality.</p>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="space-y-4">
-                            <label className="text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte">Efficiency Rating</label>
-                            <div className="flex gap-2">
+                    <form onSubmit={handleSubmit} className="space-y-12">
+                        <div className="space-y-6">
+                            <label className="text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte/40 flex items-center gap-4">
+                                01. Select Rating <div className="h-px flex-grow bg-brand-matte/5"></div>
+                            </label>
+                            <div className="flex gap-4">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         key={star}
                                         type="button"
                                         onClick={() => setRating(star)}
-                                        className="transition-transform hover:scale-110"
+                                        className="transition-all hover:scale-110 active:scale-90"
                                     >
                                         <Star
-                                            className={`w-8 h-8 ${star <= rating ? 'fill-brand-gold text-brand-gold' : 'text-brand-matte/10'}`}
+                                            className={`w-10 h-10 ${star <= rating ? 'fill-brand-gold text-brand-gold drop-shadow-sm' : 'text-brand-matte/10'}`}
                                         />
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            <label className="text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte">Operational Log</label>
+                        <div className="space-y-6">
+                            <label className="text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte/40 flex items-center gap-4">
+                                02. Your Experience <div className="h-px flex-grow bg-brand-matte/5"></div>
+                            </label>
                             <textarea
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                rows={5}
-                                className="w-full bg-brand-warm border border-brand-matte/10 p-6 text-brand-matte focus:outline-none focus:border-brand-gold transition-colors font-medium text-sm text-brand-matte/80 resize-none"
-                                placeholder="Share your experience with this protocol..."
+                                rows={6}
+                                className="w-full bg-brand-warm/50 border border-brand-matte/10 p-8 text-brand-matte focus:outline-none focus:border-brand-gold/50 transition-all font-medium text-sm text-brand-matte/80 resize-none shadow-inner"
+                                placeholder="Describe your experience with this product..."
                                 required
                             />
                         </div>
@@ -91,9 +96,9 @@ const AddReview: React.FC = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full btn-luxury py-4 text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3"
+                            className="w-full bg-brand text-white py-6 text-[12px] font-black uppercase tracking-[0.5em] flex items-center justify-center gap-3 shadow-2xl shadow-brand/20 hover:bg-brand-matte transition-all disabled:opacity-50"
                         >
-                            {loading ? 'Transmitting...' : 'Submit Report'}
+                            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Submit Review'}
                         </button>
                     </form>
                 </div>

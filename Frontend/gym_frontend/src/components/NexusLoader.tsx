@@ -39,7 +39,7 @@ const NexusLoader: React.FC = () => {
                 transition={{ delay: 0.3 }}
             >
                 <span className="text-[10px] font-black text-brand uppercase tracking-[0.4em] animate-pulse">
-                    Processing Data
+                    Loading
                 </span>
                 <div className="w-24 h-[1px] bg-brand/20 relative overflow-hidden">
                     <motion.div

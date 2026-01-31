@@ -30,7 +30,7 @@ const Slider: React.FC<SliderProps> = ({ products, loading }) => {
 
   return (
     <motion.div
-      className="relative w-full max-w-[480px] ml-auto h-[800px] overflow-hidden hidden lg:flex gap-6 pr-4 cursor-pointer"
+      className="relative w-full max-w-[480px] ml-auto h-[800px] overflow-hidden hidden  lg:flex gap-6 pr-4 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       animate={{ scale: isHovered ? 1.02 : 1 }}
@@ -45,12 +45,12 @@ const Slider: React.FC<SliderProps> = ({ products, loading }) => {
         <motion.div
           animate={{ y: ["-33.33%", "0%"] }}
           transition={{ duration: duration1, ease: "linear", repeat: Infinity }}
-          className="flex flex-col gap-6"
+          className="flex  flex-col gap-6"
         >
           {duplicatedProducts.map((product, idx) => (
-            <Link to={`/product/${product.id}`} key={`${idx}-col1`}>
+            <Link className='bg-white ' to={`/product/${product.id}`} key={`${idx}-col1`}>
               <motion.div
-                whileHover={{ y: -5, borderColor: "rgba(123, 15, 23, 0.2)", backgroundColor: "rgba(123, 15, 23, 0.02)" }}
+                whileHover={{ y: -5, borderColor: "rgba(123, 15, 23, 0.2)", backgroundColor: "rgba(255, 255, 255, 0.02)" }}
                 className={`w-full ${idx % 3 === 0 ? 'aspect-square' : 'aspect-[4/5]'} bg-brand-warm/50 border border-black/5 rounded-none p-6 flex items-center justify-center transition-all duration-300 relative group/item overflow-hidden shadow-sm`}
               >
                 {/* Product Name Label - Light Theme */}
@@ -77,9 +77,9 @@ const Slider: React.FC<SliderProps> = ({ products, loading }) => {
           className="flex flex-col gap-6"
         >
           {duplicatedProducts.map((product, idx) => (
-            <Link to={`/product/${product.id}`} key={`${idx}-col2`}>
+            <Link className='bg-white ' to={`/product/${product.id}`} key={`${idx}-col2`}>
               <motion.div
-                whileHover={{ y: -5, borderColor: "rgba(123, 15, 23, 0.2)", backgroundColor: "rgba(123, 15, 23, 0.02)" }}
+                whileHover={{ y: -5, borderColor: "rgba(123, 15, 23, 0.2)", backgroundColor: "rgba(255, 255, 255, 0.02)" }}
                 className={`w-full ${idx % 3 === 0 ? 'aspect-[4/5]' : 'aspect-square'} bg-brand-warm/50 border border-black/5 rounded-none p-6 flex items-center justify-center transition-all duration-300 relative group/item overflow-hidden shadow-sm`}
               >
                 <span className="absolute bottom-4 left-0 right-0 text-center text-[8px] font-black text-brand-matte/20 uppercase tracking-[0.3em] z-30 opacity-0 group-hover/item:opacity-100 transition-opacity whitespace-nowrap px-2 overflow-hidden text-ellipsis">

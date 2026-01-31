@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
-              Engineered for the elite. 100% verified compounds for maximum human biological output. High performance. Zero compromise.
+              Designed for results. 100% verified products for maximum performance. High quality. Zero compromise.
             </p>
             <div className="flex space-x-6">
               <Instagram className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury" />
@@ -25,29 +25,29 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-10">Protocols</h4>
+            <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-10">Products</h4>
             <ul className="space-y-4 text-[10px] font-bold uppercase tracking-[0.2em]">
-              <li><a href="#" className="hover:text-brand-gold transition-luxury">Muscle Synthesis</a></li>
-              <li><a href="#" className="hover:text-brand-gold transition-luxury">Neural Clarity</a></li>
-              <li><a href="#" className="hover:text-brand-gold transition-luxury">Bio-Optimization</a></li>
+              <li><a href="#" className="hover:text-brand-gold transition-luxury">Protein</a></li>
+              <li><a href="#" className="hover:text-brand-gold transition-luxury">Pre-Workout</a></li>
+              <li><a href="#" className="hover:text-brand-gold transition-luxury">Vitamins</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-10">Intelligence</h4>
+            <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-10">Information</h4>
             <ul className="space-y-4 text-[10px] font-bold uppercase tracking-[0.2em]">
-              <li><a href="#" className="hover:text-brand-gold transition-luxury">Logistics</a></li>
-              <li><a href="#" className="hover:text-brand-gold transition-luxury">Molecular Reports</a></li>
-              <li><a href="#" className="hover:text-brand-gold transition-luxury">Contact Command</a></li>
+              <li><a href="#" className="hover:text-brand-gold transition-luxury">Shipping</a></li>
+              <li><a href="#" className="hover:text-brand-gold transition-luxury">Lab Reports</a></li>
+              <li><a href="#" className="hover:text-brand-gold transition-luxury">Contact Us</a></li>
             </ul>
           </div>
 
           <div className="space-y-8">
-            <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-10">Base Base</h4>
+            <h4 className="text-white font-black uppercase tracking-[0.4em] text-[10px] mb-10">Our Location</h4>
             <ul className="space-y-6 text-[10px] font-bold uppercase tracking-[0.2em]">
               <li className="flex items-center gap-4">
                 <MapPin className="w-4 h-4 text-brand-gold" />
-                <span>Sector 01, Elite Performance Lab</span>
+                <span>Nexus Performance Lab, Karachi</span>
               </li>
               <li className="flex items-center gap-4 text-brand-gold">
                 <Zap className="w-4 h-4" />
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
           <p>© 2024 NEXUS SUPPLEMENTS. ALL RIGHTS RESERVED.</p>
           <div className="flex space-x-10 mt-6 md:mt-0">
             <a href="#" className="hover:text-white transition-luxury">PRIVACY POLICY</a>
-            <a href="#" className="hover:text-white transition-luxury">TERMS OF DEPLOYMENT</a>
+            <a href="#" className="hover:text-white transition-luxury">TERMS OF SERVICE</a>
           </div>
         </div>
       </div>

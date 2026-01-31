@@ -97,20 +97,23 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
     setIsQuickViewOpen(true);
   };
 
-  // const discount = product.originalPrice
-  //   ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-  //   : 0;
+  const displayPrice = variant ? (variant.discountPrice || variant.price) : (product.discountPrice || product.price);
+  const originalPrice = variant ? (variant.discountPrice ? variant.price : null) : (product.discountPrice ? product.price : null);
+
+  const discount = originalPrice
+    ? Math.round(((originalPrice - displayPrice) / originalPrice) * 100)
+    : 0;
 
   return (
     <>
       <div
-        className="group relative bg-brand-matte/5 border border-brand-matte/10 rounded-none overflow-hidden transition-luxury hover:shadow-2xl w-full max-w-[320px] flex flex-col"
+        className="group relative bg-white border border-brand-matte/5 rounded-none overflow-hidden transition-all duration-500 hover:shadow-2xl w-full max-w-[320px] flex flex-col shadow-sm"
         style={{ height: '440px' }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <Link to={`/product/${product.id}`} className="flex flex-col h-full">
-          <div className="relative h-[260px] md:h-[280px] overflow-hidden bg-brand-matte/5 flex items-center justify-center shrink-0">
+          <div className="relative h-[260px] md:h-[280px] overflow-hidden bg-brand-warm/30 flex items-center justify-center shrink-0">
             <img
               src={product.images?.[0] || 'https://images.unsplash.com/photo-1593095191850-2a0bf3a772bf?auto=format&fit=crop&q=80&w=800'}
               alt={product.name}
@@ -119,15 +122,15 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
 
             <div className="absolute top-3 left-3 flex flex-col gap-2">
               {booleanIsNew && (
-                <span className="bg-brand-gold text-brand-matte text-[10px] font-black px-2 py-1 uppercase tracking-wider">
+                <span className="bg-brand-gold text-brand-matte text-[10px] font-black px-2 py-1 uppercase tracking-wider shadow-sm">
                   NEW
                 </span>
               )}
-              {/* {discount > 0 && (
-                <span className="bg-brand text-white text-[10px] font-black px-2 py-1 uppercase tracking-wider">
-                  -{discount}%
+              {discount > 0 && (
+                <span className="bg-brand text-white text-[10px] font-black px-2 py-1 uppercase tracking-wider shadow-sm">
+                  SALE {discount}% OFF
                 </span>
-              )} */}
+              )}
             </div>
 
             <div
@@ -141,7 +144,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
                 onClick={handleAddToWishlist}
                 className={`w-9 h-9 border rounded-none flex items-center justify-center transition-colors shadow-md
     ${isWishlisted
-                    ? 'bg-red-500 text-white border-red-500'
+                    ? 'bg-brand text-white border-brand'
                     : 'bg-white text-brand-matte border-brand-matte/5 hover:bg-brand-gold'
                   }
   `}
@@ -165,11 +168,11 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
               <button
                 onClick={handleAddToCart}
                 disabled={loading}
-                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                className={`absolute bottom-0 left-0 right-0 bg-brand-matte text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
                     translate-y-0
                     lg:translate-y-full
                     ${isHovered ? 'lg:translate-y-0' : ''}
-                    ${loading ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
+                    ${loading ? 'cursor-not-allowed opacity-80' : 'cursor-pointer hover:bg-brand'}
                   `}
               >
                 {loading ? (
@@ -187,10 +190,11 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
             ) : (
               <button
                 onClick={handleBuyNow}
-                className={`absolute bottom-0 left-0 right-0 bg-brand-gold text-brand-matte py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
                   translate-y-0
                   lg:translate-y-full
                   ${isHovered ? 'lg:translate-y-0' : ''}
+                  hover:bg-brand-matte
                 `}
               >
                 <CreditCard className="w-4 h-4" />
@@ -209,17 +213,17 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
               </h3>
             </div>
 
-            <div className="flex items-center justify-between mt-auto pt-2">
+            <div className="flex items-center justify-between mt-auto pt-4 border-t border-brand-matte/5">
               <div className="flex flex-col">
                 <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">
-                  {!variant && product.variants.length > 1 && <span className="text-[10px] font-bold not-italic mr-1 text-brand-matte/40 uppercase tracking-widest">From</span>}
-                  Rs. {(variant ? variant.price : product.price).toFixed(2)}
+                  {!variant && product.variants.length > 1 && <span className="text-[10px] font-bold not-italic mr-1 text-brand-matte/40 uppercase tracking-widest text-shadow-none">From</span>}
+                  Rs. {displayPrice.toFixed(2)}
                 </span>
-                {/* {product.originalPrice && (
-                  <span className="text-[10px] text-brand-matte/30 line-through font-bold">
-                    RS{product.originalPrice.toFixed(2)}
+                {originalPrice && (
+                  <span className="text-[10px] text-brand-matte/30 line-through font-black">
+                    Rs. {originalPrice.toFixed(2)}
                   </span>
-                )} */}
+                )}
               </div>
               <div className="flex text-brand-gold">
                 {[...Array(5)].map((_, i) => (

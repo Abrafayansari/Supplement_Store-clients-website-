@@ -54,6 +54,7 @@ export const createProduct = async (req, res) => {
       size: v.size,
       flavor: v.flavor || null,
       price: Number(v.price),
+      discountPrice: v.discountPrice ? Number(v.discountPrice) : null,
       stock: Number(v.stock)
     }));
 
@@ -61,6 +62,12 @@ export const createProduct = async (req, res) => {
     const basePrice = parsedVariants.length > 0
       ? Math.min(...parsedVariants.map(v => v.price))
       : Number(price);
+
+    const baseDiscountPrice = parsedVariants.length > 0
+      ? parsedVariants.some(v => v.discountPrice)
+        ? Math.min(...parsedVariants.map(v => v.discountPrice || v.price))
+        : null
+      : req.body.discountPrice ? Number(req.body.discountPrice) : null;
 
     const totalStock = parsedVariants.length > 0
       ? parsedVariants.reduce((sum, v) => sum + v.stock, 0)
@@ -73,6 +80,7 @@ export const createProduct = async (req, res) => {
         category,
         subCategory,
         price: basePrice,
+        discountPrice: baseDiscountPrice,
         stock: totalStock,
         description,
         warnings: Array.isArray(warnings) ? warnings : [warnings],
@@ -159,16 +167,26 @@ export const uploadbulkproducts = async (req, res) => {
         }
       }
 
-      // Parse variants: format "size:price:stock|size:price:stock"
+      // Parse variants: format "size:flavor:price:discountPrice:stock" or "size:price:stock"
       const variantData = row.variants
         ? row.variants.split("|").map(v => {
           const parts = v.split(":");
-          if (parts.length === 4) {
+          if (parts.length === 5) {
+            // size:flavor:price:discountPrice:stock
+            return {
+              size: parts[0].trim(),
+              flavor: parts[1].trim(),
+              price: parseFloat(parts[2]),
+              discountPrice: parseFloat(parts[3]) || null,
+              stock: parseInt(parts[4])
+            };
+          } else if (parts.length === 4) {
             // size:flavor:price:stock
             return {
               size: parts[0].trim(),
               flavor: parts[1].trim(),
               price: parseFloat(parts[2]),
+              discountPrice: null,
               stock: parseInt(parts[3])
             };
           } else {
@@ -178,6 +196,7 @@ export const uploadbulkproducts = async (req, res) => {
               size: size.trim(),
               flavor: null,
               price: parseFloat(price),
+              discountPrice: null,
               stock: parseInt(stock)
             };
           }
@@ -187,6 +206,12 @@ export const uploadbulkproducts = async (req, res) => {
       const basePrice = variantData.length > 0
         ? Math.min(...variantData.map(v => v.price))
         : parseFloat(row.price || 0);
+
+      const baseDiscountPrice = variantData.length > 0
+        ? variantData.some(v => v.discountPrice)
+          ? Math.min(...variantData.map(v => v.discountPrice || v.price))
+          : null
+        : parseFloat(row.discountPrice || 0) || null;
 
       const totalStock = variantData.length > 0
         ? variantData.reduce((sum, v) => sum + v.stock, 0)
@@ -198,6 +223,7 @@ export const uploadbulkproducts = async (req, res) => {
         category: row.category,
         subCategory: row.subCategory || null,
         price: basePrice,
+        discountPrice: baseDiscountPrice,
         stock: totalStock,
         description: row.description || null,
         warnings: row.warnings ? row.warnings.split("|") : [],
@@ -276,10 +302,13 @@ export const getallproducts = async (req, res) => {
     }
 
     if (minPrice || maxPrice) {
-      where.price = {
-        gte: minPrice ? Number(minPrice) : 0,
-        lte: maxPrice ? Number(maxPrice) : 999999,
-      };
+      where.price = {};
+      if (minPrice && !isNaN(Number(minPrice))) {
+        where.price.gte = Number(minPrice);
+      }
+      if (maxPrice && !isNaN(Number(maxPrice))) {
+        where.price.lte = Number(maxPrice);
+      }
     }
 
     if (inStock === "true") {
@@ -298,7 +327,7 @@ export const getallproducts = async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    const [products, total] = await Promise.all([
+    const [products, total, maxPriceAggregate] = await Promise.all([
       prisma.product.findMany({
         where,
         orderBy,
@@ -309,11 +338,18 @@ export const getallproducts = async (req, res) => {
         }
       }),
       prisma.product.count({ where }),
+      prisma.product.aggregate({
+        _max: {
+          price: true
+        },
+        where: { isActive: true }
+      })
     ]);
 
     res.json({
       products,
       total,
+      maxPrice: maxPriceAggregate._max.price || 0,
       page: Number(page),
       totalPages: Math.ceil(total / Number(limit)),
     });
@@ -433,12 +469,19 @@ export const updateProduct = async (req, res) => {
         ? Math.min(...parsedVariants.map(v => Number(v.price)))
         : undefined;
 
+      const baseDiscountPrice = parsedVariants.length > 0
+        ? parsedVariants.some(v => v.discountPrice)
+          ? Math.min(...parsedVariants.map(v => Number(v.discountPrice || v.price)))
+          : null
+        : req.body.discountPrice ? Number(req.body.discountPrice) : null;
+
       const totalStock = parsedVariants.length > 0
         ? parsedVariants.reduce((sum, v) => sum + Number(v.stock), 0)
         : undefined;
 
       variantUpdate = {
         price: basePrice,
+        discountPrice: baseDiscountPrice,
         stock: totalStock,
         variantType: variantType,
         secondaryVariantName: secondaryVariantName,
@@ -448,6 +491,7 @@ export const updateProduct = async (req, res) => {
             size: v.size,
             flavor: v.flavor || null,
             price: Number(v.price),
+            discountPrice: v.discountPrice ? Number(v.discountPrice) : null,
             stock: Number(v.stock)
           }))
         }
@@ -490,7 +534,7 @@ export const deleteProduct = async (req, res) => {
       data: { isActive: false }
     });
 
-    res.json({ message: "Product decommissioned successfully" });
+    res.json({ message: "Product deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

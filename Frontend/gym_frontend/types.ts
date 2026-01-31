@@ -4,6 +4,7 @@ export interface ProductVariant {
   size: string;
   flavor?: string;
   price: number;
+  discountPrice?: number;
   stock: number;
   isActive: boolean;
   createdAt: Date;
@@ -17,6 +18,7 @@ export interface Product {
   category: string;
   subCategory?: string;
   price: number;
+  discountPrice?: number;
   stock: number;
   description?: string;
   warnings: string[];

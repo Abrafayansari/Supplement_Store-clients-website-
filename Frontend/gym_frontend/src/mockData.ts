@@ -15,7 +15,10 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Ultra-pure whey protein isolate for muscle recovery and growth.',
     warnings: ['Keep out of reach of children'],
     directions: 'Mix 1 scoop with 200ml water.',
-    variants: ['Chocolate', 'Vanilla'],
+    variants: [
+      { id: 'v1', productId: '1', size: '2lbs', flavor: 'Chocolate', price: 54.99, stock: 20, isActive: true, createdAt: new Date(), updatedAt: new Date() },
+      { id: 'v2', productId: '1', size: '5lbs', flavor: 'Vanilla', price: 99.99, stock: 25, isActive: true, createdAt: new Date(), updatedAt: new Date() }
+    ],
     stock: 45,
     isActive: true,
     reviews: [],
@@ -24,6 +27,8 @@ export const MOCK_PRODUCTS: Product[] = [
     orderItems: [],
     createdAt: new Date(),
     updatedAt: new Date(),
+    variantType: 'OTHER',
+    secondaryVariantName: 'Flavor',
   },
   {
     id: '2',
@@ -38,7 +43,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'High-intensity formula to boost focus and energy.',
     warnings: ['High caffeine content'],
     directions: 'Take 1 scoop 30 mins before workout.',
-    variants: ['Blue Razz'],
+    variants: [{ id: 'v3', productId: '2', size: '30 Servings', flavor: 'Blue Razz', price: 110.00, stock: 12, isActive: true, createdAt: new Date(), updatedAt: new Date() }],
     stock: 12,
     isActive: true,
     reviews: [],
@@ -47,6 +52,8 @@ export const MOCK_PRODUCTS: Product[] = [
     orderItems: [],
     createdAt: new Date(),
     updatedAt: new Date(),
+    variantType: 'SERVINGS',
+    secondaryVariantName: 'Flavor',
   },
   {
     id: '3',
@@ -61,7 +68,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Premium protein matrix for muscle support.',
     warnings: ['Contains milk and soy'],
     directions: 'Consume between meals or after workout.',
-    variants: ['Cookies & Cream'],
+    variants: [{ id: 'v4', productId: '3', size: '5lbs', flavor: 'Cookies & Cream', price: 40.00, stock: 100, isActive: true, createdAt: new Date(), updatedAt: new Date() }],
     stock: 100,
     isActive: true,
     reviews: [],
@@ -70,6 +77,8 @@ export const MOCK_PRODUCTS: Product[] = [
     orderItems: [],
     createdAt: new Date(),
     updatedAt: new Date(),
+    variantType: 'OTHER',
+    secondaryVariantName: 'Flavor',
   },
   {
     id: '4',
@@ -84,7 +93,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Maximalist pre-workout for massive pumps.',
     warnings: ['Do not exceed 2 scoops'],
     directions: 'Mix 1-2 scoops with water.',
-    variants: ['Tiger Blood'],
+    variants: [{ id: 'v5', productId: '4', size: '40 Servings', flavor: 'Tiger Blood', price: 50.00, stock: 20, isActive: true, createdAt: new Date(), updatedAt: new Date() }],
     stock: 20,
     isActive: true,
     reviews: [],
@@ -93,6 +102,8 @@ export const MOCK_PRODUCTS: Product[] = [
     orderItems: [],
     createdAt: new Date(),
     updatedAt: new Date(),
+    variantType: 'SERVINGS',
+    secondaryVariantName: 'Flavor',
   },
   {
     id: '5',
@@ -107,7 +118,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Advanced weight gainer for rapid size increases.',
     warnings: ['Calorie dense'],
     directions: 'Mix 4 scoops with 600ml milk.',
-    variants: ['Vanilla'],
+    variants: [{ id: 'v6', productId: '5', size: '12lbs', flavor: 'Vanilla', price: 20.00, stock: 15, isActive: true, createdAt: new Date(), updatedAt: new Date() }],
     stock: 15,
     isActive: true,
     reviews: [],
@@ -116,6 +127,8 @@ export const MOCK_PRODUCTS: Product[] = [
     orderItems: [],
     createdAt: new Date(),
     updatedAt: new Date(),
+    variantType: 'OTHER',
+    secondaryVariantName: 'Flavor',
   },
   {
     id: '6',
@@ -130,7 +143,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Triple-strength fish oil for heart and brain health.',
     warnings: ['Fish allergy alert'],
     directions: 'Take 1 softgel daily with a meal.',
-    variants: ['Lemon'],
+    variants: [{ id: 'v7', productId: '6', size: '60 Softgels', flavor: 'Lemon', price: 24.99, stock: 60, isActive: true, createdAt: new Date(), updatedAt: new Date() }],
     stock: 60,
     isActive: true,
     reviews: [],
@@ -139,6 +152,8 @@ export const MOCK_PRODUCTS: Product[] = [
     orderItems: [],
     createdAt: new Date(),
     updatedAt: new Date(),
+    variantType: 'OTHER',
+    secondaryVariantName: 'Flavor',
   }
 ];
 
@@ -146,7 +161,7 @@ export const MOCK_ORDERS: Order[] = [
   {
     id: 'ORD-001',
     date: '2023-10-25',
-    customerName: 'Operative Alpha',
+    customerName: 'John Doe',
     customerEmail: 'alpha@nexus.com',
     total: 89.98,
     status: 'Shipped',
@@ -160,7 +175,7 @@ export const MOCK_ORDERS: Order[] = [
 export const MOCK_USERS: User[] = [
   {
     id: 'u1',
-    name: 'Commander Admin',
+    name: 'Shop Admin',
     email: 'admin@nexus.com',
     role: 'ADMIN',
     status: 'Active',

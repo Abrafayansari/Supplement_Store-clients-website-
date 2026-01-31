@@ -150,7 +150,7 @@ export const deleteBundle = async (req, res) => {
             where: { id },
             data: { isActive: false }
         });
-        res.json({ message: "Bundle decommissioned successfully" });
+        res.json({ message: "Bundle deleted successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });

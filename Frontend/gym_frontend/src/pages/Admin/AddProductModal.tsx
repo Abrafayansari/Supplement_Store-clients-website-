@@ -30,8 +30,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
         variantType: 'SIZE',
         secondaryVariantName: 'Flavor',
     });
-    const [variants, setVariants] = useState<Array<{ size: string; flavor: string; price: string; stock: string }>>([
-        { size: '', flavor: '', price: '', stock: '' }
+    const [variants, setVariants] = useState<Array<{ size: string; flavor: string; price: string; discountPrice: string; stock: string }>>([
+        { size: '', flavor: '', price: '', discountPrice: '', stock: '' }
     ]);
     const [images, setImages] = useState<File[]>([]);
 
@@ -57,10 +57,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                     size: v.size || '',
                     flavor: v.flavor || '',
                     price: v.price?.toString() || '',
+                    discountPrice: v.discountPrice?.toString() || '',
                     stock: v.stock?.toString() || ''
                 })));
             } else {
-                setVariants([{ size: '', flavor: '', price: '', stock: '' }]);
+                setVariants([{ size: '', flavor: '', price: '', discountPrice: '', stock: '' }]);
             }
             // We don't set files, but we might want to track existing images if we want to delete them
             // For now, we'll just clear new image selection when editing
@@ -78,7 +79,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                 variantType: 'SIZE',
                 secondaryVariantName: 'Flavor',
             });
-            setVariants([{ size: '', flavor: '', price: '', stock: '' }]);
+            setVariants([{ size: '', flavor: '', price: '', discountPrice: '', stock: '' }]);
             setImages([]);
             setActiveTab('manual'); // Default to manual for new product
         }
@@ -136,14 +137,14 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                         Authorization: `Bearer ${token}`
                     }
                 });
-                setSuccess('Product deployed successfully!');
+                setSuccess('Product added successfully!');
             }
             setTimeout(() => {
                 onSuccess();
                 onClose();
             }, 2000);
         } catch (err: any) {
-            setError(err.response?.data?.error || `Failed to ${product ? 'update' : 'deploy'} compound`);
+            setError(err.response?.data?.error || `Failed to ${product ? 'update' : 'add'} product`);
         } finally {
             setLoading(false);
         }
@@ -177,44 +178,44 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                 onClose();
             }, 2000);
         } catch (err: any) {
-            setError(err.response?.data?.error || 'Bulk transmission failed');
+            setError(err.response?.data?.error || 'Bulk upload failed');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-zinc-950 border border-zinc-800 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl rounded-[32px]">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-matte/80 backdrop-blur-sm">
+            <div className="bg-brand-warm border border-brand-matte/5 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl rounded-none">
                 {/* Header */}
-                <div className="p-8 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50">
+                <div className="p-8 border-b border-brand-matte/5 flex items-center justify-between bg-white shadow-sm">
                     <div>
-                        <h2 className="text-2xl font-black text-white uppercase tracking-tighter">
-                            {product ? 'Modify' : 'Deploy'} <span className="text-brand">{product ? 'Core Entity' : 'New Compounds'}</span>
+                        <h2 className="text-2xl font-black text-brand-matte uppercase tracking-tighter italic">
+                            {product ? 'Edit' : 'Add'} <span className="text-brand">{product ? 'Product' : 'New Item'}</span>
                         </h2>
-                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">
-                            {product ? `Editing record ID: ${product.id.slice(0, 8)}` : 'Select deployment protocol'}
+                        <p className="text-brand-matte/40 text-[10px] font-black uppercase tracking-widest mt-1">
+                            {product ? `Editing: ${product.name}` : 'Enter the details of your new product below'}
                         </p>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-zinc-800 rounded-full transition text-zinc-500 hover:text-white">
+                    <button onClick={onClose} className="p-2 hover:bg-brand-warm rounded-none transition text-brand-matte/40 hover:text-brand">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
 
                 {/* Tabs - Only show for new products */}
                 {!product && (
-                    <div className="flex border-b border-zinc-800 bg-black">
+                    <div className="flex border-b border-brand-matte/5 bg-white">
                         <button
-                            onClick={() => setActiveTab('manual')}
-                            className={`flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${activeTab === 'manual' ? 'text-brand border-b-2 border-brand bg-brand/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            onClick={setActiveTab.bind(null, 'manual')}
+                            className={`flex-1 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-3 ${activeTab === 'manual' ? 'text-brand border-b-2 border-brand bg-brand-warm' : 'text-brand-matte/30 hover:text-brand-matte hover:bg-brand-warm/50'}`}
                         >
-                            <Package className="w-4 h-4" /> Manual Sequence
+                            <Package className="w-4 h-4" /> Single Item
                         </button>
                         <button
-                            onClick={() => setActiveTab('bulk')}
-                            className={`flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 ${activeTab === 'bulk' ? 'text-brand border-b-2 border-brand bg-brand/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            onClick={setActiveTab.bind(null, 'bulk')}
+                            className={`flex-1 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-3 ${activeTab === 'bulk' ? 'text-brand border-b-2 border-brand bg-brand-warm' : 'text-brand-matte/30 hover:text-brand-matte hover:bg-brand-warm/50'}`}
                         >
-                            <Upload className="w-4 h-4" /> Bulk Upload
+                            <Upload className="w-4 h-4" /> Upload List
                         </button>
                     </div>
                 )}
@@ -236,78 +237,78 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                         <form id="manual-form" onSubmit={handleManualSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-4">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Compound Name</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Product Name</label>
                                     <input
                                         required
                                         value={formData.name}
                                         onChange={e => setFormData({ ...formData, name: e.target.value })}
                                         placeholder="E.G. WHEY ISOLATE X"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase italic shadow-sm"
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Category</label>
+                                        <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Category</label>
                                         <input
                                             required
                                             value={formData.category}
                                             onChange={e => setFormData({ ...formData, category: e.target.value })}
                                             placeholder="PROTEIN"
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                            className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm"
                                         />
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Sub-Category</label>
+                                        <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Sub-Category</label>
                                         <input
                                             value={formData.subCategory}
                                             onChange={e => setFormData({ ...formData, subCategory: e.target.value })}
                                             placeholder="ISOLATE"
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                            className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm"
                                         />
                                     </div>
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Brand Identity</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Brand Name</label>
                                     <input
                                         required
                                         value={formData.brand}
                                         onChange={e => setFormData({ ...formData, brand: e.target.value })}
                                         placeholder="E.G. NEXUS"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm"
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Variant Type (Size/Serving)</label>
+                                        <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">Variant Type</label>
                                         <select
                                             value={formData.variantType}
                                             onChange={e => setFormData({ ...formData, variantType: e.target.value })}
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-xs font-black text-white focus:border-brand outline-none transition uppercase"
+                                            className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-xs font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm cursor-pointer"
                                         >
                                             {['SIZE', 'SERVINGS', 'GRAMS', 'TABLETS', 'BARS', 'SCOOPS', 'CAPSULES', 'VERSION', 'OTHER'].map(v => (
-                                                <option key={v} value={v} className="bg-zinc-950">{v}</option>
+                                                <option key={v} value={v} className="bg-white">{v}</option>
                                             ))}
                                         </select>
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Secondary Label (E.G. Flavor)</label>
+                                        <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">Secondary Label</label>
                                         <input
                                             value={formData.secondaryVariantName}
                                             onChange={e => setFormData({ ...formData, secondaryVariantName: e.target.value })}
                                             placeholder="FLAVOR / COLOR"
-                                            className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition uppercase"
+                                            className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm"
                                         />
                                     </div>
                                 </div>
-                                <div className="space-y-4 pt-4 border-t border-zinc-800">
+                                <div className="space-y-4 pt-6 border-t border-brand-matte/5">
                                     <div className="flex items-center justify-between ml-1">
-                                        <label className="text-[10px] font-black text-brand uppercase tracking-widest italic">Matrix Configurations (Variants)</label>
+                                        <label className="text-[10px] font-black text-brand uppercase tracking-[0.4em] italic">Product Variants</label>
                                         <button
                                             type="button"
-                                            onClick={() => setVariants([...variants, { size: '', flavor: '', price: '', stock: '' }])}
-                                            className="text-[9px] font-black text-white bg-brand/20 px-3 py-1 rounded-full uppercase tracking-widest hover:bg-brand hover:text-white transition"
+                                            onClick={() => setVariants([...variants, { size: '', flavor: '', price: '', discountPrice: '', stock: '' }])}
+                                            className="text-[9px] font-black text-brand bg-brand/10 px-4 py-2 rounded-none uppercase tracking-widest hover:bg-brand hover:text-white transition-luxury shadow-sm"
                                         >
-                                            + Add Variant
+                                            + Add Option
                                         </button>
                                     </div>
 
@@ -355,6 +356,20 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                                     />
                                                 </div>
                                                 <div className="col-span-2 space-y-1">
+                                                    <label className="text-[8px] font-black text-brand uppercase tracking-widest ml-1">Discount</label>
+                                                    <input
+                                                        type="number"
+                                                        value={v.discountPrice}
+                                                        onChange={e => {
+                                                            const newV = [...variants];
+                                                            newV[i].discountPrice = e.target.value;
+                                                            setVariants(newV);
+                                                        }}
+                                                        placeholder="0.00"
+                                                        className="w-full bg-zinc-950 border border-brand/30 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                    />
+                                                </div>
+                                                <div className="col-span-2 space-y-1">
                                                     <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">Stock</label>
                                                     <input
                                                         type="number"
@@ -382,19 +397,19 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                 </div>
                             </div>
 
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Description</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Product Description</label>
                                     <textarea
-                                        rows={3}
+                                        rows={4}
                                         value={formData.description}
                                         onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                        placeholder="Enter compound molecular description..."
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition resize-none"
+                                        placeholder="ENTER KEY PRODUCT FEATURES AND DESCRIPTION..."
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition resize-none placeholder:text-brand-matte/10 shadow-sm"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Visual Assets (Up to 5)</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">Product Gallery (Max 5)</label>
                                     <div className="relative group">
                                         <input
                                             type="file"
@@ -409,71 +424,66 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                         />
                                         <label
                                             htmlFor="image-upload"
-                                            className="flex flex-col items-center justify-center w-full h-32 bg-zinc-900 border-2 border-dashed border-zinc-800 rounded-2xl cursor-pointer group-hover:border-brand group-hover:bg-brand/5 transition"
+                                            className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand-gold group-hover:bg-brand-gold/5 transition-luxury shadow-sm"
                                         >
-                                            <ImageIcon className="w-8 h-8 text-zinc-600 group-hover:text-brand mb-2" />
-                                            <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">
-                                                {images.length > 0 ? `${images.length} Files Selected` : 'Click to upload blueprints'}
+                                            <ImageIcon className="w-8 h-8 text-brand-matte/10 group-hover:text-brand-gold mb-3 transition-colors" />
+                                            <span className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.3em] group-hover:text-brand-gold transition-colors">
+                                                {images.length > 0 ? `${images.length} Media Selected` : 'Click to add product photos'}
                                             </span>
                                         </label>
                                     </div>
-                                    {product?.images && product.images.length > 0 && (
-                                        <div className="mt-2 text-xs text-zinc-500">
-                                            Existing images: {product.images.length}
-                                        </div>
-                                    )}
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Notice Protocol (Safety Warnings)</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">Safety Information</label>
                                     <input
                                         value={formData.warnings}
                                         onChange={e => setFormData({ ...formData, warnings: e.target.value })}
-                                        placeholder="E.G. DO NOT EXCEED DOSE, CONSULT DOCTOR"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                        placeholder="E.G. NOT FOR CHILDREN, STORE IN COOL PLACE"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic">Execution Path (Directions)</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">How to Use</label>
                                     <input
                                         value={formData.directions}
                                         onChange={e => setFormData({ ...formData, directions: e.target.value })}
-                                        placeholder="E.G. TAKE 1 SCOOP DAILY, MIX WITH WATER"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                        placeholder="E.G. MIX 1 SCOOP WITH 200ML WATER"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase shadow-sm"
                                     />
                                 </div>
                             </div>
                         </form>
                     ) : (
                         <div className="space-y-8 py-10">
-                            <div className="flex flex-col items-center justify-center p-12 bg-zinc-900/50 border-2 border-dashed border-zinc-800 rounded-[40px] text-center space-y-4">
-                                <div className="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center text-brand">
+                            <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-dashed border-brand-matte/5 rounded-none text-center space-y-4 shadow-sm">
+                                <div className="w-20 h-20 bg-brand-warm rounded-full flex items-center justify-center text-brand-gold">
                                     <FileText className="w-10 h-10" />
                                 </div>
                                 <div className="space-y-2">
-                                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Bulk Archive Encryption</h3>
-                                    <p className="text-zinc-500 text-sm max-w-sm mx-auto font-medium">
-                                        Upload an Excel file (.xlsx) with product details and a ZIP file containing the corresponding images.
+                                    <h3 className="text-xl font-black text-brand-matte uppercase tracking-tighter italic">Bulk List Upload</h3>
+                                    <p className="text-brand-matte/30 text-[10px] font-black uppercase tracking-widest max-w-sm mx-auto">
+                                        Upload Excel data + Media ZIP to update items in bulk.
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic underline">Instruction Set (Excel)</label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-widest ml-1 italic">Spreadsheet (.xlsx)</label>
                                     <input
                                         type="file"
                                         accept=".xlsx, .xls"
                                         onChange={e => setExcelFile(e.target.files?.[0] || null)}
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white file:bg-brand file:border-none file:px-4 file:py-1 file:rounded-lg file:text-white file:text-[10px] file:font-black file:uppercase file:tracking-widest cursor-pointer"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-[10px] font-black text-brand-matte file:bg-brand file:border-none file:px-4 file:py-2 file:rounded-none file:text-white file:text-[9px] file:font-black file:uppercase file:tracking-widest cursor-pointer shadow-sm"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1 italic underline">Asset Archive (ZIP)</label>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-widest ml-1 italic">Media Archive (.zip)</label>
                                     <input
                                         type="file"
                                         accept=".zip"
                                         onChange={e => setZipFile(e.target.files?.[0] || null)}
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white file:bg-brand file:border-none file:px-4 file:py-1 file:rounded-lg file:text-white file:text-[10px] file:font-black file:uppercase file:tracking-widest cursor-pointer"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-[10px] font-black text-brand-matte file:bg-brand file:border-none file:px-4 file:py-2 file:rounded-none file:text-white file:text-[9px] file:font-black file:uppercase file:tracking-widest cursor-pointer shadow-sm"
                                     />
                                 </div>
                             </div>
@@ -482,26 +492,24 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                 </div>
 
                 {/* Footer */}
-                <div className="p-8 border-t border-zinc-800 bg-zinc-900/50 flex justify-end gap-4">
+                <div className="p-8 border-t border-brand-matte/5 bg-white flex justify-end gap-6">
                     <button
                         disabled={loading}
                         onClick={onClose}
-                        className="px-8 py-4 bg-zinc-900 text-zinc-500 font-black text-[10px] uppercase tracking-widest hover:text-white transition rounded-xl border border-zinc-800"
+                        className="px-8 py-5 text-brand-matte/40 font-black text-[10px] uppercase tracking-[0.3em] hover:text-brand transition-colors rounded-none"
                     >
-                        Abort Operation
+                        Back
                     </button>
                     <button
                         form={activeTab === 'manual' ? 'manual-form' : undefined}
                         onClick={activeTab === 'bulk' ? handleBulkSubmit : undefined}
                         disabled={loading}
-                        className="px-10 py-4 bg-brand text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition shadow-lg shadow-brand/20 rounded-xl flex items-center gap-3 disabled:opacity-50"
+                        className="px-12 py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-gold transition-luxury shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
                     >
                         {loading ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin" /> Transmitting...
-                            </>
+                            <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                            product ? 'Confirm Modification' : 'Initiate Deployment'
+                            product ? 'Update Details' : 'Save Item'
                         )}
                     </button>
                 </div>

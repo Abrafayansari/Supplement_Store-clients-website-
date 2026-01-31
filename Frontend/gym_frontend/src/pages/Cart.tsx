@@ -24,7 +24,7 @@ const Cart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-black min-h-screen flex items-center justify-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-brand-warm min-h-screen flex items-center justify-center">
         <NexusLoader />
       </div>
     );
@@ -32,31 +32,31 @@ const Cart: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center bg-black min-h-screen">
-        <div className="w-24 h-24 bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center mx-auto mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center bg-brand-warm min-h-screen">
+        <div className="w-24 h-24 bg-white border border-brand-matte/5 rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
           <ShoppingBag className="w-12 h-12 text-brand" />
         </div>
-        <h1 className="text-4xl font-black text-white mb-4">Your cart is empty</h1>
-        <p className="text-zinc-500 text-lg mb-10 max-w-md mx-auto italic">Looks like you haven't added anything to your protocol yet.</p>
-        <Link to="/products" className="inline-flex items-center gap-2 bg-brand text-white px-10 py-4 font-black text-lg hover:bg-white hover:text-black transition shadow-xl shadow-brand/20">
-          Browse Supplements <ArrowRight className="w-5 h-5" />
+        <h1 className="text-4xl font-black text-brand-matte mb-4 uppercase tracking-tighter">Your cart is empty</h1>
+        <p className="text-brand-matte/60 text-lg mb-10 max-w-md mx-auto italic font-light">Looks like you haven't added anything to your cart yet.</p>
+        <Link to="/products" className="inline-flex items-center gap-2 bg-brand text-white px-10 py-4 font-black text-[12px] uppercase tracking-widest hover:bg-brand-matte transition shadow-xl shadow-brand/10">
+          Browse Products <ArrowRight className="w-5 h-5" />
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-black min-h-screen">
-      <div className="flex justify-between items-end mb-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-brand-warm min-h-screen">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
         <div>
-          <h1 className="text-5xl font-black text-white uppercase tracking-tight">CART <span className="text-brand">ARCHIVE</span></h1>
-          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mt-2">Individual deployment authorization required for each protocol.</p>
+          <h1 className="text-5xl font-black text-brand-matte uppercase tracking-tighter">YOUR <span className="text-brand italic">CART</span></h1>
+          <p className="text-brand-matte/40 font-black uppercase tracking-widest text-[10px] mt-2 italic">Standard checkout process for each order.</p>
         </div>
         <button
           onClick={() => navigate('/checkout')}
-          className="bg-brand text-white px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-xl shadow-brand/20"
+          className="bg-brand text-white px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-brand-matte transition-all shadow-xl shadow-brand/10"
         >
-          Checkout All Protocols
+          Checkout All Products
         </button>
       </div>
 

@@ -140,6 +140,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   category: 'category',
   subCategory: 'subCategory',
   price: 'price',
+  discountPrice: 'discountPrice',
   stock: 'stock',
   description: 'description',
   warnings: 'warnings',
@@ -160,6 +161,7 @@ exports.Prisma.ProductVariantScalarFieldEnum = {
   size: 'size',
   flavor: 'flavor',
   price: 'price',
+  discountPrice: 'discountPrice',
   stock: 'stock',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -247,6 +249,18 @@ exports.Prisma.BannerScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.BundleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  originalPrice: 'originalPrice',
+  image: 'image',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -302,7 +316,8 @@ exports.Prisma.ModelName = {
   Review: 'Review',
   Address: 'Address',
   Notification: 'Notification',
-  Banner: 'Banner'
+  Banner: 'Banner',
+  Bundle: 'Bundle'
 };
 
 /**

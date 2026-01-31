@@ -214,7 +214,7 @@ const Home: React.FC = () => {
                     ease: "easeInOut"
                   }}
                 >
-                  ELITE DISPATCH
+                  PREMIUM QUALITY
                 </motion.span>
               </motion.div>
 
@@ -273,7 +273,7 @@ const Home: React.FC = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, delay: 1.2 }}
                 >
-                  Precision Engineered Performance
+                  High Performance Supplements
                 </motion.p>
               </motion.div>
             </motion.div>
@@ -295,7 +295,7 @@ const Home: React.FC = () => {
                   ease: "easeInOut"
                 }}
               >
-                The intersection of clinical purity and human potential. We develop non-proprietary compounds for operatives demanding peak physiological output.
+                The intersection of purity and human potential. We develop high-quality supplements for athletes demanding peak performance.
               </motion.p>
 
               <motion.div
@@ -323,7 +323,7 @@ const Home: React.FC = () => {
                         ease: "easeInOut"
                       }}
                     >
-                      DEPLOY CATALOG
+                      SHOP ALL
                     </motion.span>
                     <motion.div
                       animate={{
@@ -386,9 +386,9 @@ const Home: React.FC = () => {
               transition={{ duration: 1, delay: 1.8 }}
             >
               {[
-                { label: 'Uptake', val: '99.8%', delay: 0 },
-                { label: 'Purity', val: 'Verified', delay: 0.2 },
-                { label: 'Status', val: 'Operational', delay: 0.4 }
+                { label: 'Absorption', val: '99.8%', delay: 0 },
+                { label: 'Pure', val: 'Verified', delay: 0.2 },
+                { label: 'Availability', val: 'In Stock', delay: 0.4 }
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -800,8 +800,8 @@ const Home: React.FC = () => {
                     // Fallback for debugging
                     <div className="col-span-3 text-center text-brand-matte/50">
                       <p>No products available</p>
-                      <p className="text-sm">Products array length: {initialProducts.length}</p>
-                      <p className="text-sm">Current slide: {currentSlide}</p>
+                      {/* <p className="text-sm">Products array length: {initialProducts.length}</p>
+                      <p className="text-sm">Current slide: {currentSlide}</p> */}
                     </div>
                   )}
                 </motion.div>
@@ -889,7 +889,7 @@ const Home: React.FC = () => {
                   ease: "easeInOut"
                 }}
               >
-                Deployment Active
+                New Arrivals
               </motion.span>
               <motion.h2
                 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-brand-matte"
@@ -907,7 +907,7 @@ const Home: React.FC = () => {
                   delay: 1
                 }}
               >
-                Elite Registry
+                Top Products
               </motion.h2>
             </motion.div>
 
@@ -932,7 +932,7 @@ const Home: React.FC = () => {
                       ease: "easeInOut"
                     }}
                   >
-                    Browse All Modules
+                    Shop All Products
                   </motion.span>
                   <motion.div
                     className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-brand-gold to-transparent"
@@ -962,9 +962,9 @@ const Home: React.FC = () => {
       <section className="py-40 bg-brand-matte border-y border-white/5 relative overflow-hidden">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-24 text-center relative z-10">
           {[
-            { label: 'Integrity', val: '100%', sub: 'Molecular Trace Analysis', icon: <ShieldCheck className="w-12 h-12 text-brand mx-auto" /> },
-            { label: 'Uptake', val: 'MAX', sub: 'Bio-Available Delivery', icon: <Zap className="w-12 h-12 text-brand-gold mx-auto" /> },
-            { label: 'Command', val: 'STABLE', sub: 'Protocol Validated', icon: <Target className="w-12 h-12 text-white mx-auto" /> }
+            { label: 'Integrity', val: '100%', sub: 'Third-Party Testing', icon: <ShieldCheck className="w-12 h-12 text-brand mx-auto" /> },
+            { label: 'Absorption', val: 'MAX', sub: 'Maximum Results', icon: <Zap className="w-12 h-12 text-brand-gold mx-auto" /> },
+            { label: 'Results', val: 'PROVEN', sub: 'Lab Tested', icon: <Target className="w-12 h-12 text-white mx-auto" /> }
           ].map((stat, i) => (
             <div key={i} className="space-y-8 group">
               <div className="group-hover:scale-125 transition-transform duration-700">
@@ -972,7 +972,7 @@ const Home: React.FC = () => {
               </div>
               <div className="space-y-3">
                 <p className="text-brand-gold font-black uppercase tracking-widest text-[12px] opacity-40 group-hover:opacity-100 transition-opacity">{stat.label}</p>
-                <h3 className="text-8xl md:text-9xl font-black text-white italic tracking-tighter leading-none">{stat.val}</h3>
+                <h3 className="text-8xl lg:text-8xl md:text-8xl font-black text-white italic tracking-tighter leading-none">{stat.val}</h3>
                 <p className="text-white/10 text-[11px] font-bold uppercase tracking-[0.4em]">{stat.sub}</p>
               </div>
             </div>
@@ -985,28 +985,28 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center px-6">
           <div className="space-y-12">
             <div className="space-y-4">
-              <span className="text-brand font-black uppercase tracking-[0.4em] text-[11px]">The Prime Directive</span>
+              <span className="text-brand font-black uppercase tracking-[0.4em] text-[11px]">Our Mission</span>
               <h2 className="text-5xl font-black text-brand-matte uppercase tracking-tighter leading-tight">
                 SCIENCE OVER <span className="text-brand-gold italic">SPECULATION</span>
               </h2>
             </div>
             <p className="text-lg text-brand-matte/60 leading-relaxed font-light">
-              Nexus was born from a singular frustration: the supplement industry's obsession with marketing over molecules. We dismantled the traditional model to build a brand centered on transparency, pharmaceutical-grade isolation, and biological efficacy.
+              Nexus was born from a singular frustration: the supplement industry's obsession with marketing over quality. We dismantled the traditional model to build a brand centered on transparency, high-quality ingredients, and proven results.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <div className="space-y-4">
                 <div className="w-12 h-12 bg-brand-matte text-brand-gold flex items-center justify-center">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h4 className="font-black uppercase tracking-widest text-sm text-brand-matte">Purity Protocol</h4>
-                <p className="text-[10px] text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Every batch is verified through third-party molecular analysis.</p>
+                <h4 className="font-black uppercase tracking-widest text-sm text-brand-matte">Quality Standards</h4>
+                <p className="text-[10px] text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Every batch is verified through third-party testing.</p>
               </div>
               <div className="space-y-4">
                 <div className="w-12 h-12 bg-brand-matte text-brand-gold flex items-center justify-center">
                   <Zap className="w-6 h-6" />
                 </div>
-                <h4 className="font-black uppercase tracking-widest text-sm text-brand-matte">Peak Bio-Yield</h4>
-                <p className="text-[10px] text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Optimized absorption rates for immediate biological response.</p>
+                <h4 className="font-black uppercase tracking-widest text-sm text-brand-matte">Maximum Absorption</h4>
+                <p className="text-[10px] text-brand-matte/50 leading-loose uppercase font-bold tracking-widest">Optimized absorption rates for immediate results.</p>
               </div>
             </div>
           </div>
@@ -1028,12 +1028,12 @@ const Home: React.FC = () => {
             {
               icon: <Target className="w-12 h-12 text-brand" />,
               title: "PRECISION",
-              desc: "Targeted formulae designed for specific metabolic outcomes."
+              desc: "Targeted formulas designed for specific fitness goals."
             },
             {
               icon: <Award className="w-12 h-12 text-brand-gold" />,
               title: "ELITE STATUS",
-              desc: "Supplying the chemical foundation for world-class athletes."
+              desc: "Supplying the nutritional foundation for world-class athletes."
             },
             {
               icon: <ShieldCheck className="w-12 h-12 text-white" />,
@@ -1058,7 +1058,7 @@ const Home: React.FC = () => {
             <div className="h-1 w-24 bg-brand-gold mx-auto"></div>
           </div>
           <p className="max-w-3xl mx-auto text-xl text-brand-matte/60 font-light leading-relaxed">
-            Our labs operate at ISO-9001 and cGMP standards, utilizing the latest in liquid chromatography and mass spectrometry to ensure every gram of powder meets our exact specifications.
+            Our labs operate at ISO-9001 and cGMP standards, utilizing advanced laboratory testing to ensure every gram of powder meets our exact specifications.
           </p>
           <div className="flex flex-wrap justify-center gap-20 opacity-30 grayscale pointer-events-none">
             <div className="text-4xl font-black tracking-tighter uppercase text-brand-matte">ISO-9001</div>
@@ -1075,10 +1075,10 @@ const Home: React.FC = () => {
           <span className="text-[300px] font-black text-brand-matte uppercase select-none leading-none tracking-tighter">NEXUS</span>
         </div>
         <div className="container mx-auto px-6 relative z-10 space-y-16">
-          <h2 className="text-6xl md:text-[9rem] font-black uppercase tracking-tighter leading-[0.8] text-brand-matte">INITIALIZE <br /><span className="text-brand">YOUR PROTOCOL</span></h2>
-          <p className="text-brand-matte/50 max-w-2xl mx-auto italic text-xl leading-relaxed">Secure your clearance for the most advanced biological optimization network on the planet.</p>
+          <h2 className="text-6xl md:text-[9rem] font-black uppercase tracking-tighter leading-[0.8] text-brand-matte">START <br /><span className="text-brand">YOUR JOURNEY</span></h2>
+          <p className="text-brand-matte/50 max-w-2xl mx-auto italic text-xl leading-relaxed">Choose the most advanced supplement brand for your fitness goals.</p>
           <div className="flex justify-center">
-            <Link to="/signup" className="btn-luxury px-16 py-8 text-[14px] rounded-none shadow-[0_30px_60px_rgba(123,15,23,0.15)] hover:shadow-brand-gold/20">Secure Operational Access</Link>
+            <Link to="/signup" className="btn-luxury px-16 py-8 text-[14px] rounded-none shadow-[0_30px_60px_rgba(123,15,23,0.15)] hover:shadow-brand-gold/20">Join Now</Link>
           </div>
         </div>
       </section>

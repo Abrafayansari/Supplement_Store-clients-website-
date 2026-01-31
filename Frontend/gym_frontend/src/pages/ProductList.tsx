@@ -13,7 +13,7 @@ import {
     Filter,
     ArrowUpDown
 } from 'lucide-react';
-import { fetchProducts, getCategories } from '../data/Product.tsx';
+import { Category, fetchProducts, getCategories } from '../data/Product.tsx';
 import NexusLoader from '../components/NexusLoader';
 import ProductCard from '../components/ProductCard.tsx';
 import {
@@ -30,12 +30,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu.tsx";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "../components/ui/collapsible.tsx";
 import { Product } from '@/types.ts';
 
 const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState('');
-    const [maxPrice, setMaxPrice] = useState(20000000);
+    const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
+    const [catalogMaxPrice, setCatalogMaxPrice] = useState(10000);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'name'>('newest');
@@ -44,6 +50,7 @@ const ProductList: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [openCategories, setOpenCategories] = useState<Set<string>>(new Set());
     const activeCategory = searchParams.get('category') || 'All';
     const activeSubCategory = searchParams.get('subCategory') || 'All';
 
@@ -71,6 +78,7 @@ const ProductList: React.FC = () => {
                 setCategories(catsRes);
                 setProducts(productsRes.products);
                 setTotalPages(productsRes.totalPages);
+                setCatalogMaxPrice(productsRes.maxPrice);
                 console.log('Fetched products:', productsRes.products);
             } catch (err) {
                 console.error(err);
@@ -105,7 +113,7 @@ const ProductList: React.FC = () => {
         v.trim().toLowerCase().replace(/\s+/g, '-');
     const clearAllFilters = () => {
         setSearchQuery('');
-        setMaxPrice(200);
+        setMaxPrice(undefined);
         removeCategory();
         setSortBy('newest');
     };
@@ -115,75 +123,82 @@ const ProductList: React.FC = () => {
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
                     <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
-                    <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Protocol Series</h3>
+                    <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Categories</h3>
                 </div>
                 <div className="space-y-4">
                     <button
                         onClick={removeCategory}
                         className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${activeCategory === 'All' && activeSubCategory === 'All' ? 'bg-brand-matte text-white' : 'text-brand-matte/60 hover:bg-white hover:shadow-md'}`}
                     >
-                        All Archive
+                        All Products
                         <ChevronDown className={`w-3 h-3 transition-transform ${activeCategory === 'All' ? 'rotate-180' : ''}`} />
                     </button>
 
-                    {categories.map(cat => (
-                        <div key={cat.name} className="space-y-2">
-                            <button
-                                onClick={() => {
-                                    setSearchParams(prev => {
-                                        const params = new URLSearchParams(prev);
-                                        params.set('category', cat.name);
-                                        params.delete('subCategory');
-                                        return params;
-                                    });
-                                    setIsFilterOpen(false);
-                                }}
-                                className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${normalize(activeCategory) === normalize(cat.name) ? 'border-brand text-brand' : 'border-transparent text-brand-matte/40 hover:text-brand-matte'}`}
-                            >
-                                {cat.name}
-                            </button>
-                            <div className="pl-4 space-y-1">
-                                {cat.subCategories.map(sub => (
+                    {categories.map(cat => {
+                        const isOpen = openCategories.has(cat.name);
+                        return (
+                            <Collapsible key={cat.name} open={isOpen} onOpenChange={(open) => {
+                                const newOpenCategories = new Set(openCategories);
+                                if (open) {
+                                    newOpenCategories.add(cat.name);
+                                } else {
+                                    newOpenCategories.delete(cat.name);
+                                }
+                                setOpenCategories(newOpenCategories);
+                            }}>
+                                <CollapsibleTrigger asChild>
                                     <button
-                                        key={sub}
-                                        onClick={() => {
-                                            setSearchParams(prev => {
-                                                const params = new URLSearchParams(prev);
-                                                params.set('category', cat.name);
-                                                params.set('subCategory', sub);
-                                                return params;
-                                            });
-                                            setIsFilterOpen(false);
-                                        }}
-                                        className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${normalize(activeSubCategory) === normalize(sub) ? 'bg-brand text-white shadow-lg' : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'}`}
+                                        className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${normalize(activeCategory) === normalize(cat.name) ? 'border-brand text-brand' : 'border-transparent text-brand-matte/40 hover:text-brand-matte'}`}
                                     >
-                                        {sub}
+                                        {cat.name}
+                                        <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                                     </button>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="space-y-1">
+                                    <div className="pl-4 space-y-1">
+                                        {cat.subCategories.map(sub => (
+                                            <button
+                                                key={sub}
+                                                onClick={() => {
+                                                    setSearchParams(prev => {
+                                                        const params = new URLSearchParams(prev);
+                                                        params.set('category', cat.name);
+                                                        params.set('subCategory', sub);
+                                                        return params;
+                                                    });
+                                                    setIsFilterOpen(false);
+                                                }}
+                                                className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${normalize(activeSubCategory) === normalize(sub) ? 'bg-brand text-white shadow-lg' : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'}`}
+                                            >
+                                                {sub}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </CollapsibleContent>
+                            </Collapsible>
+                        );
+                    })}
                 </div>
             </div>
 
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
                     <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
-                    <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Price Boundary</h3>
+                    <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Price Range</h3>
                 </div>
                 <div className="px-2 space-y-6">
                     <input
                         type="range"
-                        min="10"
-                        max="200"
-                        step="5"
-                        value={maxPrice}
+                        min="0"
+                        max={catalogMaxPrice}
+                        step="10"
+                        value={maxPrice ?? catalogMaxPrice}
                         onChange={(e) => setMaxPrice(parseInt(e.target.value))}
                         className="w-full accent-brand-gold bg-brand-matte/10 h-1.5 appearance-none cursor-pointer rounded-full"
                     />
                     <div className="flex justify-between items-center">
-                        <div className="bg-white border border-brand-matte/5 px-3 py-1 rounded-sm text-[10px] font-black text-brand-matte/40">MIN $10</div>
-                        <div className="text-brand font-black text-sm italic tracking-tighter underline underline-offset-4 decoration-brand-gold/30">CAP ${maxPrice}</div>
+                        <div className="bg-white border border-brand-matte/5 px-3 py-1 rounded-sm text-[10px] font-black text-brand-matte/40">MIN Rs.0</div>
+                        <div className="text-brand font-black text-sm italic tracking-tighter underline underline-offset-4 decoration-brand-gold/30">MAX Rs.{maxPrice ?? catalogMaxPrice}</div>
                     </div>
                 </div>
             </div>
@@ -199,10 +214,10 @@ const ProductList: React.FC = () => {
 
     const getSortLabel = () => {
         switch (sortBy) {
-            case 'newest': return 'Sequence: Newest First';
-            case 'price-asc': return 'Yield: Low to High';
-            case 'price-desc': return 'Yield: High to Low';
-            case 'name': return 'Alphabetical Protocol';
+            case 'newest': return 'Sort by: Newest First';
+            case 'price-asc': return 'Price: Low to High';
+            case 'price-desc': return 'Price: High to Low';
+            case 'name': return 'Name: A to Z';
         }
     };
 
@@ -220,12 +235,12 @@ const ProductList: React.FC = () => {
                     <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
                         <div className="space-y-6">
                             <div className="flex items-center gap-4">
-                                <Badge className="bg-brand-gold text-brand-matte font-black rounded-none px-3 py-1 border-none">LIVE FEED</Badge>
-                                <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">System Online</span>
+                                <Badge className="bg-brand-gold text-brand-matte font-black rounded-none px-3 py-1 border-none">SHOP</Badge>
+                                <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Products Available</span>
                             </div>
                             <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
-                                Global <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-white shine-gold">Inventory</span>
+                                Shop <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-white shine-gold">All Products</span>
                             </h1>
                         </div>
 
@@ -233,7 +248,7 @@ const ProductList: React.FC = () => {
                             <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/20 w-5 h-5 group-focus-within:text-brand-gold transition-colors" />
                             <input
                                 type="text"
-                                placeholder="SEARCH PROTOCOL ID..."
+                                placeholder="SEARCH PRODUCTS..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-16 pr-8 py-6 bg-white/5 border border-white/10 backdrop-blur-sm focus:bg-black/40 focus:border-brand-gold/50 text-white placeholder:text-white/20 text-[13px] font-bold uppercase tracking-widest outline-none transition-all"
@@ -253,13 +268,13 @@ const ProductList: React.FC = () => {
                         <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                             <SheetTrigger asChild>
                                 <button className="lg:hidden flex items-center gap-3 px-6 py-3 bg-brand-matte text-white text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
-                                    <Filter className="w-4 h-4 text-brand-gold" /> Filter Protocol
+                                    <Filter className="w-4 h-4 text-brand-gold" /> Filter Products
                                 </button>
                             </SheetTrigger>
                             <SheetContent side="left" className="bg-brand-warm border-none w-full max-w-sm p-10 overflow-y-auto">
                                 <SheetHeader className="mb-12">
                                     <SheetTitle className="text-left text-3xl font-black text-brand-matte uppercase tracking-tighter">
-                                        Recalibrate <span className="text-brand">Grid</span>
+                                        Filters
                                     </SheetTitle>
                                 </SheetHeader>
                                 <FilterSidebar />
@@ -279,9 +294,9 @@ const ProductList: React.FC = () => {
                                     {activeCategory} <X className="w-3 h-3" />
                                 </Badge>
                             )}
-                            {maxPrice < 200 && (
-                                <Badge className="bg-brand-matte text-white px-4 py-1.5 rounded-none flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider cursor-pointer hover:bg-brand" onClick={() => setMaxPrice(200)}>
-                                    ${maxPrice} CAP <X className="w-3 h-3" />
+                            {maxPrice !== undefined && maxPrice < catalogMaxPrice && (
+                                <Badge className="bg-brand-matte text-white px-4 py-1.5 rounded-none flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider cursor-pointer hover:bg-brand" onClick={() => setMaxPrice(undefined)}>
+                                    Rs.{maxPrice} MAX <X className="w-3 h-3" />
                                 </Badge>
                             )}
                         </div>
@@ -341,15 +356,15 @@ const ProductList: React.FC = () => {
                             <div className="mt-16 p-8 bg-brand-matte text-white relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-20 h-20 bg-brand-gold rounded-full blur-[50px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
                                 <div className="space-y-4 relative z-10">
-                                    <h4 className="text-xl font-black uppercase tracking-tight leading-none">Custom <br />Formulation</h4>
-                                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-relaxed">Need a specific stack? Our clinic offers custom compounding services.</p>
-                                    <button className="text-[10px] font-black uppercase tracking-widest text-brand-gold border-b border-brand-gold/30 pb-1 hover:text-white hover:border-white transition-all">Start Consult</button>
+                                    <h4 className="text-xl font-black uppercase tracking-tight leading-none">Product <br />Bundles</h4>
+                                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-relaxed">Need a specific set of products? Check out our curated bundles.</p>
+                                    <button className="text-[10px] font-black uppercase tracking-widest text-brand-gold border-b border-brand-gold/30 pb-1 hover:text-white hover:border-white transition-all">View Bundles</button>
                                 </div>
                             </div>
                         </div>
                     </aside>
 
-                    <main className="flex-grow">
+                    <main className="flex-grow min-h-[800px] [scrollbar-gutter:stable]">
                         {loading ? (
                             <div className="flex items-center justify-center min-h-[400px]">
                                 <NexusLoader />
@@ -370,7 +385,7 @@ const ProductList: React.FC = () => {
                                                     <div className="flex-grow space-y-4">
                                                         <div className="flex items-center gap-3">
                                                             <Badge variant="outline" className="border-brand-gold/30 text-brand-gold text-[9px] font-black uppercase tracking-widest rounded-none px-2 py-0.5">{product.subCategory}</Badge>
-                                                            <span className="text-brand-matte/20 text-[9px] font-bold uppercase tracking-widest">SEQ-ID: {product.id}</span>
+                                                            <span className="text-brand-matte/20 text-[9px] font-bold uppercase tracking-widest">ID: {product.id}</span>
                                                         </div>
 
                                                         <div className="space-y-1">
@@ -379,16 +394,19 @@ const ProductList: React.FC = () => {
                                                         </div>
 
                                                         <div className="flex items-center gap-6 pt-2">
-                                                            <span className="text-3xl font-black text-brand italic tracking-tighter">${product.price.toFixed(2)}</span>
-                                                            <div className="h-8 w-[1px] bg-brand-matte/10"></div>
-                                                            {product.price && (
-                                                                <span className="text-xs text-brand-matte/30 line-through font-bold">MSRP ${(product.price * 1.2).toFixed(2)}</span>
+                                                            <span className="text-3xl font-black text-brand italic tracking-tighter">
+                                                                Rs.{(product.discountPrice || product.price).toFixed(2)}
+                                                            </span>
+                                                            {product.discountPrice && product.discountPrice < product.price && (
+                                                                <span className="text-xs text-brand-matte/30 line-through font-bold">
+                                                                    Rs.{product.price.toFixed(2)}
+                                                                </span>
                                                             )}
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4">
                                                         <button className="btn-luxury px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] relative overflow-hidden">
-                                                            Authentication
+                                                            Add to Cart
                                                         </button>
                                                     </div>
                                                 </div>
@@ -430,7 +448,7 @@ const ProductList: React.FC = () => {
                                 <Search className="w-16 h-16 text-brand-matte/10 mx-auto" />
                                 <div className="space-y-4">
                                     <p className="text-3xl font-black text-brand-matte/20 uppercase tracking-tighter">No Matches Found</p>
-                                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-matte/40 max-w-sm mx-auto">The requested protocol sequence is not found in the current archive.</p>
+                                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-matte/40 max-w-sm mx-auto">The requested product is not found in the current inventory.</p>
                                     <button
                                         onClick={clearAllFilters}
                                         className="text-brand font-black uppercase tracking-widest text-[11px] underline underline-offset-4 hover:text-brand-gold"

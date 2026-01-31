@@ -105,7 +105,7 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                         Authorization: `Bearer ${token}`
                     }
                 });
-                setSuccess('Bundle deployed successfully!');
+                setSuccess('Bundle created successfully!');
             }
             setTimeout(() => {
                 onSuccess();
@@ -130,19 +130,19 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
     );
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm shadow-2xl overflow-y-auto">
-            <div className="bg-zinc-950 border border-zinc-800 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl rounded-[32px] my-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-brand-matte/80 backdrop-blur-sm shadow-2xl overflow-y-auto">
+            <div className="bg-brand-warm border border-brand-matte/5 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl rounded-none my-auto">
                 {/* Header */}
-                <div className="p-8 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50">
+                <div className="p-8 border-b border-brand-matte/5 flex items-center justify-between bg-white shadow-sm">
                     <div>
-                        <h2 className="text-2xl font-black text-white uppercase tracking-tighter">
-                            {bundle ? 'Modify' : 'Deploy'} <span className="text-brand">{bundle ? 'Strategic Pack' : 'Bundle Protocol'}</span>
+                        <h2 className="text-2xl font-black text-brand-matte uppercase tracking-tighter italic">
+                            {bundle ? 'Edit' : 'Create'} <span className="text-brand">{bundle ? 'Pack' : 'New Pack'}</span>
                         </h2>
-                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">
-                            {bundle ? `Editing record ID: ${bundle.id.slice(0, 8)}` : 'Create a multi-compound value stack'}
+                        <p className="text-brand-matte/40 text-[10px] font-black uppercase tracking-widest mt-1">
+                            {bundle ? `Editing: ${bundle.name}` : 'Combine items into a discounted set'}
                         </p>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-zinc-800 rounded-full transition text-zinc-500 hover:text-white">
+                    <button onClick={onClose} className="p-2 hover:bg-brand-warm rounded-none transition text-brand-matte/40 hover:text-brand">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -164,54 +164,54 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                         {/* Left Side: Details */}
                         <div className="space-y-6">
                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Bundle Name</label>
+                                <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Pack Name</label>
                                 <input
                                     required
                                     value={formData.name}
                                     onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="E.G. THE SPARTAN MASS STACK"
-                                    className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                    placeholder="E.G. SUMMER STRENGTH PACK"
+                                    className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition uppercase italic shadow-sm"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Stack Valuation (Price)</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Bundle Price</label>
                                     <input
                                         required
                                         type="number"
                                         value={formData.price}
                                         onChange={e => setFormData({ ...formData, price: e.target.value })}
                                         placeholder="149.99"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition shadow-sm"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Original Price (Strike)</label>
+                                    <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">Original Price</label>
                                     <input
                                         type="number"
                                         value={formData.originalPrice}
                                         onChange={e => setFormData({ ...formData, originalPrice: e.target.value })}
                                         placeholder="199.99"
-                                        className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition"
+                                        className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition shadow-sm"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Strategy Description</label>
+                                <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1">Pack Description</label>
                                 <textarea
                                     required
                                     rows={4}
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                    placeholder="Describe the synergy between these compounds..."
-                                    className="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-sm font-bold text-white focus:border-brand outline-none transition resize-none"
+                                    placeholder="DESCRIBE THE BENEFITS OF THIS SET..."
+                                    className="w-full bg-white border border-brand-matte/10 p-4 rounded-none text-sm font-black text-brand-matte focus:border-brand outline-none transition resize-none shadow-sm"
                                 />
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Bundle Blueprint (Image)</label>
+                                <label className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] ml-1 italic">Marketing Image</label>
                                 <div className="relative group">
                                     <input
                                         type="file"
@@ -222,25 +222,25 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                                     />
                                     <label
                                         htmlFor="bundle-image-upload"
-                                        className="flex flex-col items-center justify-center w-full h-40 bg-zinc-900 border-2 border-dashed border-zinc-800 rounded-2xl cursor-pointer group-hover:border-brand group-hover:bg-brand/5 transition"
+                                        className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand-gold group-hover:bg-brand-gold/5 transition-luxury shadow-sm"
                                     >
                                         {image ? (
                                             <div className="w-full h-full p-2">
-                                                <img src={URL.createObjectURL(image)} alt="preview" className="w-full h-full object-contain rounded-lg" />
+                                                <img src={URL.createObjectURL(image)} alt="preview" className="w-full h-full object-contain" />
                                             </div>
                                         ) : bundle?.image ? (
                                             <div className="w-full h-full p-2">
-                                                <img src={bundle.image} alt="existing" className="w-full h-full object-contain rounded-lg brightness-50" />
+                                                <img src={bundle.image} alt="existing" className="w-full h-full object-contain brightness-50" />
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                                                     <ImageIcon className="w-8 h-8 text-white mb-2" />
-                                                    <span className="text-[10px] font-black text-white uppercase tracking-widest">Replace Asset</span>
+                                                    <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Replace Image</span>
                                                 </div>
                                             </div>
                                         ) : (
                                             <>
-                                                <ImageIcon className="w-8 h-8 text-zinc-600 group-hover:text-brand mb-2" />
-                                                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest text-center px-4">
-                                                    Select strategic bundle imagery
+                                                <ImageIcon className="w-8 h-8 text-brand-matte/10 group-hover:text-brand-gold mb-3 transition-colors" />
+                                                <span className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.3em] group-hover:text-brand-gold transition-colors text-center px-4">
+                                                    Add media asset
                                                 </span>
                                             </>
                                         )}
@@ -253,21 +253,21 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                         <div className="space-y-4 flex flex-col">
                             <div className="space-y-1">
                                 <div className="flex items-center justify-between ml-1">
-                                    <label className="text-[10px] font-black text-brand uppercase tracking-widest">Molecular Manifest (Products)</label>
-                                    <span className="text-[10px] font-black text-zinc-500 uppercase">{selectedProductIds.length} Selected</span>
+                                    <label className="text-[10px] font-black text-brand uppercase tracking-[0.4em] italic">Select Items</label>
+                                    <span className="text-[10px] font-black text-brand uppercase">{selectedProductIds.length} Added</span>
                                 </div>
                                 <div className="relative mb-4">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-matte/20 w-4 h-4" />
                                     <input
                                         type="text"
-                                        placeholder="Search compounds..."
+                                        placeholder="SEARCH PRODUCTS..."
                                         value={searchTerm}
                                         onChange={e => setSearchTerm(e.target.value)}
-                                        className="w-full bg-zinc-900 border border-zinc-800 pl-12 pr-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest text-white outline-none focus:border-brand"
+                                        className="w-full bg-white border border-brand-matte/10 pl-12 pr-4 py-4 rounded-none text-[11px] font-black uppercase tracking-widest text-brand-matte outline-none focus:border-brand shadow-sm"
                                     />
                                 </div>
 
-                                <div className="flex-grow bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col max-h-[400px]">
+                                <div className="flex-grow bg-white border border-brand-matte/5 rounded-none overflow-hidden flex flex-col max-h-[440px] shadow-sm">
                                     <div className="overflow-y-auto p-2 space-y-2 custom-scrollbar">
                                         {filteredProducts.map(p => (
                                             <div
@@ -279,8 +279,8 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                                                     <img src={p.images?.[0]} alt="" className="w-full h-full object-contain" />
                                                 </div>
                                                 <div className="flex-grow">
-                                                    <h4 className="text-[10px] font-black text-white uppercase tracking-tight truncate">{p.name}</h4>
-                                                    <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">{p.brand}</p>
+                                                    <h4 className="text-[10px] font-black text-brand-matte uppercase tracking-tight truncate">{p.name}</h4>
+                                                    <p className="text-[9px] font-bold text-brand-matte/30 uppercase tracking-widest">{p.brand}</p>
                                                 </div>
                                                 {selectedProductIds.includes(p.id) && (
                                                     <div className="w-5 h-5 bg-brand rounded-full flex items-center justify-center text-white">
@@ -291,7 +291,7 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                                         ))}
                                         {filteredProducts.length === 0 && (
                                             <div className="py-10 text-center text-zinc-500 text-[10px] font-black uppercase tracking-widest">
-                                                No compounds found.
+                                                No products found.
                                             </div>
                                         )}
                                     </div>
@@ -302,25 +302,23 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                 </div>
 
                 {/* Footer */}
-                <div className="p-8 border-t border-zinc-800 bg-zinc-900/50 flex justify-end gap-4">
+                <div className="p-8 border-t border-brand-matte/5 bg-white flex justify-end gap-6">
                     <button
                         disabled={loading}
                         onClick={onClose}
-                        className="px-8 py-4 bg-zinc-900 text-zinc-500 font-black text-[10px] uppercase tracking-widest hover:text-white transition rounded-xl border border-zinc-800"
+                        className="px-8 py-5 text-brand-matte/40 font-black text-[10px] uppercase tracking-[0.3em] hover:text-brand transition-colors rounded-none"
                     >
-                        Abort Operation
+                        Back
                     </button>
                     <button
                         form="bundle-form"
                         disabled={loading || selectedProductIds.length === 0}
-                        className="px-10 py-4 bg-brand text-white font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition shadow-lg shadow-brand/20 rounded-xl flex items-center gap-3 disabled:opacity-50"
+                        className="px-12 py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-gold transition-luxury shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
                     >
                         {loading ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin" /> Finalizing Protocol...
-                            </>
+                            <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                            bundle ? 'Synthesize Pack' : 'Deploy Bundle'
+                            bundle ? 'Save Changes' : 'Create Pack'
                         )}
                     </button>
                 </div>

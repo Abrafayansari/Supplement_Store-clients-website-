@@ -151,7 +151,7 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    let price = product.price;
+    let price = product.discountPrice || product.price;
     let stock = product.stock;
 
     if (variantId) {
@@ -159,7 +159,7 @@ export const addToCart = async (req, res) => {
       if (!variant) {
         return res.status(404).json({ error: "Variant not found" });
       }
-      price = variant.price;
+      price = variant.discountPrice || variant.price;
       stock = variant.stock;
     }
 
@@ -168,13 +168,11 @@ export const addToCart = async (req, res) => {
     }
 
     // 2. Check if already in cart (with specific variant)
-    const existingItem = await prisma.cartItem.findUnique({
+    const existingItem = await prisma.cartItem.findFirst({
       where: {
-        userId_productId_variantId: {
-          userId: userid,
-          productId: productId,
-          variantId: variantId || null,
-        },
+        userId: userid,
+        productId: productId,
+        variantId: variantId || null,
       },
     });
 
@@ -388,13 +386,11 @@ export const updateCart = async (req, res) => {
 
     // quantity <= 0 → REMOVE item
     if (quantity <= 0) {
-      await prisma.cartItem.delete({
+      await prisma.cartItem.deleteMany({
         where: {
-          userId_productId_variantId: {
-            userId,
-            productId,
-            variantId: variantId || null
-          }
+          userId,
+          productId,
+          variantId: variantId || null
         }
       })
 
@@ -402,13 +398,11 @@ export const updateCart = async (req, res) => {
     }
 
     // Ensure item exists
-    const cartItem = await prisma.cartItem.findUnique({
+    const cartItem = await prisma.cartItem.findFirst({
       where: {
-        userId_productId_variantId: {
-          userId,
-          productId,
-          variantId: variantId || null
-        }
+        userId,
+        productId,
+        variantId: variantId || null
       }
     })
 
@@ -440,7 +434,7 @@ export const deleteCartItem = async (req, res) => {
       return res.status(401).json({ message: "Not authenticated" });
     }
 
-    await prisma.cartItem.delete({
+    await prisma.cartItem.deleteMany({
       where: {
         id,
         userId
@@ -576,92 +570,6 @@ export const getProfile = async (req, res) => {
 };
 
 
-// Forgot Password
-// export const forgotPassword = async (req, res) => {
-//   const { email } = req.body;
-
-//   try {
-//     const user = await prisma.user.findUnique({ where: { email } });
-
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-
-//     // Generate token
-//     const resetToken = crypto.randomBytes(32).toString("hex");
-//     const resetTokenHash = crypto
-//       .createHash("sha256")
-//       .update(resetToken)
-//       .digest("hex");
-
-//     const resetTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-//     await prisma.user.update({
-//       where: { email },
-//       data: {
-//         resetToken: resetTokenHash,
-//         resetTokenExpire: resetTokenExpire,
-//       },
-//     });
-
-//     // Create reset URL
-//     // Assuming frontend runs on localhost:5173 or typically configured frontend URL
-//     // In production, use env var for frontend URL
-//     const frontendUrl =
-//       process.env.FRONTEND_URL ||
-//       "http://localhost:3000";
-//     const resetUrl = `${frontendUrl}/#/reset-password/${resetToken}`;
-
-//     const message = `
-//       <h1>You have requested a password reset</h1>
-//       <p>Please go to this link to reset your password:</p>
-//       <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
-//     `;
-
-//     // Send Email
-//     console.log({
-//       EMAIL_HOST: process.env.EMAIL_HOST,
-//       EMAIL_PORT: process.env.EMAIL_PORT,
-//       EMAIL_USERNAME: process.env.EMAIL_USERNAME,
-//       HAS_PASSWORD: !!process.env.EMAIL_PASSWORD,
-//     });
-
-//     const transporter = nodemailer.createTransport({
-
-//       host: process.env.EMAIL_HOST,
-//       port: Number(process.env.EMAIL_PORT),
-//       secure: false,
-//       auth: {
-//         user: process.env.EMAIL_USERNAME,
-//         pass: process.env.EMAIL_PASSWORD,
-//       },
-//       tls: {
-//         rejectUnauthorized: false,
-//       },
-//     });
-
-//     await transporter.verify();
-//     console.log("SMTP connection OK");
-
-
-//     await transporter.sendMail({
-//       from: process.env.EMAIL_FROM || "noreply@gymstore.com",
-//       to: user.email,
-//       subject: "Password Reset Request",
-//       html: message,
-//     });
-
-//     res.status(200).json({ success: true, data: "Email Sent" });
-//   } catch (err) {
-//     console.error(err);
-//     // Clean up on error
-//     await prisma.user.update({
-//       where: { email },
-//       data: { resetToken: null, resetTokenExpire: null },
-//     });
-//     res.status(500).json({ error: "Email could not be sent" });
-//   }
-// };
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -710,76 +618,11 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-// Reset Password
-// export const resetPassword = async (req, res) => {
-//   const resetToken = crypto
-//     .createHash("sha256")
-//     .update(req.params.resetToken)
-//     .digest("hex");
 
-//   try {
-//     const user = await prisma.user.findFirst({
-//       where: {
-//         resetToken,
-//         resetTokenExpire: {
-//           gt: new Date(),
-//         },
-//       },
-//     });
-
-//     if (!user) {
-//       return res.status(400).json({ error: "Invalid Token" });
-//     }
-
-//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-//     await prisma.user.update({
-//       where: { id: user.id },
-//       data: {
-//         password: hashedPassword,
-//         resetToken: null,
-//         resetTokenExpire: null,
-//       },
-//     });
-
-//     res.status(201).json({
-//       success: true,
-//       data: "Password Updated Success",
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: "Server Error" });
-//   }
-// };
 
 export const resetPassword = async (req, res) => {
-  const resetToken = crypto.createHash("sha256").update(req.params.resetToken).digest("hex");
-
   try {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    const resetToken = crypto.createHash("sha256").update(req.params.resetToken).digest("hex");
 
     const user = await prisma.user.findFirst({
       where: { resetToken, resetTokenExpire: { gt: new Date() } },
@@ -792,51 +635,6 @@ export const resetPassword = async (req, res) => {
       where: { id: user.id },
       data: { password: hashedPassword, resetToken: null, resetTokenExpire: null },
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     res.status(201).json({ success: true, data: "Password Updated Success" });
@@ -872,7 +670,7 @@ export const enrollPlan = async (req, res) => {
       htmlContent: `
         <div style="font-family: sans-serif; padding: 20px; color: #333;">
           <h1 style="color: #ed2124;">New Enrollment Request</h1>
-          <p>A user has requested to enroll in a strategic training plan.</p>
+          <p>A user has requested to enroll in a training plan.</p>
           <hr />
           <p><strong>User Detail:</strong></p>
           <ul>
@@ -882,8 +680,8 @@ export const enrollPlan = async (req, res) => {
           </ul>
           <p><strong>Plan Requested:</strong> <span style="font-weight: bold; color: #000;">${planName}</span></p>
           <hr />
-          <p>Please contact the user to initialize the enrollment protocols.</p>
-          <p style="font-size: 10px; color: #999;">This is an automated notification from Nexus Command.</p>
+          <p>Please contact the user to complete the enrollment.</p>
+          <p style="font-size: 10px; color: #999;">This is an automated notification from Nexus Elite.</p>
         </div>
       `,
     });
