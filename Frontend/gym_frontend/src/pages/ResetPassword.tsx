@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Lock, ArrowRight, ShoppingCart } from 'lucide-react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { Lock, ArrowRight, ShoppingCart, ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 
@@ -33,75 +33,77 @@ const ResetPassword: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex bg-brand-matte font-sans overflow-hidden items-center justify-center relative">
-            {/* Background Ambience */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand/20 blur-[120px] rounded-full"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-gold/10 blur-[120px] rounded-full"></div>
-            </div>
+        <div className="min-h-screen bg-white flex items-center justify-center font-sans overflow-x-hidden relative p-6">
+            {/* Background Decorations */}
+            <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-brand/5 blur-[120px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 blur-[120px] rounded-full pointer-events-none translate-x-1/2 translate-y-1/2" />
 
-            <div className="w-full max-w-lg p-4 relative z-10">
-                <div className="glass-panel p-8 md:p-12 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <ShoppingCart className="w-24 h-24 text-white" />
+            <div className="w-full max-w-[480px] relative z-10">
+                <Link to="/login" className="absolute -top-12 left-0 flex items-center gap-2 text-brand-matte/40 hover:text-brand transition-colors">
+                    <ChevronLeft className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Back to Login</span>
+                </Link>
+
+                <div className="text-center mb-12">
+                    <div className="w-16 h-16 bg-brand-warm border border-black/5 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                        <ShoppingCart className="w-8 h-8 text-brand" />
                     </div>
-
-                    <div className="space-y-6 relative z-10">
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">
-                                Set New Password
-                            </h1>
-                            <p className="text-white/40 text-sm font-medium">Secure your account with a new credential.</p>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            <div className="space-y-2 group/input">
-                                <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1 group-focus-within/input:text-brand-gold transition-colors">New Password</label>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within/input:text-brand-gold transition-colors" />
-                                    <input
-                                        required
-                                        type="password"
-                                        placeholder="••••••••"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-brand-gold/50 text-white font-medium placeholder:text-white/20 hover:bg-white/10 transition-all"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2 group/input">
-                                <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1 group-focus-within/input:text-brand-gold transition-colors">Confirm Password</label>
-                                <div className="relative">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within/input:text-brand-gold transition-colors" />
-                                    <input
-                                        required
-                                        type="password"
-                                        placeholder="••••••••"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-brand-gold/50 text-white font-medium placeholder:text-white/20 hover:bg-white/10 transition-all"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="pt-4">
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full bg-brand hover:bg-brand-gold disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-brand/20 active:scale-[0.98] flex items-center justify-center gap-3 group/btn"
-                                >
-                                    {loading ? 'Processing...' : (
-                                        <>
-                                            Update Password
-                                            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    <h1 className="text-4xl font-black text-brand-matte uppercase tracking-tighter mb-3 italic">
+                        New Password
+                    </h1>
+                    <p className="text-brand-matte/30 text-xs font-bold uppercase tracking-[0.2em]">
+                        Secure your account with a new password
+                    </p>
                 </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.2em] pl-1">New Password</label>
+                        <div className="relative group">
+                            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-matte/10 group-focus-within:text-brand transition-colors" />
+                            <input
+                                required
+                                type="password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-brand-warm/50 border border-black/5 px-14 py-5 text-brand-matte text-sm font-bold uppercase tracking-widest outline-none focus:border-brand-gold/30 hover:bg-brand-warm transition-all"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.2em] pl-1">Confirm Password</label>
+                        <div className="relative group">
+                            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-matte/10 group-focus-within:text-brand transition-colors" />
+                            <input
+                                required
+                                type="password"
+                                placeholder="••••••••"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="w-full bg-brand-warm/50 border border-black/5 px-14 py-5 text-brand-matte text-sm font-bold uppercase tracking-widest outline-none focus:border-brand-gold/30 hover:bg-brand-warm transition-all"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="pt-4">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-brand hover:bg-brand-matte disabled:opacity-50 text-white py-6 font-black text-xs uppercase tracking-[0.3em] transition-all active:scale-[0.98] flex items-center justify-center gap-4 group shadow-xl hover:shadow-brand/20"
+                        >
+                            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : (
+                                <>
+                                    Update Password
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

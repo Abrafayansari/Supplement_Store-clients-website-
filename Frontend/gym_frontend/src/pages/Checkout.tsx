@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CreditCard, Truck, ShieldCheck, CheckCircle, ArrowLeft, Lock, Loader2, Banknote, QrCode, UploadCloud, ChevronRight, PlusCircle, MapPin } from 'lucide-react';
+import { CreditCard, Truck, ShieldCheck, CheckCircle, ArrowLeft, Lock, Loader2, Banknote, QrCode, UploadCloud, ChevronRight, PlusCircle, MapPin, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
@@ -259,19 +259,19 @@ const Checkout: React.FC = () => {
                   <div className="grid grid-cols-2 gap-6 animate-in fade-in slide-in-from-top duration-500">
                     <div className="space-y-2 col-span-2">
                       <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Full Name</label>
-                      <input required name="fullName" value={formData.fullName} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all uppercase text-xs tracking-widest font-black shadow-sm" />
+                      <input required name="fullName" value={formData.fullName} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all text-xs tracking-widest font-black shadow-sm" />
                     </div>
                     <div className="space-y-2 col-span-2 sm:col-span-1">
                       <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Phone Number</label>
-                      <input required name="phone" value={formData.phone} onChange={handleInputChange} type="tel" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all uppercase text-xs tracking-widest font-black shadow-sm" />
+                      <input required name="phone" value={formData.phone} onChange={handleInputChange} type="tel" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all text-xs tracking-widest font-black shadow-sm" />
                     </div>
                     <div className="space-y-2 col-span-2 sm:col-span-1">
                       <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Street Address</label>
-                      <input required name="street" value={formData.street} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all uppercase text-xs tracking-widest font-black shadow-sm" />
+                      <input required name="street" value={formData.street} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all text-xs tracking-widest font-black shadow-sm" />
                     </div>
                     <div className="space-y-2 col-span-2 sm:col-span-1">
                       <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">City</label>
-                      <input required name="city" value={formData.city} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all uppercase text-xs tracking-widest font-black shadow-sm" />
+                      <input required name="city" value={formData.city} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all text-xs tracking-widest font-black shadow-sm" />
                     </div>
                     <div className="space-y-2 col-span-2 sm:col-span-1">
                       <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Province (State)</label>
@@ -289,7 +289,7 @@ const Checkout: React.FC = () => {
                     </div>
                     <div className="space-y-2 col-span-2 sm:col-span-1">
                       <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-widest">Zip Code</label>
-                      <input required name="zipCode" value={formData.zipCode} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all uppercase text-xs tracking-widest font-black shadow-sm" />
+                      <input required name="zipCode" value={formData.zipCode} onChange={handleInputChange} type="text" className="w-full bg-white border border-brand-matte/10 p-5 outline-none focus:border-brand/40 text-brand-matte transition-all text-xs tracking-widest font-black shadow-sm" />
                     </div>
                   </div>
                 )}

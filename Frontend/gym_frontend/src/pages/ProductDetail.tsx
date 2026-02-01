@@ -423,7 +423,7 @@ const ProductDetail: React.FC = () => {
                                 className="glass-panel p-8 border border-brand-matte/5 relative overflow-hidden text-brand-matte"
                             >
                                 {/* Decorative Gradient */}
-                                <div className="absolute -top-40 -right-40 w-96 h-96 bg-brand-gold/5 blur-[120px]"></div>
+                                <div className="absolute -top-40 -right-40 w-96 h-96 bg-brand-gold/5 blur-[120px] pointer-events-none"></div>
 
                                 {activeTab === 'details' && (
                                     <div className="space-y-12">
@@ -456,7 +456,7 @@ const ProductDetail: React.FC = () => {
                                             <h3 className="text-4xl font-black uppercase tracking-tighter italic text-brand">Safety Warnings</h3>
                                         </div>
                                         <div className="bg-brand/5 p-12 border border-brand/20 relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/10 blur-[50px]"></div>
+                                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/10 blur-[50px] pointer-events-none"></div>
                                             <ul className="space-y-8 relative z-10">
                                                 {(product.warnings && product.warnings.length > 0 ? product.warnings : ['Consult a healthcare professional before use.']).map((w, i) => (
                                                     <li key={i} className="flex gap-6 items-start text-brand-matte/80 font-medium text-lg leading-relaxed border-b border-brand-matte/5 pb-6 last:border-0 last:pb-0">
@@ -483,7 +483,7 @@ const ProductDetail: React.FC = () => {
                                 )}
                                 {activeTab === 'reviews' && (
                                     <div className="space-y-12">
-                                        <div className="flex justify-between items-end">
+                                        <div className="flex justify-between items-end relative z-10">
                                             <div className="space-y-2">
                                                 <h3 className="text-4xl font-black uppercase tracking-tighter italic">Product Reviews</h3>
                                                 <div className="h-1.5 w-24 bg-brand-gold"></div>
@@ -498,7 +498,7 @@ const ProductDetail: React.FC = () => {
                                                         }
                                                         setShowReviewForm(true);
                                                     }}
-                                                    className="btn-luxury px-8 py-3 text-[10px]"
+                                                    className="z-50 btn-luxury px-8 py-3 text-[10px]"
                                                 >
                                                     Write a Review
                                                 </button>
@@ -511,7 +511,7 @@ const ProductDetail: React.FC = () => {
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 className="bg-brand-matte p-10 space-y-8 border-l-4 border-brand-gold relative overflow-hidden"
                                             >
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold opacity-5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
+                                                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold opacity-5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
                                                 <div className="flex justify-between items-center relative z-10">
                                                     <h4 className="text-xl font-black text-white uppercase tracking-widest italic">Submit Your Feedback</h4>
@@ -533,7 +533,7 @@ const ProductDetail: React.FC = () => {
                                                                 }}
                                                                 className="transition-transform active:scale-90 hover:scale-110"
                                                             >
-                                                                <Star className={`w-10 h-10 ${star <= reviewRating ? 'fill-brand-gold text-brand-gold drop-shadow-sm' : 'text-white/10'}`} />
+                                                                <Star className={`w-10 h-10 ${star <= reviewRating ? 'fill-brand-gold text-brand-gold drop-shadow-sm' : 'text-white/30'}`} />
                                                             </button>
                                                         ))}
                                                     </div>
@@ -545,7 +545,7 @@ const ProductDetail: React.FC = () => {
                                                         value={reviewComment}
                                                         onChange={(e) => setReviewComment(e.target.value)}
                                                         rows={4}
-                                                        className="w-full bg-white/5 border border-white/10 p-5 text-white outline-none focus:border-brand-gold transition-luxury resize-none text-sm placeholder:text-white/20"
+                                                        className="w-full bg-white/10 border border-white/20 p-5 text-white outline-none focus:border-brand-gold transition-luxury resize-none text-sm placeholder:text-white/40 font-bold"
                                                         placeholder="Share your experience with Nexus Elite..."
                                                     />
                                                 </div>

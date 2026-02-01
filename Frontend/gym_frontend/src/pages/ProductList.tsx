@@ -290,8 +290,12 @@ const ProductList: React.FC = () => {
 
                         <div className="flex items-center gap-2 shrink-0">
                             {activeCategory !== 'All' && (
-                                <Badge className="bg-brand-matte text-white px-4 py-1.5 rounded-none flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider cursor-pointer hover:bg-brand" onClick={removeCategory}>
-                                    {activeCategory} <X className="w-3 h-3" />
+                                <Badge
+                                    className="bg-brand-matte text-white px-4 py-1.5 rounded-none flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider cursor-pointer hover:bg-brand max-w-[150px] truncate"
+                                    onClick={removeCategory}
+                                    title={activeCategory}
+                                >
+                                    {activeCategory} <X className="w-3 h-3 shrink-0" />
                                 </Badge>
                             )}
                             {maxPrice !== undefined && maxPrice < catalogMaxPrice && (

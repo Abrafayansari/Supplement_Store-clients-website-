@@ -29,7 +29,7 @@ const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const fullText = 'BIOLOGY';
   const productsPerSlide = 3;
-  const totalSlides = Math.ceil(10 / productsPerSlide); // Show up to 10 products
+  const totalSlides = initialProducts.length > 0 ? Math.ceil(initialProducts.length / productsPerSlide) : 1;
 
   // Mouse move handler for interactive effects
   React.useEffect(() => {
@@ -541,9 +541,9 @@ const Home: React.FC = () => {
       >
         {/* Subtle animated background pattern */}
         <motion.div
-          className="absolute inset-0 opacity-[0.02] pointer-events-none"
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
           style={{
-            backgroundImage: 'linear-gradient(45deg, #000 1px, transparent 1px), linear-gradient(-45deg, #000 1px, transparent 1px)'
+            backgroundImage: 'linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)'
           }}
           animate={{
             backgroundPosition: ['0px 0px', '20px 20px']
@@ -559,7 +559,7 @@ const Home: React.FC = () => {
         {[...Array(4)].map((_, i) => (
           <motion.div
             key={`arrivals-${i}`}
-            className="absolute w-2 h-2 bg-brand-matte/20 rounded-full"
+            className="absolute w-2 h-2 bg-brand-gold/20 rounded-full"
             style={{
               left: `${10 + Math.random() * 80}%`,
               top: `${30 + Math.random() * 40}%`,
@@ -587,12 +587,12 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <motion.h2
-              className="text-4xl font-black uppercase tracking-tighter text-brand-matte"
+              className="text-4xl font-black uppercase tracking-tighter text-brand-gold"
               animate={{
                 textShadow: [
-                  "0 0 0px rgba(14, 14, 14, 0)",
-                  "0 0 15px rgba(14, 14, 14, 0.1)",
-                  "0 0 0px rgba(14, 14, 14, 0)"
+                  "0 0 10px rgba(201, 162, 119, 0)",
+                  "0 0 25px rgba(201, 162, 119, 0.4)",
+                  "0 0 10px rgba(201, 162, 119, 0)"
                 ]
               }}
               transition={{
@@ -605,7 +605,7 @@ const Home: React.FC = () => {
             </motion.h2>
 
             <motion.div
-              className="flex gap-2"
+              className="flex gap-3"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -613,10 +613,10 @@ const Home: React.FC = () => {
             >
               <motion.button
                 onClick={prevSlide}
-                className="p-2 bg-[#F4F4F4] hover:bg-brand-gold hover:text-white transition-colors rounded-none"
+                className="p-3 bg-brand-warm border border-brand-matte/10 text-brand-matte hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all rounded-none"
                 whileHover={{
                   scale: 1.1,
-                  boxShadow: "0 4px 12px rgba(201, 162, 119, 0.3)"
+                  boxShadow: "0 0 20px rgba(201, 162, 119, 0.2)"
                 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -624,10 +624,10 @@ const Home: React.FC = () => {
               </motion.button>
               <motion.button
                 onClick={nextSlide}
-                className="p-2 bg-[#F4F4F4] hover:bg-brand-gold hover:text-white transition-colors rounded-none"
+                className="p-3 bg-brand-warm border border-brand-matte/10 text-brand-matte hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all rounded-none"
                 whileHover={{
                   scale: 1.1,
-                  boxShadow: "0 4px 12px rgba(201, 162, 119, 0.3)"
+                  boxShadow: "0 0 20px rgba(201, 162, 119, 0.2)"
                 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -812,52 +812,16 @@ const Home: React.FC = () => {
       </motion.section>
 
 
-      {/* 2. FEATURED REGISTRY - Enhanced Warm White (#FAFAFA) */}
+      {/* 2. FEATURED REGISTRY - Enhanced Dark */}
       <motion.section
-        className="bg-brand-warm py-32 border-t border-black/5 relative overflow-hidden"
+        className="bg-brand-matte py-32 border-t border-white/5 relative overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1 }}
       >
         {/* Animated Background Elements */}
-        <motion.div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(123, 15, 23, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(201, 162, 119, 0.1) 0%, transparent 50%)'
-          }}
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%']
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-
-        {/* Floating particles */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`registry-${i}`}
-            className="absolute w-1 h-1 bg-brand/30 rounded-full"
-            style={{
-              left: `${15 + Math.random() * 70}%`,
-              top: `${20 + Math.random() * 60}%`,
-            }}
-            animate={{
-              y: [0, -15, 0],
-              opacity: [0.3, 0.8, 0.3],
-              scale: [0.8, 1.2, 0.8]
-            }}
-            transition={{
-              duration: 3 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-              ease: "easeInOut"
-            }}
-          />
-        ))}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand/5 to-transparent pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <motion.div
@@ -879,7 +843,7 @@ const Home: React.FC = () => {
                 animate={{
                   textShadow: [
                     "0 0 0px rgba(123, 15, 23, 0)",
-                    "0 0 10px rgba(123, 15, 23, 0.3)",
+                    "0 0 15px rgba(123, 15, 23, 0.5)",
                     "0 0 0px rgba(123, 15, 23, 0)"
                   ]
                 }}
@@ -889,15 +853,15 @@ const Home: React.FC = () => {
                   ease: "easeInOut"
                 }}
               >
-                New Arrivals
+                Our Categories
               </motion.span>
               <motion.h2
-                className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-brand-matte"
+                className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white"
                 animate={{
                   textShadow: [
-                    "0 0 0px rgba(14, 14, 14, 0)",
-                    "0 0 20px rgba(14, 14, 14, 0.1)",
-                    "0 0 0px rgba(14, 14, 14, 0)"
+                    "0 0 0px rgba(255, 255, 255, 0)",
+                    "0 0 20px rgba(255, 255, 255, 0.1)",
+                    "0 0 0px rgba(255, 255, 255, 0)"
                   ]
                 }}
                 transition={{
@@ -907,7 +871,7 @@ const Home: React.FC = () => {
                   delay: 1
                 }}
               >
-                Top Products
+                Top Collections
               </motion.h2>
             </motion.div>
 

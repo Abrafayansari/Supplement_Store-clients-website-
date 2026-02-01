@@ -8,14 +8,14 @@ const NexusLoader: React.FC = () => {
             <div className="relative">
                 {/* Outer Ring */}
                 <motion.div
-                    className="w-24 h-24 rounded-full border-t-2 border-brand border-r-2 border-brand/30 border-b-2 border-brand/10 border-l-2 border-transparent"
+                    className="w-24  h-24 rounded-full border-t-2 border-brand border-r-2 border-brand/30 border-b-2 border-brand/10 border-l-2 "
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                 />
 
                 {/* Inner Ring */}
                 <motion.div
-                    className="absolute inset-2 rounded-full border-b-2 border-white border-l-2 border-white/30 border-t-2 border-white/10 border-r-2 border-transparent"
+                    className="absolute inset-2 rounded-full border-b-2 border-brand border-l-2 border-brand/30 border-t-2 border-brand/10 border-r-2"
                     animate={{ rotate: -360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                 />
@@ -27,7 +27,7 @@ const NexusLoader: React.FC = () => {
                     animate={{ scale: [0.8, 1.1, 0.8], opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 >
-                    <span className="text-2xl font-black text-white italic tracking-tighter">N</span>
+                    <span className="text-2xl font-black text-brand italic tracking-tighter">N</span>
                 </motion.div>
             </div>
 

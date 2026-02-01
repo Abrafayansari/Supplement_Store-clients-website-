@@ -692,3 +692,26 @@ export const enrollPlan = async (req, res) => {
     res.status(500).json({ error: "Failed to send enrollment request" });
   }
 };
+export const handleContactMessage = async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Create a notification for the admin
+    await prisma.notification.create({
+      data: {
+        type: "contact_message",
+        title: `New Inquiry from ${name}`,
+        message: `[${subject}] ${message} (Reply to: ${email})`,
+      }
+    });
+
+    res.status(200).json({ success: true, message: "Message sent successfully" });
+  } catch (error) {
+    console.error("Contact form error:", error);
+    res.status(500).json({ error: "Failed to send message" });
+  }
+};

@@ -314,9 +314,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
 
                                     <div className="space-y-3">
                                         {variants.map((v, i) => (
-                                            <div key={i} className="grid grid-cols-12 gap-2 items-end bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800/50">
+                                            <div key={i} className="grid grid-cols-12 gap-2 items-end bg-brand-warm p-3 rounded-none border border-brand-matte/5">
                                                 <div className="col-span-3 space-y-1">
-                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">{formData.variantType}</label>
+                                                    <label className="text-[8px] font-black text-brand-matte/40 uppercase tracking-widest ml-1">{formData.variantType}</label>
                                                     <input
                                                         value={v.size}
                                                         onChange={e => {
@@ -325,11 +325,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                                             setVariants(newV);
                                                         }}
                                                         placeholder="30 SERVINGS"
-                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                        className="w-full bg-white border border-brand-matte/10 p-2 rounded-none text-xs font-bold text-brand-matte focus:border-brand outline-none"
                                                     />
                                                 </div>
                                                 <div className="col-span-3 space-y-1">
-                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">{formData.secondaryVariantName || 'Flavor'}</label>
+                                                    <label className="text-[8px] font-black text-brand-matte/40 uppercase tracking-widest ml-1">{formData.secondaryVariantName || 'Flavor'}</label>
                                                     <input
                                                         value={v.flavor}
                                                         onChange={e => {
@@ -338,11 +338,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                                             setVariants(newV);
                                                         }}
                                                         placeholder="CHOCOLATE"
-                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                        className="w-full bg-white border border-brand-matte/10 p-2 rounded-none text-xs font-bold text-brand-matte focus:border-brand outline-none"
                                                     />
                                                 </div>
                                                 <div className="col-span-2 space-y-1">
-                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">Price</label>
+                                                    <label className="text-[8px] font-black text-brand-matte/40 uppercase tracking-widest ml-1">Price</label>
                                                     <input
                                                         type="number"
                                                         value={v.price}
@@ -352,7 +352,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                                             setVariants(newV);
                                                         }}
                                                         placeholder="0.00"
-                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                        className="w-full bg-white border border-brand-matte/10 p-2 rounded-none text-xs font-bold text-brand-matte focus:border-brand outline-none"
                                                     />
                                                 </div>
                                                 <div className="col-span-2 space-y-1">
@@ -366,11 +366,11 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                                             setVariants(newV);
                                                         }}
                                                         placeholder="0.00"
-                                                        className="w-full bg-zinc-950 border border-brand/30 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                        className="w-full bg-white border border-brand/20 p-2 rounded-none text-xs font-bold text-brand focus:border-brand outline-none"
                                                     />
                                                 </div>
                                                 <div className="col-span-2 space-y-1">
-                                                    <label className="text-[8px] font-black text-zinc-500 uppercase tracking-widest ml-1">Stock</label>
+                                                    <label className="text-[8px] font-black text-brand-matte/40 uppercase tracking-widest ml-1">Stock</label>
                                                     <input
                                                         type="number"
                                                         value={v.stock}
@@ -380,7 +380,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                                             setVariants(newV);
                                                         }}
                                                         placeholder="10"
-                                                        className="w-full bg-zinc-950 border border-zinc-800 p-2 rounded-lg text-xs font-bold text-white focus:border-brand outline-none"
+                                                        className="w-full bg-white border border-brand-matte/10 p-2 rounded-none text-xs font-bold text-brand-matte focus:border-brand outline-none"
                                                     />
                                                 </div>
                                                 <button

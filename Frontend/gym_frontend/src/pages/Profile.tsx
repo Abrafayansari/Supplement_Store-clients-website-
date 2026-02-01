@@ -119,7 +119,7 @@ const Profile: React.FC = () => {
                       <input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-brand-warm border border-black/5 p-5 text-[12px] font-black uppercase tracking-widest outline-none focus:border-brand-gold transition-luxury"
+                        className="w-full bg-brand-warm border border-black/5 p-5 text-[12px] font-black uppercase tracking-widest outline-none focus:border-brand-gold transition-luxury text-brand-matte"
                       />
                     </div>
                     <div className="space-y-3">
@@ -127,7 +127,7 @@ const Profile: React.FC = () => {
                       <input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-brand-warm border border-black/5 p-5 text-[12px] font-black uppercase tracking-widest outline-none focus:border-brand-gold transition-luxury"
+                        className="w-full bg-brand-warm border border-black/5 p-5 text-[12px] font-black uppercase tracking-widest outline-none focus:border-brand-gold transition-luxury text-brand-matte"
                       />
                     </div>
                   </div>

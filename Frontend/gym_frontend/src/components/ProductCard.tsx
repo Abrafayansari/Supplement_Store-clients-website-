@@ -205,7 +205,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
 
           <div className="p-4 md:p-5 flex-grow flex flex-col justify-between bg-white overflow-hidden">
             <div>
-              <p className="text-[9px] font-black text-brand-gold uppercase tracking-[0.2em] mb-1">
+              <p className="text-[9px] font-black text-brand-gold uppercase tracking-[0.2em] mb-1 truncate" title={product.category}>
                 {product.category}
               </p>
               <h3 className="text-xs md:text-sm font-black text-brand-matte uppercase tracking-tight line-clamp-2 leading-tight group-hover:text-brand transition-colors">

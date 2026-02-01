@@ -1,11 +1,11 @@
 import express from "express"
-import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile, forgotPassword, resetPassword, enrollPlan } from "../controllers/UserController.js"
+import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile, forgotPassword, resetPassword, enrollPlan, handleContactMessage } from "../controllers/UserController.js"
 import { createAddress, createOrder, getAllOrders, getUserAddresses, getUserOrders, updateAddress, updateOrderStatus } from "../controllers/OrderController.js";
 import { authenticate } from "../middlewares/auth.js";
 import { adminOnly } from "../middlewares/authorization.js";
 import { createProduct, getallproducts, getCategories, uploadbulkproducts, getProductById, updateProduct, deleteProduct } from "../controllers/ProductController.js";
 import upload from "../middlewares/uploads.js";
-import { getAdminStats } from "../controllers/AdminController.js";
+import { getAdminStats, getAllUsers, suspendUser } from "../controllers/AdminController.js";
 import { getNotifications, getUnreadCount, markAsReadAndDelete, deleteAllNotifications } from "../controllers/NotificationController.js";
 import { getBanners, createBanner, deleteBanner } from "../controllers/BannerController.js";
 import { createBundle, getBundles, getBundleById, updateBundle, deleteBundle } from "../controllers/BundleController.js";
@@ -48,6 +48,7 @@ router.get("/orders", authenticate, getUserOrders);
 router.get("/getprofile", authenticate, getProfile);
 router.put("/profile", authenticate, updateProfile);
 router.post("/enroll-plan", authenticate, enrollPlan);
+router.post("/contact", handleContactMessage);
 
 // Banner Routes
 router.get("/banners", getBanners);
@@ -58,6 +59,8 @@ router.delete("/admin/banners/:id", authenticate, adminOnly, deleteBanner);
 router.get("/admin/stats", authenticate, adminOnly, getAdminStats);
 router.get("/admin/orders", authenticate, adminOnly, getAllOrders);
 router.put("/admin/orders/:orderId/status", authenticate, adminOnly, updateOrderStatus);
+router.get("/admin/users", authenticate, adminOnly, getAllUsers);
+router.patch("/admin/users/:userId/suspend", authenticate, adminOnly, suspendUser);
 
 // Admin Notification Routes
 router.get("/admin/notifications", authenticate, adminOnly, getNotifications);

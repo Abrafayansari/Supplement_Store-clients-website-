@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, ArrowRight, ShoppingCart } from 'lucide-react';
+import { Mail, ArrowRight, ShoppingCart, ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 
@@ -23,7 +23,6 @@ const ForgotPassword: React.FC = () => {
                     headers: {
                         Authorization: `Bearer ${storedToken}`
                     }
-
                 }
             );
             setSent(true);
@@ -36,78 +35,89 @@ const ForgotPassword: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex bg-brand-matte font-sans overflow-hidden items-center justify-center relative">
-            {/* Background Ambience */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand/20 blur-[120px] rounded-full"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-gold/10 blur-[120px] rounded-full"></div>
-            </div>
+        <div className="min-h-screen bg-white flex items-center justify-center font-sans overflow-x-hidden relative p-6">
+            {/* Background Decorations */}
+            <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-brand/5 blur-[120px] rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 blur-[120px] rounded-full pointer-events-none translate-x-1/2 translate-y-1/2" />
 
-            <div className="w-full max-w-lg p-4 relative z-10">
-                <div className="glass-panel p-8 md:p-12 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <ShoppingCart className="w-24 h-24 text-white" />
+            <div className="w-full max-w-[480px] relative z-10">
+                <Link to="/login" className="absolute -top-12 left-0 flex items-center gap-2 text-brand-matte/40 hover:text-brand transition-colors">
+                    <ChevronLeft className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Back to Login</span>
+                </Link>
+
+                <div className="text-center mb-12">
+                    <div className="w-16 h-16 bg-brand-warm border border-black/5 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                        <ShoppingCart className="w-8 h-8 text-brand" />
                     </div>
-
-                    <div className="space-y-6 relative z-10">
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">
-                                Reset Password
-                            </h1>
-                            <p className="text-white/40 text-sm font-medium">Enter your email to receive recovery instructions.</p>
-                        </div>
-
-                        {!sent ? (
-                            <form onSubmit={handleSubmit} className="space-y-5">
-                                <div className="space-y-2 group/input">
-                                    <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1 group-focus-within/input:text-brand-gold transition-colors">Email Address</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within/input:text-brand-gold transition-colors" />
-                                        <input
-                                            required
-                                            type="email"
-                                            placeholder="name@example.com"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-brand-gold/50 text-white font-medium placeholder:text-white/20 hover:bg-white/10 transition-all"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="pt-4">
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="w-full bg-brand hover:bg-brand-gold disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-brand/20 active:scale-[0.98] flex items-center justify-center gap-3 group/btn"
-                                    >
-                                        {loading ? 'Processing...' : (
-                                            <>
-                                                Send Link
-                                                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </form>
-                        ) : (
-                            <div className="bg-brand/10 border border-brand/20 p-6 rounded-xl flex flex-col items-center text-center space-y-4">
-                                <div className="w-12 h-12 bg-brand rounded-full flex items-center justify-center text-white shadow-lg shadow-brand/40">
-                                    <Mail className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h3 className="text-white font-bold text-lg">Check your inbox</h3>
-                                    <p className="text-white/40 text-xs leading-relaxed mt-2">We have sent a password reset link to <span className="text-brand-gold">{email}</span></p>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="flex items-center justify-center pt-2">
-                            <div className="text-sm font-medium text-white/40">
-                                Remember details? <Link to="/login" className="text-brand-gold hover:text-white transition-colors underline-offset-4 hover:underline">Sign in</Link>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 className="text-4xl font-black text-brand-matte uppercase tracking-tighter mb-3 italic">
+                        Reset Password
+                    </h1>
+                    <p className="text-brand-matte/30 text-xs font-bold uppercase tracking-[0.2em]">
+                        Enter your email to receive recovery instructions
+                    </p>
                 </div>
+
+                {!sent ? (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.2em] pl-1">Email Address</label>
+                            <div className="relative group">
+                                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-matte/10 group-focus-within:text-brand transition-colors" />
+                                <input
+                                    required
+                                    type="email"
+                                    placeholder="your@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full bg-brand-warm/50 border border-black/5 px-14 py-5 text-brand-matte text-sm font-bold uppercase tracking-widest outline-none focus:border-brand-gold/30 hover:bg-brand-warm transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="pt-4">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-brand hover:bg-brand-matte disabled:opacity-50 text-white py-6 font-black text-xs uppercase tracking-[0.3em] transition-all active:scale-[0.98] flex items-center justify-center gap-4 group shadow-xl hover:shadow-brand/20"
+                            >
+                                {loading ? (
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    <>
+                                        Send Reset Link
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-brand-warm/50 border border-black/5 p-8 text-center space-y-6"
+                    >
+                        <div className="w-16 h-16 bg-brand rounded-full flex items-center justify-center mx-auto text-white shadow-xl shadow-brand/20">
+                            <Mail className="w-8 h-8" />
+                        </div>
+                        <div>
+                            <h3 className="text-brand-matte font-black uppercase text-lg tracking-widest">Check your inbox</h3>
+                            <p className="text-brand-matte/50 text-xs leading-relaxed mt-4 uppercase font-bold tracking-widest">
+                                We have sent a password reset link to <br />
+                                <span className="text-brand group-hover:text-brand-gold transition-colors">{email}</span>
+                            </p>
+                        </div>
+                        <div className="pt-4">
+                            <Link
+                                to="/login"
+                                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4" /> Back to Login
+                            </Link>
+                        </div>
+                    </motion.div>
+                )}
             </div>
         </div>
     );

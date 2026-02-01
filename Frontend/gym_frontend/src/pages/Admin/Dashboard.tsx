@@ -138,13 +138,13 @@ const AdminDashboard: React.FC = () => {
       icon: <Users className="w-6 h-6" />,
       color: 'zinc'
     },
-    {
-      label: 'Conversion Rate',
-      value: '3.42%',
-      trend: '+4.1%',
-      icon: <TrendingUp className="w-6 h-6" />,
-      color: 'brand'
-    },
+    // {
+    //   label: 'Conversion Rate',
+    //   value: '3.42%',
+    //   trend: '+4.1%',
+    //   icon: <TrendingUp className="w-6 h-6" />,
+    //   color: 'brand'
+    // },
   ];
 
   return (
@@ -196,7 +196,7 @@ const AdminDashboard: React.FC = () => {
       <main className="flex-grow p-6 md:p-12 space-y-12 max-w-[1600px] mx-auto w-full relative">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-50">
           <div className="space-y-4">
             <h1 className="text-5xl md:text-7xl font-black text-brand-matte tracking-[-0.05em] uppercase leading-none">Admin <span className="shine-gold italic font-brand">Console</span></h1>
             <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-brand-matte/20">
@@ -222,7 +222,7 @@ const AdminDashboard: React.FC = () => {
 
               {/* Notification Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 top-full mt-2 w-[380px] bg-white border border-brand-matte/10 shadow-2xl z-50">
+                <div className="absolute right-0 top-full mt-2 w-[380px] bg-white border border-brand-matte/10 shadow-2xl z-[9999]">
                   <div className="flex items-center justify-between p-4 border-b border-brand-matte/5">
                     <h4 className="text-xs font-black text-brand-matte uppercase tracking-widest">Alerts</h4>
                     {notifications.length > 0 && (
@@ -235,46 +235,48 @@ const AdminDashboard: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                  <div className="max-h-[400px] z-10 overflow-y-auto custom-scrollbar">
                     {notifications.length === 0 ? (
-                      <div className="p-8 text-center">
-                        <Bell className="w-8 h-8 text-brand-matte/10 mx-auto mb-3" />
-                        <p className="text-[10px] font-black text-brand-matte/30 uppercase tracking-widest">No new updates</p>
+                      <div className="p-8 text-center bg-brand-warm/50">
+                        <Bell className="w-8 h-8 text-brand-matte/5 mx-auto mb-3" />
+                        <p className="text-[10px] font-black text-brand-matte/20 uppercase tracking-widest">No Alerts</p>
                       </div>
                     ) : (
                       notifications.map((notification) => (
                         <div
                           key={notification.id}
-                          className="p-4 border-b border-brand-matte/5 hover:bg-brand-warm transition-colors group"
+                          className="p-5 border-b border-brand-matte/5 hover:bg-brand-warm/80 transition-all duration-300 relative group border-l-2 border-l-transparent hover:border-l-brand"
                         >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex-grow">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="px-2 py-0.5 bg-brand/10 text-brand text-[8px] font-black uppercase tracking-wider">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-grow min-w-0">
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className={`px-2 py-0.5 text-[7px] font-black uppercase tracking-wider rounded-none ${notification.type === 'new_order' ? 'bg-brand text-white' : 'bg-brand-gold/10 text-brand-gold'
+                                  }`}>
                                   {notification.type.replace('_', ' ')}
                                 </span>
-                                <span className="text-[8px] font-bold text-brand-matte/20">
-                                  {new Date(notification.createdAt).toLocaleString()}
+                                <span className="text-[8px] font-bold text-brand-matte/30 tabular-nums">
+                                  {new Date(notification.createdAt).toLocaleDateString()} {new Date(notification.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
                               </div>
-                              <h5 className="text-xs font-black text-brand-matte mb-1">{notification.title}</h5>
-                              <p className="text-[10px] text-brand-matte/50">{notification.message}</p>
+                              <h5 className="text-[11px] font-black text-brand-matte mb-1 leading-tight">{notification.title}</h5>
+                              <p className="text-[10px] text-brand-matte/50 leading-relaxed mb-3">{notification.message}</p>
                               {notification.orderId && (
                                 <Link
                                   to="/admin/orders"
-                                  className="inline-block mt-2 text-[9px] font-black text-brand-gold hover:text-brand uppercase tracking-widest transition-colors"
+                                  className="inline-flex items-center gap-2 py-2 px-3 bg-brand-matte/5 text-[9px] font-black text-brand-gold hover:bg-brand-gold hover:text-white uppercase tracking-widest transition-all"
                                   onClick={() => {
                                     deleteNotification(notification.id);
                                     setShowNotifications(false);
                                   }}
                                 >
-                                  Process Order →
+                                  Take Action <ArrowUpRight className="w-3 h-3" />
                                 </Link>
                               )}
                             </div>
                             <button
                               onClick={() => deleteNotification(notification.id)}
-                              className="p-1 text-brand-matte/20 hover:text-brand transition-colors opacity-0 group-hover:opacity-100"
+                              className="shrink-0 w-8 h-8 flex items-center justify-center bg-brand-warm border border-brand-matte/5 text-brand-matte/30 hover:text-white hover:bg-brand hover:border-brand transition-all duration-300"
+                              title="Dismiss Alert"
                             >
                               <X className="w-4 h-4" />
                             </button>
@@ -287,9 +289,7 @@ const AdminDashboard: React.FC = () => {
               )}
             </div>
 
-            <button className="btn-luxury px-10 py-5 text-[10px]">
-              Download Report
-            </button>
+
           </div>
         </div>
 
@@ -319,8 +319,8 @@ const AdminDashboard: React.FC = () => {
               ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 relative z-10">
-              <div className="lg:col-span-2 bg-white border border-brand-matte/5 shadow-sm p-10 space-y-10">
+            <div className="grid grid-cols-1 gap-10 relative z-10">
+              <div className="bg-white border border-brand-matte/5 shadow-sm p-10 space-y-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-black text-brand-matte uppercase tracking-tighter italic">Recent Orders</h3>
                   <Link to="/admin/orders" className="text-[10px] font-black text-brand-gold flex items-center gap-2 hover:text-brand transition-all duration-300 uppercase tracking-widest group">
@@ -355,30 +355,6 @@ const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white border border-brand-matte/5 shadow-sm p-10 space-y-10 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand/10 transition-colors" />
-                <h3 className="text-2xl font-black text-brand-matte uppercase tracking-tighter relative z-10 italic">Best Sellers</h3>
-                <div className="space-y-8 relative z-10">
-                  {MOCK_PRODUCTS.slice(0, 3).map(product => (
-                    <div key={product.id} className="flex items-center gap-6 group/item hover:translate-x-2 transition-transform duration-500">
-                      <div className="w-16 h-16 bg-white flex items-center justify-center p-3 border border-brand-matte/5 group-hover/item:border-brand-gold/30 transition-colors shadow-sm">
-                        <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain filter group-hover/item:brightness-110 transition-all duration-500" />
-                      </div>
-                      <div className="flex-grow min-w-0">
-                        <h4 className="text-[10px] font-black text-brand-matte uppercase truncate tracking-widest">{product.name}</h4>
-                        <p className="text-[8px] text-brand-matte/20 font-bold uppercase tracking-widest">In Stock</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-black text-brand-gold italic">Rs. 4.5k</p>
-                        <p className="text-[9px] text-brand font-black">+12%</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button className="w-full py-5 bg-brand-warm border border-brand-matte/10 text-[10px] font-black uppercase tracking-[0.3em] text-brand hover:bg-brand hover:text-white transition-all duration-500 relative z-10">
-                  View Inventory Details
-                </button>
-              </div>
             </div>
           </>
         )}

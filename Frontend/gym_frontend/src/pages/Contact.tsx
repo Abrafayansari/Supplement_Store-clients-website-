@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, MessageSquare, Clock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import axios from 'axios';
 
 const Contact: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -22,10 +23,11 @@ const Contact: React.FC = () => {
 
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success("Message sent successfully! We will get back to you shortly.");
-      setFormData({ name: '', email: '', subject: 'Product Inquiry', message: '' });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/contact`, formData);
+      if (res.data.success) {
+        toast.success("Message sent successfully! We will get back to you shortly.");
+        setFormData({ name: '', email: '', subject: 'Product Inquiry', message: '' });
+      }
     } catch (err) {
       toast.error("Failed to send message. Please try again.");
     } finally {
@@ -113,20 +115,22 @@ const Contact: React.FC = () => {
                     <label className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">Your Name</label>
                     <input
                       type="text"
+                      required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. John Doe"
-                      className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest transition-all"
+                      className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black tracking-widest transition-all text-brand-matte"
                     />
                   </div>
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">Email Address</label>
                     <input
                       type="email"
+                      required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="e.g. john@example.com"
-                      className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest transition-all"
+                      className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black tracking-widest transition-all text-brand-matte"
                     />
                   </div>
                 </div>
@@ -135,7 +139,7 @@ const Contact: React.FC = () => {
                   <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest transition-all appearance-none cursor-pointer"
+                    className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest transition-all appearance-none cursor-pointer text-brand-matte"
                   >
                     <option>Product Question</option>
                     <option>Shipping & Orders</option>
@@ -147,10 +151,11 @@ const Contact: React.FC = () => {
                   <label className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40">Your Message</label>
                   <textarea
                     rows={6}
+                    required
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Tell us what you need help with..."
-                    className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest transition-all resize-none"
+                    className="w-full bg-brand-warm border border-black/5 p-6 outline-none focus:border-brand-gold/40 text-[11px] font-black tracking-widest transition-all resize-none text-brand-matte"
                   />
                 </div>
 

@@ -6,6 +6,7 @@ import { Product } from '@/types';
 import NexusLoader from '../components/NexusLoader';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '../components/ui/badge';
+import api from '../lib/api';
 
 interface Bundle {
     id: string;
@@ -13,8 +14,8 @@ interface Bundle {
     description: string;
     price: number;
     originalPrice?: number;
-    image: string;
-    products: { product: Product }[];
+    image: string | null;
+    products: Product[];
 }
 
 const Bundles: React.FC = () => {
@@ -40,8 +41,7 @@ const Bundles: React.FC = () => {
 
     const handleAddBundleToCart = (bundle: Bundle) => {
         if (bundle.products && bundle.products.length > 0) {
-            bundle.products.forEach((bp: any) => {
-                const product = bp.product;
+            bundle.products.forEach((product: any) => {
                 const firstVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
                 addToCart(product, 1, firstVariant);
             });
@@ -94,7 +94,7 @@ const Bundles: React.FC = () => {
                                 {/* Visual Side */}
                                 <div className="w-full md:w-2/5 aspect-square md:aspect-auto relative bg-brand-warm/30 overflow-hidden">
                                     <img
-                                        src={bundle.products[0]?.product.images[0] || "https://images.unsplash.com/photo-1579722820308-d74e571900a9?auto=format&fit=crop&q=80&w=800"}
+                                        src={bundle.image || (bundle.products[0]?.images?.[0]) || "https://images.unsplash.com/photo-1579722820308-d74e571900a9?auto=format&fit=crop&q=80&w=800"}
                                         alt={bundle.name}
                                         className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:rotate-1"
                                     />
@@ -109,33 +109,34 @@ const Bundles: React.FC = () => {
                                 {/* Info Side */}
                                 <div className="w-full md:w-3/5 p-10 flex flex-col justify-between relative bg-white">
                                     <div>
-                                        <div className="flex justify-between items-start mb-6">
-                                            <h2 className="text-3xl font-black text-brand-matte uppercase tracking-tight leading-none group-hover:text-brand transition-colors">
+                                        <div className="flex justify-between items-start mb-6 gap-4">
+                                            <h2 className="text-3xl font-black text-brand-matte uppercase tracking-tight leading-none group-hover:text-brand transition-colors line-clamp-2" title={bundle.name}>
                                                 {bundle.name}
                                             </h2>
-                                            <div className="flex flex-col items-end">
+                                            <div className="flex flex-col items-end shrink-0">
                                                 <span className="text-3xl font-black text-brand italic tracking-tighter">
                                                     Rs.{bundle.price.toFixed(2)}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <p className="text-brand-matte/40 text-[11px] font-black uppercase tracking-[0.2em] mb-8 border-b border-brand-matte/5 pb-6">
+                                        <p className="text-brand-matte/40 text-[11px] font-black uppercase tracking-[0.2em] mb-8 border-b border-brand-matte/5 pb-6 line-clamp-3 min-h-[44px]">
                                             {bundle.description || "Comprehensive package for elite performance."}
                                         </p>
 
-                                        <div className="space-y-4 mb-10">
+                                        <div className="space-y-4 mb-10 overflow-hidden">
                                             <p className="text-[9px] font-black text-brand-gold uppercase tracking-widest flex items-center gap-2">
                                                 <span className="w-4 h-4 rounded-full bg-brand-gold/10 flex items-center justify-center text-[8px] text-brand-gold">✓</span>
                                                 Includes {bundle.products.length} Products
                                             </p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {bundle.products.map((bp: any, idx: number) => (
+                                            <div className="flex flex-wrap gap-2 max-h-[100px] overflow-y-auto no-scrollbar">
+                                                {bundle.products.map((product: any, idx: number) => (
                                                     <Badge
                                                         key={idx}
-                                                        className="bg-brand-warm text-brand-matte/60 border-none rounded-none text-[9px] font-black px-3 py-1 uppercase tracking-widest hover:bg-brand hover:text-white transition-colors"
+                                                        className="bg-brand-warm text-brand-matte/60 border-none rounded-none text-[9px] font-black px-3 py-1 uppercase tracking-widest hover:bg-brand hover:text-white transition-colors truncate max-w-[150px]"
+                                                        title={product.name}
                                                     >
-                                                        {bp.product.name}
+                                                        {product.name}
                                                     </Badge>
                                                 ))}
                                             </div>
