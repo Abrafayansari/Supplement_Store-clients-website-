@@ -26,6 +26,7 @@ import ForgotPassword from './src/pages/ForgotPassword';
 import ResetPassword from './src/pages/ResetPassword';
 import Plans from './src/pages/Plans';
 import Bundles from './src/pages/Bundles';
+import BundleDetail from './src/pages/BundleDetail';
 import { CartProvider } from './src/contexts/CartContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import { WishlistProvider } from './src/contexts/WishlistContext';
@@ -67,6 +68,7 @@ const App: React.FC = () => {
                   <Route path="/product/:id" element={<Layout><ProductDetail /></Layout>} />
                   <Route path="/plans" element={<Layout><Plans /></Layout>} />
                   <Route path="/bundles" element={<Layout><Bundles /></Layout>} />
+                  <Route path="/bundle/:id" element={<Layout><BundleDetail /></Layout>} />
                   <Route path="/product/:id/review" element={<Layout><ProtectedRoute><AddReview /></ProtectedRoute></Layout>} />
                   <Route path="/cart" element={<Layout><Cart /></Layout>} />
                   <Route path="/checkout" element={<Layout><ProtectedRoute><Checkout /></ProtectedRoute></Layout>} />

@@ -1,22 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, ArrowRight, Package, ShoppingBag, Loader2 } from 'lucide-react';
+import { ShoppingCart, ArrowRight, Package, ShoppingBag, Loader2, CreditCard } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { toast } from 'sonner';
-import { Product } from '@/types';
+import { Product, Bundle } from '@/types';
 import NexusLoader from '../components/NexusLoader';
 import { useNavigate } from 'react-router-dom';
-import { Badge } from '../components/ui/badge';
 import api from '../lib/api';
-
-interface Bundle {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    originalPrice?: number;
-    image: string | null;
-    products: Product[];
-}
 
 const Bundles: React.FC = () => {
     const [bundles, setBundles] = useState<Bundle[]>([]);
@@ -42,13 +31,25 @@ const Bundles: React.FC = () => {
     const handleAddBundleToCart = (bundle: Bundle) => {
         if (bundle.products && bundle.products.length > 0) {
             bundle.products.forEach((product: any) => {
-                const firstVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
-                addToCart(product, 1, firstVariant);
+                const firstVariantId = product.variants && product.variants.length > 0 ? product.variants[0].id : undefined;
+                addToCart(product, 1, firstVariantId);
             });
             toast.success(`${bundle.name} items added to cart`);
         } else {
             toast.error('Bundle contains no products');
         }
+    };
+
+    const handleBuyNow = (bundle: Bundle) => {
+        if (!bundle.products || bundle.products.length === 0) {
+            toast.error('Bundle contains no products');
+            return;
+        }
+        bundle.products.forEach((product: any) => {
+            const firstVariantId = product.variants && product.variants.length > 0 ? product.variants[0].id : undefined;
+            addToCart(product, 1, firstVariantId);
+        });
+        navigate('/checkout');
     };
 
     if (loading) return (
@@ -92,72 +93,86 @@ const Bundles: React.FC = () => {
                                 className="bg-white group relative overflow-hidden flex flex-col md:flex-row border border-brand-matte/5 hover:shadow-2xl transition-all duration-700 shadow-sm"
                             >
                                 {/* Visual Side */}
-                                <div className="w-full md:w-2/5 aspect-square md:aspect-auto relative bg-brand-warm/30 overflow-hidden">
+                                <div
+                                    className="w-full md:w-2/5 aspect-square md:aspect-auto relative bg-brand-warm/30 overflow-hidden cursor-pointer"
+                                    onClick={() => navigate(`/bundle/${bundle.id}`)}
+                                >
                                     <img
                                         src={bundle.image || (bundle.products[0]?.images?.[0]) || "https://images.unsplash.com/photo-1579722820308-d74e571900a9?auto=format&fit=crop&q=80&w=800"}
                                         alt={bundle.name}
-                                        className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:rotate-1"
+                                        className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-brand-matte/40 to-transparent"></div>
-                                    <div className="absolute bottom-6 left-6">
-                                        <div className="bg-brand text-white text-[10px] font-black px-4 py-2 uppercase tracking-[0.2em] shadow-lg">
-                                            Bundle Offer
+                                    <div className="absolute top-4 left-4">
+                                        <div className="bg-brand text-white text-[9px] font-black px-3 py-1 uppercase tracking-widest">
+                                            Bundle Save
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Info Side */}
-                                <div className="w-full md:w-3/5 p-10 flex flex-col justify-between relative bg-white">
+                                <div className="w-full md:w-3/5 p-6 md:p-10 flex flex-col justify-between relative bg-white">
                                     <div>
-                                        <div className="flex justify-between items-start mb-6 gap-4">
-                                            <h2 className="text-3xl font-black text-brand-matte uppercase tracking-tight leading-none group-hover:text-brand transition-colors line-clamp-2" title={bundle.name}>
+                                        <div className="flex flex-col justify-between items-start mb-6 gap-2">
+                                            <h2
+                                                className="text-2xl md:text-3xl font-black text-brand-matte uppercase tracking-tight leading-tight group-hover:text-brand transition-colors cursor-pointer block w-full"
+                                                onClick={() => navigate(`/bundle/${bundle.id}`)}
+                                            >
                                                 {bundle.name}
                                             </h2>
-                                            <div className="flex flex-col items-end shrink-0">
-                                                <span className="text-3xl font-black text-brand italic tracking-tighter">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-2xl font-black text-brand italic tracking-tighter">
                                                     Rs.{bundle.price.toFixed(2)}
                                                 </span>
+                                                {bundle.originalPrice && (
+                                                    <span className="text-sm font-black text-brand-matte/20 line-through tracking-tighter decoration-brand/30">
+                                                        Rs.{bundle.originalPrice.toFixed(2)}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
 
-                                        <p className="text-brand-matte/40 text-[11px] font-black uppercase tracking-[0.2em] mb-8 border-b border-brand-matte/5 pb-6 line-clamp-3 min-h-[44px]">
+                                        <p className="text-brand-matte/40 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] mb-8 border-b border-brand-matte/5 pb-6 line-clamp-2">
                                             {bundle.description || "Comprehensive package for elite performance."}
                                         </p>
 
-                                        <div className="space-y-4 mb-10 overflow-hidden">
-                                            <p className="text-[9px] font-black text-brand-gold uppercase tracking-widest flex items-center gap-2">
-                                                <span className="w-4 h-4 rounded-full bg-brand-gold/10 flex items-center justify-center text-[8px] text-brand-gold">✓</span>
-                                                Includes {bundle.products.length} Products
-                                            </p>
-                                            <div className="flex flex-wrap gap-2 max-h-[100px] overflow-y-auto no-scrollbar">
+                                        <div className="space-y-4 mb-8">
+                                            <div className="flex flex-wrap gap-2 max-h-[120px] overflow-y-auto no-scrollbar py-1">
                                                 {bundle.products.map((product: any, idx: number) => (
-                                                    <Badge
+                                                    <div
                                                         key={idx}
-                                                        className="bg-brand-warm text-brand-matte/60 border-none rounded-none text-[9px] font-black px-3 py-1 uppercase tracking-widest hover:bg-brand hover:text-white transition-colors truncate max-w-[150px]"
-                                                        title={product.name}
+                                                        className="bg-brand-warm text-brand-matte/60 border border-brand-matte/5 px-3 py-1.5 text-[8px] md:text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:text-white hover:border-brand transition-all duration-300"
                                                     >
-                                                        {product.name}
-                                                    </Badge>
+                                                        <span className="block truncate max-w-[150px]">{product.name}</span>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+                                    <div className="grid grid-cols-2 gap-4 mt-auto pt-6">
                                         <button
                                             onClick={() => handleAddBundleToCart(bundle)}
-                                            className="flex-grow bg-brand text-white py-4 px-6 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-brand-matte transition-all shadow-xl shadow-brand/10 flex items-center justify-center gap-3 active:scale-95"
+                                            className="bg-brand-matte text-white py-4 px-4 text-[9px] font-black uppercase tracking-widest hover:bg-brand transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-brand-matte/10"
                                         >
-                                            <ShoppingCart className="w-4 h-4" />
-                                            Add Bundle To Cart
+                                            <ShoppingCart className="w-3.5 h-3.5" />
+                                            Add Cart
                                         </button>
                                         <button
-                                            onClick={() => navigate('/products')}
-                                            className="bg-brand-matte text-white p-4 hover:bg-brand transition-all shadow-xl shadow-brand-matte/5 active:scale-95"
+                                            onClick={() => handleBuyNow(bundle)}
+                                            className="bg-brand text-white py-4 px-4 text-[9px] font-black uppercase tracking-widest hover:bg-brand-gold hover:text-brand-matte transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg shadow-brand/10"
                                         >
-                                            <ArrowRight className="w-4 h-4" />
+                                            <CreditCard className="w-3.5 h-3.5" />
+                                            Buy Now
                                         </button>
                                     </div>
+
+                                    <button
+                                        onClick={() => navigate(`/bundle/${bundle.id}`)}
+                                        className="absolute top-4 right-4 text-brand-matte/10 hover:text-brand transition-colors"
+                                    >
+                                        <ArrowRight className="w-5 h-5" />
+                                    </button>
                                 </div>
                             </div>
                         ))}

@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
                           className="text-[10px] font-black uppercase tracking-[0.2em] text-brand border-b border-brand/10 pb-2 block truncate"
                           title={cat.name}
                         >
-                          {cat.name}
+                          {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                         </Link>
                         <div className="space-y-2">
                           {cat.subCategories.map((sub) => (
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                               to={`/products?subCategory=${sub}`}
                               className="block text-[10px] font-bold text-brand-matte/60 hover:text-brand-gold uppercase tracking-widest transition-colors"
                             >
-                              {sub}
+                              {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                             </Link>
                           ))}
                         </div>
@@ -267,7 +267,7 @@ const Navbar: React.FC = () => {
                         onClick={() => setIsMenuOpen(false)}
                         className="block text-lg font-black uppercase tracking-[0.2em] text-brand border-b border-brand/10 pb-2 "
                       >
-                        {cat.name}
+                        {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                       </Link>
                       <div className="pl-2 space-y-3">
                         {cat.subCategories.map(sub => (
@@ -277,7 +277,7 @@ const Navbar: React.FC = () => {
                             onClick={() => setIsMenuOpen(false)}
                             className="block text-xs font-bold uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold transition-colors"
                           >
-                            {sub}
+                            {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                           </Link>
                         ))}
                       </div>
@@ -291,7 +291,7 @@ const Navbar: React.FC = () => {
                   </Link>
                   {user ? (
                     <>
-                      <Link to="/profile" className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.2em] text-brand-matte/40 hover:text-brand-gold" onClick={() => setIsMenuOpen(false)}>
+                      <Link to="/profile" className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.2em] text-black hover:text-brand-gold" onClick={() => setIsMenuOpen(false)}>
                         <User className="w-5 h-5" /> My Account
                       </Link>
                       <button

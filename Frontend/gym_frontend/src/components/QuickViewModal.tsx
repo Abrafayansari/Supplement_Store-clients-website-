@@ -153,10 +153,13 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="text-3xl lg:text-4xl font-black text-brand-matte uppercase tracking-tight leading-none mb-2 italic"
+                  className="text-2xl lg:text-4xl font-black text-brand-matte uppercase tracking-tight leading-none mb-1 italic"
                 >
                   {product.name}
                 </motion.h2>
+                <p className="text-[10px] font-bold text-brand-gold uppercase tracking-[0.3em] mb-4">
+                  {product.category.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                </p>
 
                 <motion.div
                   initial={{ opacity: 0 }}

@@ -95,4 +95,15 @@ export interface WishlistItem {
   product: Product;
   createdAt: string;
 }
+export interface Bundle {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  image: string | null;
+  products: Product[];
+  createdAt: Date;
+  updatedAt: Date;
+}
 export type VariantType = 'SIZE' | 'SERVINGS' | 'GRAMS' | 'TABLETS' | 'BARS' | 'SCOOPS' | 'CAPSULES' | 'VERSION' | 'OTHER';

@@ -131,13 +131,13 @@ const Categories = () => {
 
                 {/* Content */}
                 <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end items-center text-center">
-                  <div className="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-700 ease-out">
-                    <span className="text-brand-gold text-[9px] font-black uppercase tracking-[0.4em] mb-4 block opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700 ease-out w-full">
+                    <span className="text-brand-gold text-[9px] font-black uppercase tracking-[0.4em] mb-3 block opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                       Explore Now
                     </span>
 
-                    <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 italic leading-tight group-hover:text-brand-gold transition-colors duration-500 line-clamp-2 max-w-[90%]" title={category.name}>
-                      {category.name}
+                    <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 italic leading-[1.1] group-hover:text-brand-gold transition-colors duration-500 px-2" title={category.name}>
+                      {category.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                     </h3>
 
                     <div className="w-16 h-1 bg-brand-gold mx-auto scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-center" />

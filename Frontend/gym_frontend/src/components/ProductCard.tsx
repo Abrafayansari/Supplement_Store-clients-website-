@@ -168,7 +168,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
               <button
                 onClick={handleAddToCart}
                 disabled={loading}
-                className={`absolute bottom-0 left-0 right-0 bg-brand-matte text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex hover:bg-brand-gold items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
                     translate-y-0
                     lg:translate-y-full
                     ${isHovered ? 'lg:translate-y-0' : ''}
@@ -190,11 +190,10 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
             ) : (
               <button
                 onClick={handleBuyNow}
-                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black hover:bg-brand-gold uppercase tracking-widest transition-all duration-300 
                   translate-y-0
                   lg:translate-y-full
                   ${isHovered ? 'lg:translate-y-0' : ''}
-                  hover:bg-brand-matte
                 `}
               >
                 <CreditCard className="w-4 h-4" />
@@ -206,7 +205,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
           <div className="p-4 md:p-5 flex-grow flex flex-col justify-between bg-white overflow-hidden">
             <div>
               <p className="text-[9px] font-black text-brand-gold uppercase tracking-[0.2em] mb-1 truncate" title={product.category}>
-                {product.category}
+                {product.category.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
               </p>
               <h3 className="text-xs md:text-sm font-black text-brand-matte uppercase tracking-tight line-clamp-2 leading-tight group-hover:text-brand transition-colors">
                 {product.name} {variant && <span className="text-brand-gold">({variant.size})</span>}

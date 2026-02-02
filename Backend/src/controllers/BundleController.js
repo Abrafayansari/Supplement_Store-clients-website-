@@ -60,11 +60,8 @@ export const getBundles = async (req, res) => {
             where: { isActive: true },
             include: {
                 products: {
-                    select: {
-                        id: true,
-                        name: true,
-                        images: true,
-                        price: true
+                    include: {
+                        variants: true
                     }
                 }
             }
@@ -81,7 +78,13 @@ export const getBundleById = async (req, res) => {
         const { id } = req.params;
         const bundle = await prisma.bundle.findUnique({
             where: { id },
-            include: { products: true }
+            include: {
+                products: {
+                    include: {
+                        variants: true
+                    }
+                }
+            }
         });
         if (!bundle) return res.status(404).json({ message: "Bundle not found" });
         res.json(bundle);

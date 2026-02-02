@@ -150,7 +150,7 @@ const ProductList: React.FC = () => {
                                     <button
                                         className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${normalize(activeCategory) === normalize(cat.name) ? 'border-brand text-brand' : 'border-transparent text-brand-matte/40 hover:text-brand-matte'}`}
                                     >
-                                        {cat.name}
+                                        {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                                         <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                                     </button>
                                 </CollapsibleTrigger>
@@ -170,7 +170,7 @@ const ProductList: React.FC = () => {
                                                 }}
                                                 className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${normalize(activeSubCategory) === normalize(sub) ? 'bg-brand text-white shadow-lg' : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'}`}
                                             >
-                                                {sub}
+                                                {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                                             </button>
                                         ))}
                                     </div>
@@ -295,7 +295,7 @@ const ProductList: React.FC = () => {
                                     onClick={removeCategory}
                                     title={activeCategory}
                                 >
-                                    {activeCategory} <X className="w-3 h-3 shrink-0" />
+                                    {activeCategory.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')} <X className="w-3 h-3 shrink-0" />
                                 </Badge>
                             )}
                             {maxPrice !== undefined && maxPrice < catalogMaxPrice && (
