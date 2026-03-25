@@ -34,10 +34,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!localStorage.getItem("token")) {
-      toast.error("Login required");
-      return;
-    }
+    if (loading) return;
     if (loading) return;
 
     try {
@@ -70,8 +67,10 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
     e.preventDefault();
     e.stopPropagation();
 
-    if (!localStorage.getItem("token")) {
-      toast.error("Login required");
+    const token = localStorage.getItem("token");
+    if (!token && !isWishlisted) {
+      toast.error("Please login to add items to your wishlist");
+      navigate('/login');
       return;
     }
 
@@ -80,7 +79,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
         await removeFromWishlist(product.id);
         setIsWishlisted(false);
       } else {
-        await addToWishlist(product.id);
+        await addToWishlist(product);
         setIsWishlisted(true);
       }
     } catch {
@@ -107,7 +106,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
   return (
     <>
       <div
-        className="group relative bg-white border border-brand-matte/5 rounded-none overflow-hidden transition-all duration-500 hover:shadow-2xl w-full max-w-[320px] flex flex-col shadow-sm"
+        className="group relative bg-brand-warm border border-brand-matte/5 rounded-none overflow-hidden transition-all duration-500 hover:shadow-2xl w-full max-w-[320px] flex flex-col shadow-sm"
         style={{ height: '440px' }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -117,7 +116,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
             <img
               src={product.images?.[0] || 'https://images.unsplash.com/photo-1593095191850-2a0bf3a772bf?auto=format&fit=crop&q=80&w=800'}
               alt={product.name}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105 p-4"
             />
 
             <div className="absolute top-3 left-3 flex flex-col gap-2">

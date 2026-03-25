@@ -99,7 +99,7 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
           </button>
 
           {/* Left Side: Image */}
-          <div className="relative h-[300px] sm:h-[400px] lg:h-[600px] bg-white flex items-center justify-center p-8 overflow-hidden group">
+          <div className="relative h-[300px] sm:h-[400px] lg:h-[600px] bg-brand-warm flex items-center justify-center p-8 overflow-hidden group">
             {/* Background Effects */}
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(201,162,77,0.05),transparent_70%)]"></div>
 

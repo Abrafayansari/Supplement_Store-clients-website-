@@ -130,7 +130,7 @@ const BannerManagement: React.FC = () => {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            className="bg-white p-12 max-w-2xl w-full border border-brand-matte/5 relative shadow-2xl"
+                            className="bg-brand-warm p-12 max-w-2xl w-full border border-brand-matte/5 relative shadow-2xl"
                         >
                             <button onClick={() => setShowAddForm(false)} className="absolute top-8 right-8 text-brand-matte/30 hover:text-brand transition-colors">
                                 <X className="w-6 h-6" />

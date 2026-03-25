@@ -26,7 +26,7 @@ const Plans: React.FC = () => {
 
     const plans = [
         {
-            name: "Standard Protocol",
+            name: "Standard Plan",
             price: "5,000",
             duration: "Monthly",
             description: "Essential foundation for fitness enthusiasts looking for structure and results.",
@@ -41,7 +41,7 @@ const Plans: React.FC = () => {
             popular: false
         },
         {
-            name: "Elite Performance",
+            name: "Advanced Performance",
             price: "12,000",
             duration: "Monthly",
             description: "Advanced coaching and physiological monitoring for serious athletes and competitors.",
@@ -49,7 +49,7 @@ const Plans: React.FC = () => {
                 "All Standard Features",
                 "Bi-Weekly 1-on-1 Coaching",
                 "Precision Diet Plans",
-                "Recovery Protocol Design",
+                "Recovery Plan Design",
                 "Advanced Lab Analytics"
             ],
             accent: "brand",
@@ -61,11 +61,11 @@ const Plans: React.FC = () => {
             duration: "Quarterly",
             description: "Full-spectrum transformation program including supplementation and direct monitoring.",
             features: [
-                "All Elite Features",
+                "All Advanced Features",
                 "Daily Progress Tracking",
                 "Full Supplement Provision",
                 "Priority Support 24/7",
-                "Bio-Individual Adjustments"
+                "Personalized Adjustments"
             ],
             accent: "brand-gold",
             popular: false
@@ -86,7 +86,7 @@ const Plans: React.FC = () => {
                         <span className="text-brand italic text-shadow-sm">TRANSFORMATION</span>
                     </h1>
                     <p className="max-w-2xl mx-auto text-brand-matte/50 text-sm font-medium leading-relaxed uppercase tracking-widest italic pt-4">
-                        Choose a plan that aligns with your objectives. Each protocol is engineered for specific biological outcomes and performance scaling.
+                        Choose a plan that aligns with your objectives. Each plan is designed for specific fitness goals and results.
                     </p>
                 </div>
 
@@ -94,7 +94,7 @@ const Plans: React.FC = () => {
                     {plans.map((plan, index) => (
                         <div
                             key={index}
-                            className={`group relative flex flex-col bg-white border border-brand-matte/5 shadow-sm p-12 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2 overflow-hidden ${plan.popular ? 'ring-4 ring-brand/10' : ''}`}
+                            className={`group relative flex flex-col bg-brand-warm border border-brand-matte/5 shadow-sm p-12 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2 overflow-hidden ${plan.popular ? 'ring-4 ring-brand/10' : ''}`}
                         >
                             {plan.popular && (
                                 <div className="absolute top-0 right-0">

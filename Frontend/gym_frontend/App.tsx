@@ -32,11 +32,12 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import { WishlistProvider } from './src/contexts/WishlistContext';
 import { Toaster } from './src/components/ui/sonner';
 import { LoaderProvider } from './src/contexts/LoaderContext';
+import ScrollToTop from './src/components/ScrollToTop';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex flex-col min-h-screen">
     <Navbar />
-    <main className="flex-grow pt-20">
+    <main className="flex-grow pt-[64px] md:pt-[72px]">
       {children}
     </main>
     <Footer />
@@ -60,6 +61,7 @@ const App: React.FC = () => {
           <CartProvider>
             <WishlistProvider>
               <Router>
+                <ScrollToTop />
                 <Routes>
                   <Route path="/" element={<Layout><Home /></Layout>} />
                   <Route path="/about" element={<Layout><About /></Layout>} />
@@ -77,7 +79,7 @@ const App: React.FC = () => {
                   <Route path="/signup" element={<Layout><Auth mode="signup" /></Layout>} />
                   <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
                   <Route path="/reset-password/:token" element={<Layout><ResetPassword /></Layout>} />
-                  <Route path="/wishlist" element={<Layout><ProtectedRoute><Wishlist /></ProtectedRoute></Layout>} />
+                  <Route path="/wishlist" element={<Layout><Wishlist /></Layout>} />
 
                   {/* Admin routes */}
                   <Route path="/admin/login" element={<Layout><Auth mode="admin-login" /></Layout>} />

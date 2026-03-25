@@ -239,7 +239,7 @@ const Checkout: React.FC = () => {
                       <div
                         key={addr.id}
                         onClick={() => setSelectedAddressId(addr.id)}
-                        className={`p-6 border cursor-pointer transition-all duration-300 relative group ${selectedAddressId === addr.id ? 'bg-white border-brand shadow-lg' : 'bg-white border-brand-matte/5 hover:border-brand-matte/20'}`}
+                        className={`p-6 border cursor-pointer transition-all duration-300 relative group ${selectedAddressId === addr.id ? 'bg-brand-warm border-brand shadow-lg' : 'bg-brand-warm border-brand-matte/5 hover:border-brand-matte/20'}`}
                       >
                         <div className="flex items-start gap-4">
                           <div className={`w-10 h-10 flex items-center justify-center border transition-all ${selectedAddressId === addr.id ? 'bg-brand border-brand text-white' : 'bg-brand-warm border-brand-matte/5 text-brand-matte/40'}`}>
@@ -354,7 +354,7 @@ const Checkout: React.FC = () => {
                       <h4 className="text-[10px] font-black text-brand uppercase tracking-widest">Payment Account</h4>
                       <div className="bg-brand-warm p-4 border border-brand-matte/5">
                         <p className="text-xs text-brand-matte font-black tracking-widest">IBAN: PK64 NEXUS 0000 9238 4721 00</p>
-                        <p className="text-[10px] text-brand-matte/40 mt-1 uppercase font-black tracking-widest italic">Bank: Nexus Elite Finance</p>
+                        <p className="text-[10px] text-brand-matte/40 mt-1 uppercase font-black tracking-widest italic">Bank: Nexus Finance</p>
                       </div>
                     </div>
 

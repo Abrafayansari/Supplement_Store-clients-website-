@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Zap } from 
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-brand-matte border-t border-brand-gold/20 text-white/50">
+    <footer className="bg-brand-matte border-t border-brand-gold/10 text-brand-warm/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
           <div className="space-y-8">
@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-4 text-brand-gold">
                 <Zap className="w-4 h-4" />
-                <span>800-ELITE-PROTO</span>
+                <span>800-NEXUS-CARE</span>
               </li>
             </ul>
           </div>

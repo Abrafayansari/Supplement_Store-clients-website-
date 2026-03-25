@@ -3,13 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ShoppingCart, ArrowRight, Lock, Mail, User, ShieldCheck, Zap, Activity, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 
 interface AuthProps {
     mode: 'login' | 'signup' | 'admin-login';
 }
 
 const Auth: React.FC<AuthProps> = ({ mode }) => {
-    const { login, signup, user } = useAuth();
+    const { login, signup, user, logout } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -23,10 +24,15 @@ const Auth: React.FC<AuthProps> = ({ mode }) => {
 
     useEffect(() => {
         if (user) {
-            if (user.role === 'ADMIN') navigate('/admin');
-            else navigate('/');
+            if (mode === 'admin-login' && user.role !== 'ADMIN') {
+                toast.error("Access denied. Admin privileges required.");
+                logout();
+            } else {
+                if (user.role === 'ADMIN') navigate('/admin');
+                else navigate('/');
+            }
         }
-    }, [user, navigate]);
+    }, [user, navigate, mode]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,11 +41,20 @@ const Auth: React.FC<AuthProps> = ({ mode }) => {
         try {
             if (mode === 'signup') {
                 await signup(name, email, password, role);
+                toast.success("Account created successfully!");
             } else {
                 await login(email, password);
+
+                // For admin-login mode, the validation is tricky here because `login` updates context.
+                // It's better to let context handle it or check `user` later, BUT `user` state updates asynchronously.
+                // A better approach is to check if `mode === 'admin-login'`, but `login` doesn't return the user object directly.
+                // We'll trust that if it succeeded, `useEffect` will handle redirects, but let's add a check in `useEffect` or update `login` to return the user.
+                // Wait, `login` throws if invalid. We'll catch it below.
+                toast.success("Logged in successfully!");
             }
         } catch (error: any) {
             console.error('Authentication error:', error);
+            toast.error(error.response?.data?.error || error.response?.data?.message || 'Authentication failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }
@@ -169,7 +184,7 @@ const Auth: React.FC<AuthProps> = ({ mode }) => {
                             <div className="flex justify-between items-center pr-1">
                                 <label className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.2em]">Password</label>
                                 {mode !== 'signup' && (
-                                    <Link to="/forgot-password" size="sm" className="text-[9px] font-black text-brand-gold hover:text-brand transition-colors uppercase tracking-widest">
+                                    <Link to="/forgot-password" className="text-[9px] font-black text-brand-gold hover:text-brand transition-colors uppercase tracking-widest">
                                         Forgot Password?
                                     </Link>
                                 )}

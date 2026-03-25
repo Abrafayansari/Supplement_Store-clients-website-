@@ -107,12 +107,12 @@ const AdminDashboard: React.FC = () => {
 
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'PENDING': return 'bg-white text-brand-matte/40 border-brand-matte/10';
+      case 'PENDING': return 'bg-brand-warm text-brand-matte/40 border-brand-matte/10';
       case 'PROCESSING': return 'bg-brand/10 text-brand border-brand/20';
       case 'SHIPPED': return 'bg-brand-gold/10 text-brand-gold border-brand-gold/20';
-      case 'DELIVERED': return 'bg-brand text-white border-brand shadow-[0_5px_15px_rgba(123,15,23,0.15)]';
+      case 'DELIVERED': return 'bg-brand text-brand-warm border-brand shadow-[0_5px_15px_rgba(123,15,23,0.15)]';
       case 'CANCELLED': return 'bg-red-50 text-red-600 border-red-100';
-      default: return 'bg-gray-100 text-gray-400';
+      default: return 'bg-brand-warm text-brand-matte/40';
     }
   };
 

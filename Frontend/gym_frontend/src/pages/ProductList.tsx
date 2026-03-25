@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import {
     Search,
     SlidersHorizontal,
@@ -9,9 +9,11 @@ import {
     ChevronDown,
     ChevronLeft,
     ChevronRight,
-    FlaskConical,
     Filter,
-    ArrowUpDown
+    ArrowUpDown,
+    Package,
+    Zap,
+    ArrowRight
 } from 'lucide-react';
 import { Category, fetchProducts, getCategories } from '../data/Product.tsx';
 import NexusLoader from '../components/NexusLoader';
@@ -50,6 +52,7 @@ const ProductList: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [error, setError] = useState(false);
     const [openCategories, setOpenCategories] = useState<Set<string>>(new Set());
     const activeCategory = searchParams.get('category') || 'All';
     const activeSubCategory = searchParams.get('subCategory') || 'All';
@@ -61,6 +64,7 @@ const ProductList: React.FC = () => {
     useEffect(() => {
         const loadPageData = async () => {
             setLoading(true);
+            setError(false);
             try {
                 const [catsRes, productsRes] = await Promise.all([
                     getCategories(),
@@ -79,9 +83,9 @@ const ProductList: React.FC = () => {
                 setProducts(productsRes.products);
                 setTotalPages(productsRes.totalPages);
                 setCatalogMaxPrice(productsRes.maxPrice);
-                console.log('Fetched products:', productsRes.products);
             } catch (err) {
                 console.error(err);
+                setError(true);
             } finally {
                 setLoading(false);
             }
@@ -118,72 +122,208 @@ const ProductList: React.FC = () => {
         setSortBy('newest');
     };
 
-    const FilterSidebar = () => (
-        <div className="space-y-12">
+    // const FilterSidebar = () => (
+    //     <div className="space-y-12 border p-2 py-4">
+    //         <div className="space-y-6">
+    //             <div className="flex items-center gap-3">
+    //                 <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
+    //                 <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Categories</h3>
+    //             </div>
+    //             <div className="space-y-4">
+    //                 <button
+    //                     onClick={removeCategory}
+    //                     className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${activeCategory === 'All' && activeSubCategory === 'All' ? 'bg-brand-matte text-brand-warm' : 'text-brand-matte/60 hover:bg-brand-warm hover:shadow-md'}`}
+    //                 >
+    //                     All Products
+    //                     <ChevronDown className={`w-3 h-3 transition-transform ${activeCategory === 'All' ? 'rotate-180' : ''}`} />
+    //                 </button>
+
+    //                 {categories.map(cat => {
+    //                     const isOpen = openCategories.has(cat.name);
+    //                     return (
+    //                         <Collapsible key={cat.name} open={isOpen} onOpenChange={(open) => {
+    //                             const newOpenCategories = new Set(openCategories);
+    //                             if (open) {
+    //                                 newOpenCategories.add(cat.name);
+    //                             } else {
+    //                                 newOpenCategories.delete(cat.name);
+    //                             }
+    //                             setOpenCategories(newOpenCategories);
+    //                         }}>
+    //                             <CollapsibleTrigger asChild>
+    //                                 <button
+    //                                     className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${normalize(activeCategory) === normalize(cat.name) ? 'border-brand text-brand' : 'border-transparent text-brand-matte/40 hover:text-brand-matte'}`}
+    //                                 >
+    //                                     {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+    //                                     <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+    //                                 </button>
+    //                             </CollapsibleTrigger>
+    //                             <CollapsibleContent className="space-y-1">
+    //                                 <div className="pl-4 space-y-1">
+    //                                     {cat.subCategories.map(sub => (
+    //                                         <button
+    //                                             key={sub}
+    //                                             onClick={() => {
+    //                                                 setSearchParams(prev => {
+    //                                                     const params = new URLSearchParams(prev);
+    //                                                     params.set('category', cat.name);
+    //                                                     params.set('subCategory', sub);
+    //                                                     return params;
+    //                                                 });
+    //                                                 setIsFilterOpen(false);
+    //                                             }}
+    //                                             className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${normalize(activeSubCategory) === normalize(sub) ? 'bg-brand text-white shadow-lg' : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'}`}
+    //                                         >
+    //                                             {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+    //                                         </button>
+    //                                     ))}
+    //                                 </div>
+    //                             </CollapsibleContent>
+    //                         </Collapsible>
+    //                     );
+    //                 })}
+    //             </div>
+    //         </div>
+
+    //         <div className="space-y-6">
+    //             <div className="flex items-center gap-3">
+    //                 <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
+    //                 <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Price Range</h3>
+    //             </div>
+    //             <div className="px-2 space-y-6">
+    //                 <input
+    //                     type="range"
+    //                     min="0"
+    //                     max={catalogMaxPrice}
+    //                     step="10"
+    //                     value={maxPrice ?? catalogMaxPrice}
+    //                     onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+    //                     className="w-full accent-brand-gold bg-brand-matte/10 h-1.5 appearance-none cursor-pointer rounded-full"
+    //                 />
+    //                 <div className="flex justify-between items-center">
+    //                     <div className="bg-white border border-brand-matte/5 px-3 py-1 rounded-sm text-[10px] font-black text-brand-matte/40">MIN Rs.0</div>
+    //                     <div className="text-brand font-black text-sm italic tracking-tighter underline underline-offset-4 decoration-brand-gold/30">MAX Rs.{maxPrice ?? catalogMaxPrice}</div>
+    //                 </div>
+    //             </div>
+    //         </div>
+
+    //         <button
+    //             onClick={clearAllFilters}
+    //             className="w-full py-4 border border-brand text-brand text-[10px] font-black uppercase tracking-[0.3em] hover:bg-brand hover:text-white transition-luxury"
+    //         >
+    //             Reset Filters
+    //         </button>
+    //     </div>
+    // );
+    const FilterSidebar = () => {
+    const [isCategoriesOpen, setIsCategoriesOpen] = useState(true); // outer collapsible
+
+    return (
+        <div className="space-y-12 border p-2 py-4">
+
+            {/* ── OUTER: "Categories" collapsible ── */}
+            <Collapsible open={isCategoriesOpen} onOpenChange={setIsCategoriesOpen}>
+                <div className="space-y-6">
+                    <CollapsibleTrigger asChild>
+                        <button className="flex items-center justify-between w-full px-2">
+                            <div className="flex items-center gap-3">
+                                <div className="w-1.5 h-1.5 bg-brand-gold rotate-45" />
+                                <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">
+                                    Categories
+                                </h3>
+                            </div>
+                            <ChevronDown
+                                className={`w-3 h-3 transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`}
+                            />
+                        </button>
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent className="space-y-4">
+
+                        {/* "All Products" button */}
+                        <button
+                            onClick={removeCategory}
+                            className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${
+                                activeCategory === 'All' && activeSubCategory === 'All'
+                                    ? 'bg-brand-matte text-brand-warm'
+                                    : 'text-brand-matte/60 hover:bg-brand-warm hover:shadow-md'
+                            }`}
+                        >
+                            All Products
+                        </button>
+
+                        {/* ── INNER: Each category is its own collapsible ── */}
+                        {categories.map(cat => {
+                            const isOpen = openCategories.has(cat.name);
+                            return (
+                                <Collapsible
+                                    key={cat.name}
+                                    open={isOpen}
+                                    onOpenChange={(open) => {
+                                        const next = new Set(openCategories);
+                                        open ? next.add(cat.name) : next.delete(cat.name);
+                                        setOpenCategories(next);
+                                    }}
+                                >
+                                    {/* Category trigger */}
+                                    <CollapsibleTrigger asChild>
+                                        <button
+                                            className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${
+                                                normalize(activeCategory) === normalize(cat.name)
+                                                    ? 'border-brand text-brand'
+                                                    : 'border-transparent text-brand-matte/40 hover:text-brand-matte'
+                                            }`}
+                                        >
+                                            {cat.name
+                                                .split(/[- ]/)
+                                                .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                                                .join(' ')}
+                                            <ChevronDown
+                                                className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
+                                    </CollapsibleTrigger>
+
+                                    {/* Subcategories */}
+                                    <CollapsibleContent className="space-y-1">
+                                        <div className="pl-4 space-y-1">
+                                            {cat.subCategories.map(sub => (
+                                                <button
+                                                    key={sub}
+                                                    onClick={() => {
+                                                        setSearchParams(prev => {
+                                                            const params = new URLSearchParams(prev);
+                                                            params.set('category', cat.name);
+                                                            params.set('subCategory', sub);
+                                                            return params;
+                                                        });
+                                                        setIsFilterOpen(false);
+                                                    }}
+                                                    className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${
+                                                        normalize(activeSubCategory) === normalize(sub)
+                                                            ? 'bg-brand text-white shadow-lg'
+                                                            : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'
+                                                    }`}
+                                                >
+                                                    {sub
+                                                        .split(/[- ]/)
+                                                        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                                                        .join(' ')}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            );
+                        })}
+                    </CollapsibleContent>
+                </div>
+            </Collapsible>
+
+            {/* ── Price Range (unchanged) ── */}
             <div className="space-y-6">
                 <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
-                    <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Categories</h3>
-                </div>
-                <div className="space-y-4">
-                    <button
-                        onClick={removeCategory}
-                        className={`flex items-center justify-between w-full text-left text-[11px] font-bold uppercase tracking-widest px-4 py-3 transition-all rounded-sm ${activeCategory === 'All' && activeSubCategory === 'All' ? 'bg-brand-matte text-white' : 'text-brand-matte/60 hover:bg-white hover:shadow-md'}`}
-                    >
-                        All Products
-                        <ChevronDown className={`w-3 h-3 transition-transform ${activeCategory === 'All' ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    {categories.map(cat => {
-                        const isOpen = openCategories.has(cat.name);
-                        return (
-                            <Collapsible key={cat.name} open={isOpen} onOpenChange={(open) => {
-                                const newOpenCategories = new Set(openCategories);
-                                if (open) {
-                                    newOpenCategories.add(cat.name);
-                                } else {
-                                    newOpenCategories.delete(cat.name);
-                                }
-                                setOpenCategories(newOpenCategories);
-                            }}>
-                                <CollapsibleTrigger asChild>
-                                    <button
-                                        className={`flex items-center justify-between w-full text-left text-[11px] font-black uppercase tracking-widest px-4 py-2 transition-all border-l-2 ${normalize(activeCategory) === normalize(cat.name) ? 'border-brand text-brand' : 'border-transparent text-brand-matte/40 hover:text-brand-matte'}`}
-                                    >
-                                        {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
-                                        <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                                    </button>
-                                </CollapsibleTrigger>
-                                <CollapsibleContent className="space-y-1">
-                                    <div className="pl-4 space-y-1">
-                                        {cat.subCategories.map(sub => (
-                                            <button
-                                                key={sub}
-                                                onClick={() => {
-                                                    setSearchParams(prev => {
-                                                        const params = new URLSearchParams(prev);
-                                                        params.set('category', cat.name);
-                                                        params.set('subCategory', sub);
-                                                        return params;
-                                                    });
-                                                    setIsFilterOpen(false);
-                                                }}
-                                                className={`flex items-center justify-between w-full text-left text-[10px] font-bold uppercase tracking-widest px-4 py-2 transition-all rounded-sm ${normalize(activeSubCategory) === normalize(sub) ? 'bg-brand text-white shadow-lg' : 'text-brand-matte/50 hover:bg-white hover:text-brand-matte hover:shadow-sm'}`}
-                                            >
-                                                {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </CollapsibleContent>
-                            </Collapsible>
-                        );
-                    })}
-                </div>
-            </div>
-
-            <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-brand-gold rotate-45"></div>
+                    <div className="w-1.5 h-1.5 bg-brand-gold rotate-45" />
                     <h3 className="text-[11px] font-black text-brand-matte uppercase tracking-[0.4em]">Price Range</h3>
                 </div>
                 <div className="px-2 space-y-6">
@@ -211,6 +351,7 @@ const ProductList: React.FC = () => {
             </button>
         </div>
     );
+};
 
     const getSortLabel = () => {
         switch (sortBy) {
@@ -222,23 +363,23 @@ const ProductList: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-brand-warm selection:bg-brand selection:text-white">
+        <div className="min-h-screen bg-white selection:bg-brand selection:text-white">
 
             {/* 1. DARK HERO SECTION */}
             <div className="bg-brand-matte pt-32 pb-24 relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
                 <div className="absolute top-0 right-0 p-20 opacity-5">
-                    <FlaskConical className="w-96 h-96 text-white" />
+                    <img src="/assets/dumbbell.svg" alt="dumbbell" className="w-96 h-96" />
                 </div>
 
                 <div className="max-w-[1700px] mx-auto px-6 relative z-10">
-                    <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
-                        <div className="space-y-6">
+                    <div className="flex px-4 flex-col lg:flex-row justify-between items-end gap-12">
+                        <div className=" space-y-6">
                             <div className="flex items-center gap-4">
                                 <Badge className="bg-brand-gold text-brand-matte font-black rounded-none px-3 py-1 border-none">SHOP</Badge>
                                 <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Products Available</span>
                             </div>
-                            <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
+                            <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85]">
                                 Shop <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-white shine-gold">All Products</span>
                             </h1>
@@ -262,7 +403,7 @@ const ProductList: React.FC = () => {
             <div className="max-w-[1700px] mx-auto px-6 -mt-10 relative z-20 pb-40">
 
                 {/* TOOLBAR (FLOATING CARD) */}
-                <div className="bg-white border-b-4 border-brand-gold shadow-[0_20px_40px_rgba(0,0,0,0.05)] p-6 mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div className="bg-white border-b-4 border-brand-gold shadow-[0_20px_40px_rgba(0,0,0,0.05)] p-4 mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
 
                     <div className="flex items-center gap-8 w-full md:w-auto overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
                         <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
@@ -373,6 +514,30 @@ const ProductList: React.FC = () => {
                             <div className="flex items-center justify-center min-h-[400px]">
                                 <NexusLoader />
                             </div>
+                        ) : error ? (
+                            <div className="py-32 text-center space-y-8 bg-white/50 border border-brand-matte/5 p-12 overflow-hidden relative">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-brand-gold animate-shimmer"></div>
+                                <div className="w-20 h-20 bg-brand-gold/10 flex items-center justify-center mx-auto rounded-none border border-brand-gold/20 relative group">
+                                    <Zap className="w-10 h-10 text-brand-gold group-hover:scale-110 transition-transform" />
+                                </div>
+                                <div className="space-y-4">
+                                    <h3 className="text-3xl font-black text-brand-matte uppercase tracking-tighter italic">Connection Lost</h3>
+                                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-matte/40 max-w-sm mx-auto italic leading-relaxed">
+                                        We are having trouble connecting to our servers. Our nutritional database seems to be momentarily offline.
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setPage(1);
+                                            setLoading(true);
+                                        }}
+                                        className="btn-luxury px-12 py-5 text-[11px] hover:shadow-brand/20 mx-auto group"
+                                    >
+                                        <span className="flex items-center gap-4">
+                                            Re-establish Connection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
                         ) : processedProducts.length > 0 ? (
                             <>
                                 <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8' : 'flex flex-col gap-6'}`}>
@@ -409,9 +574,9 @@ const ProductList: React.FC = () => {
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4">
-                                                        <button className="btn-luxury px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] relative overflow-hidden">
-                                                            Add to Cart
-                                                        </button>
+                                                        <Link to={`/product/${product.id}`} className="btn-luxury px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] relative overflow-hidden">
+                                                            View Details
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             )}
@@ -449,7 +614,7 @@ const ProductList: React.FC = () => {
                             </>
                         ) : (
                             <div className="py-32 text-center space-y-8 bg-white/50 border border-brand-matte/5 p-12">
-                                <Search className="w-16 h-16 text-brand-matte/10 mx-auto" />
+                                <Package className="w-16 h-16 text-brand-matte/10 mx-auto" />
                                 <div className="space-y-4">
                                     <p className="text-3xl font-black text-brand-matte/20 uppercase tracking-tighter">No Matches Found</p>
                                     <p className="text-[11px] font-bold uppercase tracking-widest text-brand-matte/40 max-w-sm mx-auto">The requested product is not found in the current inventory.</p>

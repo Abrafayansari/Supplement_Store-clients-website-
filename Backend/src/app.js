@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bodyparser from "express"
 import { router } from "./routes/Routes.js"
 import cookieParser from "cookie-parser"; // << here
 

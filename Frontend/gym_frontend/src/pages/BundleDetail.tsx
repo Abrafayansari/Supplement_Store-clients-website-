@@ -62,11 +62,6 @@ const BundleDetail: React.FC = () => {
 
     const handleBuyNow = async () => {
         if (!bundle) return;
-        if (!isAuthenticated) {
-            toast.error("Please login to purchase");
-            navigate('/login');
-            return;
-        }
 
         // For Buy Now, we add to cart and redirect immediately
         setAddingToCart(true);
@@ -87,16 +82,19 @@ const BundleDetail: React.FC = () => {
 
     const handleWishlistAll = async () => {
         if (!bundle) return;
-        if (!isAuthenticated) {
-            toast.error("Please login to wishlist items");
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            toast.error("Please login to add items to your wishlist");
             navigate('/login');
             return;
         }
+
         try {
             for (const product of bundle.products) {
                 const isItemWishlisted = await checkIfWishlisted(product.id);
                 if (!isItemWishlisted) {
-                    await addToWishlist(product.id);
+                    await addToWishlist(product);
                 }
             }
             toast.success(`Successfully added items to your wishlist`);
@@ -140,7 +138,7 @@ const BundleDetail: React.FC = () => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="aspect-square bg-white border border-brand-matte/5 relative group overflow-hidden shadow-2xl"
+                            className="aspect-square bg-brand-warm border border-brand-matte/5 relative group overflow-hidden shadow-2xl"
                         >
                             <img
                                 src={bundle.image || (bundle.products[0]?.images?.[0]) || "https://images.unsplash.com/photo-1579722820308-d74e571900a9?auto=format&fit=crop&q=80&w=1200"}

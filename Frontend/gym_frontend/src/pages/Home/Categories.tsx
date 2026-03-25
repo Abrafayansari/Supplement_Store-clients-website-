@@ -66,9 +66,9 @@ const Categories = () => {
   if (!categories.length) return null;
 
   return (
-    <div className="relative group/slider">
-      {/* Navigation Buttons */}
-      <div className="absolute top-1/2 -left-4 md:-left-8 -translate-y-1/2 z-30 opacity-0 group-hover/slider:opacity-100 transition-all duration-300 hidden lg:block">
+    <div className="relative group/slider overflow-y-visible">
+      {/* Left Navigation Button */}
+      <div className="absolute top-1/2 -left-12 md:-left-16 -translate-y-1/2 z-30 opacity-0 group-hover/slider:opacity-100 transition-all duration-300 hidden lg:block">
         <button
           onClick={() => scroll('left')}
           className="w-14 h-14 bg-brand-gold text-brand-matte flex items-center justify-center shadow-2xl hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 rounded-none"
@@ -77,7 +77,8 @@ const Categories = () => {
         </button>
       </div>
 
-      <div className="absolute top-1/2 -right-4 md:-right-8 -translate-y-1/2 z-30 opacity-0 group-hover/slider:opacity-100 transition-all duration-300 hidden lg:block">
+      {/* Right Navigation Button */}
+      <div className="absolute top-1/2 -right-12 md:-right-16 -translate-y-1/2 z-30 opacity-0 group-hover/slider:opacity-100 transition-all duration-300 hidden lg:block">
         <button
           onClick={() => scroll('right')}
           className="w-14 h-14 bg-brand-gold text-brand-matte flex items-center justify-center shadow-2xl hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 rounded-none"
@@ -89,11 +90,12 @@ const Categories = () => {
       {/* Horizontal Scroll Area */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto gap-8 pb-12 transition-all no-scrollbar scroll-smooth cursor-grab active:cursor-grabbing"
+        className="flex overflow-x-auto gap-12 pb-16 pt-8 px-4 transition-all no-scrollbar scroll-smooth cursor-grab active:cursor-grabbing overflow-y-visible"
         style={{
           scrollSnapType: 'x mandatory',
           scrollbarWidth: 'none',
-          msOverflowStyle: 'none'
+          msOverflowStyle: 'none',
+          overflowY: 'visible'
         }}
       >
         {categories.map((category, index) => {
@@ -109,12 +111,13 @@ const Categories = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="min-w-[200px] md:min-w-[260px] lg:min-w-[300px] aspect-[4/5] scroll-snap-align-start select-none"
+              className="min-w-[370px] md:min-w-[440px] lg:min-w-[500px] h-[420px] md:h-[480px]"
               style={{ scrollSnapAlign: 'start' }}
+              whileHover={{ y: -12, scale: 1.05 }}
             >
               <Link
                 to={`/products?category=${category.name}`}
-                className="group relative block w-full h-full overflow-hidden bg-brand-matte border border-white/5 shadow-2xl transition-all duration-700 active:scale-[0.98]"
+                className="group relative block w-full h-full overflow-hidden bg-gradient-to-br from-brand-warm to-brand-warm border border-brand-matte/10 shadow-lg hover:shadow-2xl transition-all duration-700 active:scale-[0.98] rounded-3xl"
               >
                 {/* Image with overlay */}
                 <img
@@ -127,7 +130,7 @@ const Categories = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-matte via-brand-matte/10 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-700 pointer-events-none" />
 
                 {/* Decorative Frame */}
-                <div className="absolute inset-4 border border-white/0 group-hover:border-white/10 transition-all duration-700 pointer-events-none" />
+                <div className="absolute inset-4 border border-transparent group-hover:border-brand-matte/5 transition-all duration-700 pointer-events-none" />
 
                 {/* Content */}
                 <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end items-center text-center">
@@ -136,7 +139,7 @@ const Categories = () => {
                       Explore Now
                     </span>
 
-                    <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 italic leading-[1.1] group-hover:text-brand-gold transition-colors duration-500 px-2" title={category.name}>
+                    <h3 className="text-2xl md:text-3xl font-black text-brand-matte uppercase tracking-tighter mb-4 italic leading-[1.1] group-hover:text-brand transition-colors duration-500 px-2" title={category.name}>
                       {category.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                     </h3>
 
@@ -144,34 +147,20 @@ const Categories = () => {
                   </div>
 
                   {/* Quick Action Icon */}
-                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-x-6 group-hover:translate-x-0">
-                    <div className="w-10 h-10 bg-white text-brand-matte flex items-center justify-center shadow-2xl hover:bg-brand-gold transition-colors group/btn">
-                      <ArrowRight className="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform" />
+                  <div className="absolute bottom-6 opacity-0 group-hover:opacity-100 transition-all duration-700 transform scale-75 group-hover:scale-100">
+                    <div className="w-12 h-12 bg-brand-gold text-brand-matte flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 group/btn rounded-full border-2 border-brand-matte">
+                      <ArrowRight className="w-6 h-6 transform group-hover/btn:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </div>
 
                 {/* Hover Glow Effect */}
-                <div className="absolute -inset-24 bg-brand-gold/10 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 rounded-full -z-10 pointer-events-none" />
+                <div className="absolute -inset-20 bg-gradient-to-r from-brand-gold/10 to-brand/5 blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 rounded-full -z-10 pointer-events-none" />
               </Link>
             </motion.div>
           );
         })}
       </div>
-
-      {/* Scroll indicator */}
-      {/* <div className="flex justify-center items-center gap-3 mt-8">
-        {categories.map((_, i) => (
-          <div
-            key={i}
-            className="h-1 bg-white/10 transition-all duration-500 rounded-full"
-            style={{
-              width: categories.length > 5 ? '12px' : '20px',
-              backgroundColor: i === 0 ? 'rgba(201, 162, 119, 0.8)' : 'rgba(255, 255, 255, 0.1)'
-            }}
-          />
-        ))}
-      </div> */}
     </div>
   );
 };

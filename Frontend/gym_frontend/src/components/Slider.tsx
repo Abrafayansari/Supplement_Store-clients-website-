@@ -36,9 +36,9 @@ const Slider: React.FC<SliderProps> = ({ products, loading }) => {
       animate={{ scale: isHovered ? 1.02 : 1 }}
       transition={{ type: "spring", stiffness: 70, damping: 25 }}
     >
-      {/* Edge Fades - Changed from black to white */}
-      <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-white via-white/80 to-transparent z-20 pointer-events-none"></div>
-      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-white via-white/80 to-transparent z-20 pointer-events-none"></div>
+      {/* Edge Fades - Using brand tokens */}
+      <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-brand-warm via-brand-warm/80 to-transparent z-20 pointer-events-none"></div>
+      <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-brand-warm via-brand-warm/80 to-transparent z-20 pointer-events-none"></div>
 
       {/* Column 1: Downward */}
       <div className="flex-1">

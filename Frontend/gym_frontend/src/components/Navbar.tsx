@@ -4,7 +4,7 @@ import { ShoppingCart, User, Search, Menu, X, Heart, Package, LayoutDashboard, C
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../contexts/CartContext.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
-import { ToastContainer } from 'react-toast';
+import { toast } from 'sonner';
 import logo from '../assets/nexus_logo.jpg';
 import { getCategories, Category } from '../data/Product';
 
@@ -54,12 +54,11 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-white/90 border-b border-black/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-white/80 border-b border-white/10 backdrop-blur-md py-3'}`}>
-        <ToastContainer />
+      <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-brand-warm/90 border-b border-brand-matte/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-brand-warm/80 border-b border-brand-matte/5 backdrop-blur-md py-2'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 md:h-20">
+          <div className="flex justify-between items-center h-12 md:h-14">
             <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-              <img src={logo} alt="Nexus Logo" className="h-8 w-auto sm:h-10 object-contain transition-luxury group-hover:scale-110" />
+              <img src={logo} alt="Nexus Logo" className="h-6 w-auto sm:h-8 object-contain transition-luxury group-hover:scale-110" />
               <span className="text-xl sm:text-2xl md:text-3xl tracking-tighter uppercase text-brand font-brand">
                 NEXUS
               </span>
@@ -78,8 +77,8 @@ const Navbar: React.FC = () => {
                   Shop <ChevronDown className="w-3 h-3 group-hover/shop-dropdown:rotate-180 transition-transform" />
                 </Link>
 
-                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-[600px] opacity-0 translate-y-2 pointer-events-none group-hover/shop-dropdown:opacity-100 group-hover/shop-dropdown:translate-y-0 group-hover/shop-dropdown:pointer-events-auto transition-all duration-300 z-[70]">
-                  <div className="bg-white border border-brand-matte/10 shadow-2xl p-8 grid grid-cols-3 gap-8 backdrop-blur-xl">
+                <div className="absolute left-1/2 -translate-x-1/2 mt-1 w-[600px] opacity-0 translate-y-2 pointer-events-none group-hover/shop-dropdown:opacity-100 group-hover/shop-dropdown:translate-y-0 group-hover/shop-dropdown:pointer-events-auto transition-all duration-300 z-[70] pt-4">
+                  <div className="bg-brand-warm border border-brand-matte/10 shadow-2xl p-8 grid grid-cols-3 gap-8 backdrop-blur-xl">
                     {categories.map((cat) => (
                       <div key={cat.name} className="space-y-4">
                         <Link
@@ -134,7 +133,7 @@ const Navbar: React.FC = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search..."
-                        className="w-full bg-white border border-brand-matte/10 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest outline-none focus:border-brand-gold transition-all"
+                        className="w-full bg-brand-warm border border-brand-matte/10 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest outline-none focus:border-brand-gold transition-all"
                       />
                     </motion.form>
                   )}
@@ -151,33 +150,46 @@ const Navbar: React.FC = () => {
               {/* Account - Mini on Mobile */}
               {user ? (
                 <div className="relative group/user-menu">
-                  <button className="flex items-center gap-2 p-0.5 sm:p-1 sm:pl-3 rounded-full bg-white border border-brand-matte/10 hover:border-brand-gold/50 transition-luxury shadow-sm">
+                  <button className="flex items-center gap-2 p-0.5 sm:p-1 sm:pl-3 rounded-full bg-brand-warm border border-brand-matte/10 hover:border-brand-gold/50 transition-luxury shadow-sm">
                     <span className="text-[10px] font-black uppercase tracking-widest text-brand-matte/70 hidden md:block">
                       {user.name.split(' ')[0]}
                     </span>
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand flex items-center justify-center border border-brand-gold/30">
-                      <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                      <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-matte" />
                     </div>
                   </button>
 
                   {/* Dropdown Menu (Desktop) */}
-                  <div className="absolute right-0 mt-2 w-56 opacity-0 translate-y-2 pointer-events-none group-hover/user-menu:opacity-100 group-hover/user-menu:translate-y-0 group-hover/user-menu:pointer-events-auto transition-all duration-300 z-[70] hidden lg:block">
-                    <div className="bg-white border border-brand-matte/10 shadow-2xl overflow-hidden p-2 backdrop-blur-xl">
+                  <div className="absolute right-0 top-full w-56 opacity-0 translate-y-2 pointer-events-none group-hover/user-menu:opacity-100 group-hover/user-menu:translate-y-0 group-hover/user-menu:pointer-events-auto transition-all duration-300 z-[70] hidden lg:block pt-2">
+                    <div className="bg-brand-warm border border-brand-matte/10 shadow-2xl overflow-hidden p-2 backdrop-blur-xl">
                       <div className="px-4 py-3 border-b border-brand-matte/5 mb-2">
                         <p className="text-[10px] font-black text-brand-matte uppercase tracking-tighter truncate">{user.name}</p>
                         <p className="text-[9px] font-bold text-brand-gold uppercase tracking-[0.2em]">{user.role}</p>
                       </div>
-                      {isAdmin && (
-                        <Link to="/admin" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand-matte hover:bg-brand-gold/10 transition-luxury border-b border-brand-matte/5 mb-2">
-                          <LayoutDashboard className="w-4 h-4" /> Admin Console
-                        </Link>
+                      
+                      {isAdmin ? (
+                        <>
+                          <Link to="/admin" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand-matte hover:bg-brand-gold/10 transition-luxury border-b border-brand-matte/5 mb-2">
+                            <LayoutDashboard className="w-4 h-4" /> Admin Console
+                          </Link>
+                          <Link to="/admin/products" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold hover:bg-brand-matte/5 transition-luxury">
+                            <Package className="w-4 h-4" /> Manage Products
+                          </Link>
+                          <Link to="/admin/orders" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold hover:bg-brand-matte/5 transition-luxury">
+                            <ShoppingCart className="w-4 h-4" /> Manage Orders
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link to="/profile" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold hover:bg-brand-matte/5 transition-luxury">
+                            <User className="w-4 h-4" /> Account Settings
+                          </Link>
+                          <Link to="/profile" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold hover:bg-brand-matte/5 transition-luxury">
+                            <Package className="w-4 h-4" /> Order History
+                          </Link>
+                        </>
                       )}
-                      <Link to="/profile" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold hover:bg-brand-matte/5 transition-luxury">
-                        <User className="w-4 h-4" /> Account Settings
-                      </Link>
-                      <Link to="/profile" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-matte/60 hover:text-brand-gold hover:bg-brand-matte/5 transition-luxury">
-                        <Package className="w-4 h-4" /> Order History
-                      </Link>
+
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-white hover:bg-brand transition-luxury mt-2 border-t border-brand-matte/5 pt-4"
@@ -193,11 +205,13 @@ const Navbar: React.FC = () => {
                 </Link>
               )}
 
-              <Link to="/wishlist" className="hidden sm:block p-1.5 sm:p-2 transition-luxury text-black hover:text-brand-gold">
+              <Link to="/wishlist" className="hidden sm:block p-1.5 sm:p-2 transition-luxury text-brand-matte hover:text-brand-gold">
+
                 <Heart className="w-5 h-5 stroke-[1.5px]" />
               </Link>
 
-              <Link to="/cart" className="relative p-1.5 sm:p-2 transition-luxury text-black hover:text-brand-gold">
+              <Link to="/cart" className="relative p-1.5 sm:p-2 transition-luxury text-brand-matte hover:text-brand-gold">
+
                 <ShoppingCart className="w-5 h-5 stroke-[1.5px]" />
                 {cartCount > 0 && (
                   <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-0 bg-brand text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-brand-matte">

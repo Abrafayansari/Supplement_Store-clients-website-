@@ -94,12 +94,12 @@ const OrderManagement: React.FC = () => {
 
   const getStatusDisplay = (status: string) => {
     switch (status) {
-      case 'PENDING': return { icon: <Clock className="w-3 h-3" />, class: 'bg-white text-brand-matte/40 border-brand-matte/10' };
+      case 'PENDING': return { icon: <Clock className="w-3 h-3" />, class: 'bg-brand-warm text-brand-matte/40 border-brand-matte/10' };
       case 'PROCESSING': return { icon: <RefreshCw className="w-3 h-3 animate-spin" />, class: 'bg-brand/10 text-brand border-brand/20' };
       case 'SHIPPED': return { icon: <Truck className="w-3 h-3" />, class: 'bg-brand-gold/10 text-brand-gold border-brand-gold/20' };
-      case 'DELIVERED': return { icon: <CheckCircle className="w-3 h-3" />, class: 'bg-brand text-white border-brand shadow-[0_5px_15px_rgba(123,15,23,0.15)]' };
+      case 'DELIVERED': return { icon: <CheckCircle className="w-3 h-3" />, class: 'bg-brand text-brand-warm border-brand shadow-[0_5px_15px_rgba(123,15,23,0.15)]' };
       case 'CANCELLED': return { icon: <XCircle className="w-3 h-3" />, class: 'bg-red-50 text-red-600 border-red-100' };
-      default: return { icon: null, class: 'bg-white text-brand-matte/40 border-brand-matte/10' };
+      default: return { icon: null, class: 'bg-brand-warm text-brand-matte/40 border-brand-matte/10' };
     }
   };
 

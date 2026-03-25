@@ -5,7 +5,7 @@ import { ShieldCheck, Zap, Target, Award } from 'lucide-react';
 
 const About: React.FC = () => {
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-brand-warm overflow-hidden">
       {/* 1. Hero Section */}
       <section className="relative h-[60vh] bg-brand-matte flex items-center justify-center text-center">
         <div className="absolute inset-0 opacity-30">
@@ -83,7 +83,7 @@ const About: React.FC = () => {
             },
             {
               icon: <Award className="w-12 h-12 text-brand-gold" />,
-              title: "ELITE STATUS",
+              title: "PREMIUM STATUS",
               desc: "Supplying the nutritional foundation for world-class athletes."
             },
             {

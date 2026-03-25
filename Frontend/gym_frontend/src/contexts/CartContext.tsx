@@ -43,15 +43,29 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addToCart = async (product: Product, quantity = 1, variantId?: string) => {
     try {
-      await api.post('/addtocart', {
-        productId: product.id,
-        variantId: variantId,
-        quantity: quantity
-      });
+      const token = localStorage.getItem("token");
+      const variant = variantId && product.variants ? product.variants.find(v => v.id === variantId) : null;
+      
+      if (token) {
+        await api.post('/addtocart', {
+          productId: product.id,
+          variantId: variantId,
+          quantity: quantity
+        });
+        await showCart(); // Refresh cart from server
+      } else {
+        // Local add to cart
+        setItems(prev => {
+          const existing = prev.find(item => item.product.id === product.id && item.variant?.id === variantId);
+          if (existing) {
+            return prev.map(item => item.id === existing.id ? { ...item, quantity: item.quantity + quantity } : item);
+          } else {
+            return [...prev, { id: Date.now().toString(), product, variant: variant || undefined, quantity }];
+          }
+        });
+      }
 
-      const variant = variantId ? product.variants.find(v => v.id === variantId) : null;
       toast.success(`${product.name} ${variant ? `(${variant.size}${variant.flavor ? ` - ${variant.flavor}` : ''})` : ''} added to cart.`);
-      await showCart(); // Refresh cart from server
     } catch (err: any) {
       console.error("Add to cart error:", err);
     }
@@ -59,7 +73,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const removeFromCart = async (itemId: string) => {
     try {
-      await api.delete(`/removecart/${itemId}`);
+      const token = localStorage.getItem("token");
+      if (token) {
+        await api.delete(`/removecart/${itemId}`);
+      }
       setItems(prev => prev.filter(item => item.id !== itemId));
     } catch (err: any) {
       console.error("Remove from cart error:", err);
@@ -69,10 +86,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const updateQuantity = async (itemId: string, quantity: number, productId: string, variantId?: string) => {
     try {
-      await api.post(
-        '/updatecart',
-        { productId, variantId, quantity }
-      );
+      const token = localStorage.getItem("token");
+      if (token) {
+        await api.post(
+          '/updatecart',
+          { productId, variantId, quantity }
+        );
+      }
 
       if (quantity <= 0) {
         setItems(prev => prev.filter(item => item.id !== itemId));
@@ -93,7 +113,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const clearCart = async () => {
     try {
-      await api.delete('/clearcart');
+      const token = localStorage.getItem("token");
+      if (token) {
+        await api.delete('/clearcart');
+      }
       setItems([]);
     } catch (err: any) {
       console.error("Clear cart error:", err);

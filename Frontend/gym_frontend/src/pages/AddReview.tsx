@@ -54,7 +54,7 @@ const AddReview: React.FC = () => {
                     <ArrowLeft className="w-4 h-4" /> Back to Product
                 </button>
 
-                <div className="bg-white p-12 shadow-2xl border border-brand-matte/5">
+                <div className="bg-brand-warm p-12 shadow-2xl border border-brand-matte/5">
                     <h1 className="text-4xl font-black text-brand-matte uppercase tracking-tighter mb-4">Write a <span className="text-brand">Review</span></h1>
                     <p className="text-brand-matte/40 text-[10px] font-black uppercase tracking-widest mb-12">Your feedback helps us maintain standard quality.</p>
 

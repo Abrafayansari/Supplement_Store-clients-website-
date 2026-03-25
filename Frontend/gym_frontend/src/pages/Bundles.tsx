@@ -78,7 +78,7 @@ const Bundles: React.FC = () => {
                 </div>
 
                 {bundles.length === 0 ? (
-                    <div className="py-32 text-center bg-white border border-brand-matte/5 p-12 shadow-sm">
+                    <div className="py-32 text-center bg-brand-warm border border-brand-matte/5 p-12 shadow-sm">
                         <Package className="w-16 h-16 text-brand/20 mx-auto mb-6" />
                         <h2 className="text-2xl font-black text-brand-matte/50 uppercase tracking-tighter mb-4">No bundles available at the moment</h2>
                         <button onClick={() => navigate('/products')} className="inline-block bg-brand hover:bg-brand-matte text-white font-black uppercase tracking-widest py-4 px-10 transition-all shadow-xl shadow-brand/10 text-[12px]">
@@ -90,7 +90,7 @@ const Bundles: React.FC = () => {
                         {bundles.map((bundle) => (
                             <div
                                 key={bundle.id}
-                                className="bg-white group relative overflow-hidden flex flex-col md:flex-row border border-brand-matte/5 hover:shadow-2xl transition-all duration-700 shadow-sm"
+                                className="bg-brand-warm group relative overflow-hidden flex flex-col md:flex-row border border-brand-matte/5 hover:shadow-2xl transition-all duration-700 shadow-sm"
                             >
                                 {/* Visual Side */}
                                 <div
@@ -133,7 +133,7 @@ const Bundles: React.FC = () => {
                                         </div>
 
                                         <p className="text-brand-matte/40 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] mb-8 border-b border-brand-matte/5 pb-6 line-clamp-2">
-                                            {bundle.description || "Comprehensive package for elite performance."}
+                                            {bundle.description || "Comprehensive package for high performance."}
                                         </p>
 
                                         <div className="space-y-4 mb-8">

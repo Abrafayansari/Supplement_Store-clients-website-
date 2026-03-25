@@ -33,7 +33,7 @@ const Cart: React.FC = () => {
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center bg-brand-warm min-h-screen">
-        <div className="w-24 h-24 bg-white border border-brand-matte/5 rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
+        <div className="w-24 h-24 bg-brand-warm border border-brand-matte/5 rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
           <ShoppingBag className="w-12 h-12 text-brand" />
         </div>
         <h1 className="text-4xl font-black text-brand-matte mb-4 uppercase tracking-tighter">Your cart is empty</h1>

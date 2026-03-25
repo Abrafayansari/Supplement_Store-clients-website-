@@ -22,6 +22,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchProducts, fetchProductById } from '../data/Product.tsx';
 import { useCart } from '../contexts/CartContext.tsx';
+import { useWishlist } from '../contexts/WishlistContext.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { Product } from '@/types.ts';
 import api from '../lib/api';
@@ -43,6 +44,8 @@ const ProductDetail: React.FC = () => {
     const [activeImageIdx, setActiveImageIdx] = useState(0);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const { addToWishlist, removeFromWishlist, checkIfWishlisted } = useWishlist();
+    const [isWishlisted, setIsWishlisted] = useState(false);
 
     const { user, isAuthenticated } = useAuth();
     const [reviewRating, setReviewRating] = useState(0);
@@ -70,6 +73,10 @@ const ProductDetail: React.FC = () => {
                         setSelectedSize(first.size);
                         setSelectedFlavor(first.flavor || '');
                         setSelectedVariant(first);
+                    }
+                    if (fetchedProduct?.id) {
+                        const exists = await checkIfWishlisted(fetchedProduct.id);
+                        setIsWishlisted(exists);
                     }
                 }
                 const { products: relatedProducts } = await fetchProducts({ sort: 'newest', limit: 4 });
@@ -106,7 +113,7 @@ const ProductDetail: React.FC = () => {
     const availableFlavors = Array.from(new Set(product?.variants?.filter(v => v.size === selectedSize).map(v => v.flavor).filter(Boolean) || []));
 
     if (fetching) return (
-        <div className="min-h-screen flex items-center justify-center bg-brand-matte">
+        <div className="min-h-screen flex items-center justify-center bg-brand-warm">
             <NexusLoader />
         </div>
     );
@@ -117,10 +124,6 @@ const ProductDetail: React.FC = () => {
         e.preventDefault();
         if (product.variants && product.variants.length > 0 && !selectedVariant) {
             toast.error("Please select a product variant");
-            return;
-        }
-        if (!localStorage.getItem("token")) {
-            toast.error("Login required");
             return;
         }
         if (loading) return;
@@ -138,11 +141,30 @@ const ProductDetail: React.FC = () => {
             toast.error("Please select a product variant");
             return;
         }
-        if (!localStorage.getItem("token")) {
-            toast.error("Login required");
+        navigate('/checkout', { state: { singleItem: { product, quantity, variant: selectedVariant, variantId: selectedVariant?.id } } });
+    };
+
+    const handleWishlistToggle = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        
+        const token = localStorage.getItem("token");
+        if (!token && !isWishlisted) {
+            toast.error("Please login to add items to your wishlist");
+            navigate('/login');
             return;
         }
-        navigate('/checkout', { state: { singleItem: { product, quantity, variant: selectedVariant, variantId: selectedVariant?.id } } });
+
+        try {
+            if (isWishlisted) {
+                await removeFromWishlist(product.id);
+                setIsWishlisted(false);
+            } else {
+                await addToWishlist(product);
+                setIsWishlisted(true);
+            }
+        } catch (err) {
+            console.error("Wishlist error", err);
+        }
     };
 
     return (
@@ -177,7 +199,7 @@ const ProductDetail: React.FC = () => {
                             {/* Accent Background */}
                             <div className="absolute inset-0 bg-brand/5 blur-3xl rounded-full"></div>
 
-                            <div className="aspect-square glass-panel flex items-center justify-center p-8 border border-brand-matte/5 relative overflow-hidden group-hover:border-brand-matte/10 transition-luxury">
+                            <div className="aspect-square glass-panel flex items-center justify-center p-8 border border-brand-matte/10 relative overflow-hidden group-hover:border-brand-matte/20 transition-luxury">
                                 <AnimatePresence mode="wait">
                                     <motion.img
                                         key={activeImageIdx}
@@ -247,7 +269,7 @@ const ProductDetail: React.FC = () => {
                                 <span className="text-[11px] font-black uppercase tracking-[0.4em] text-brand-matte/30">SKU: {product.id.slice(-8).toUpperCase()}</span>
                             </div>
 
-                            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-tight text-brand-matte">
+                            <h1 className="text-3xl md:text-5xl font-bold uppercase tracking-tight leading-tight text-brand-matte">
                                 {product.name}
                             </h1>
 
@@ -268,8 +290,8 @@ const ProductDetail: React.FC = () => {
                         {/* Price Section */}
                         <div className="space-y-2 p-6 glass-panel border border-brand-matte/5 border-l-brand-gold border-l-4">
                             <div className="flex items-baseline gap-4">
-                                <span className="text-4xl font-black italic tracking-tighter text-brand-matte">
-                                    Rs.{(selectedVariant ? (selectedVariant.discountPrice || selectedVariant.price) : (product.discountPrice || product.price)).toLocaleString()}
+                                <span className="text-3xl md:text-4xl font-bold tracking-tight text-brand-matte">
+                                    Rs. {(selectedVariant ? (selectedVariant.discountPrice || selectedVariant.price) : (product.discountPrice || product.price)).toLocaleString()}
                                 </span>
                                 {((selectedVariant?.discountPrice && selectedVariant.discountPrice < selectedVariant.price) || (product.discountPrice && product.discountPrice < product.price)) && (
                                     <span className="text-xl text-brand-matte/20 line-through font-bold">
@@ -375,17 +397,20 @@ const ProductDetail: React.FC = () => {
 
                                 {/* Quick Actions */}
                                 <div className="flex gap-3">
-                                    <button className="w-[54px] h-[54px] glass-panel border border-brand-matte/10 flex items-center justify-center text-brand-matte hover:text-brand-gold transition-luxury hover:border-brand-gold group">
-                                        <Heart className="w-5 h-5 transition-luxury group-hover:scale-110" />
+                                    <button 
+                                      onClick={handleWishlistToggle}
+                                      className={`w-[54px] h-[54px] bg-white border border-brand-matte/10 flex items-center justify-center transition-colors group shadow-sm rounded-none ${isWishlisted ? 'text-brand border-brand bg-brand/5' : 'text-brand-matte hover:text-brand'}`}
+                                    >
+                                        <Heart className="w-5 h-5 transition-transform group-hover:scale-110" fill={isWishlisted ? "currentColor" : "none"} />
                                     </button>
                                 </div>
                             </div>
 
                             <button
                                 onClick={handleBuyNow}
-                                className="w-full h-[54px] border border-brand-matte/10 text-brand-matte/60 flex items-center justify-center font-black uppercase tracking-[0.3em] text-[10px] hover:bg-brand-matte hover:text-white transition-luxury"
+                                className="w-full h-[54px] border border-brand-matte/10 bg-white text-brand-matte/80 flex items-center justify-center font-bold uppercase tracking-widest text-[11px] hover:bg-brand-warm transition-colors shadow-sm"
                             >
-                                Secure Buy It Now
+                                Buy It Now
                             </button>
                         </div>
                     </div>
@@ -546,7 +571,7 @@ const ProductDetail: React.FC = () => {
                                                         onChange={(e) => setReviewComment(e.target.value)}
                                                         rows={4}
                                                         className="w-full bg-white/10 border border-white/20 p-5 text-white outline-none focus:border-brand-gold transition-luxury resize-none text-sm placeholder:text-white/40 font-bold"
-                                                        placeholder="Share your experience with Nexus Elite..."
+                                                        placeholder="Share your experience..."
                                                     />
                                                 </div>
 

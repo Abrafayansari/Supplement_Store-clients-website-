@@ -111,7 +111,7 @@ const BundleManagement: React.FC = () => {
                             />
                         </div>
                         <button className="flex items-center justify-center gap-4 px-12 py-5 bg-white border border-brand-matte/5 font-black text-[11px] uppercase tracking-[0.2em] text-brand-matte hover:text-brand-gold transition-all shadow-sm">
-                            <Filter className="w-4 h-4" /> Filter Protocols
+                            <Filter className="w-4 h-4" /> Filter Bundles
                         </button>
                     </div>
 
@@ -119,7 +119,7 @@ const BundleManagement: React.FC = () => {
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="bg-brand-warm/50">
-                                    <th className="px-10 py-8 text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.4em]">Protocol Name</th>
+                                    <th className="px-10 py-8 text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.4em]">Bundle Name</th>
                                     <th className="px-10 py-8 text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.4em]">Components</th>
                                     <th className="px-10 py-8 text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.4em]">Valuation</th>
                                     <th className="px-10 py-8 text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.4em] text-right">Operations</th>
@@ -130,7 +130,7 @@ const BundleManagement: React.FC = () => {
                                     <tr>
                                         <td colSpan={4} className="py-32 text-center">
                                             <Package className="w-16 h-16 text-brand-matte/5 mx-auto mb-4" />
-                                            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-brand-matte/20">No matching protocols identified</p>
+                                            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-brand-matte/20">No matching bundles identified</p>
                                         </td>
                                     </tr>
                                 ) : (
@@ -169,14 +169,14 @@ const BundleManagement: React.FC = () => {
                                                     <button
                                                         onClick={() => handleEdit(bundle)}
                                                         className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand-gold/5 hover:border-brand-gold/20 transition-all duration-300"
-                                                        title="Edit Protocol"
+                                                        title="Edit Bundle"
                                                     >
                                                         <Edit2 className="w-4 h-4" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(bundle.id)}
                                                         className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand hover:text-white hover:border-brand transition-all duration-300"
-                                                        title="Delete Protocol"
+                                                        title="Delete Bundle"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>

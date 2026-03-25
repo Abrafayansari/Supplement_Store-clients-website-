@@ -53,7 +53,7 @@ const Wishlist: React.FC = () => {
                 </h1>
 
                 {items.length === 0 ? (
-                    <div className="text-center py-20 bg-white border border-brand-matte/5 p-12 shadow-sm">
+                    <div className="text-center py-20 bg-brand-warm border border-brand-matte/5 p-12 shadow-sm">
                         <Heart className="w-16 h-16 text-brand/20 mx-auto mb-6" />
                         <h2 className="text-2xl font-black text-brand-matte/50 uppercase tracking-tighter mb-4">Your wishlist is empty</h2>
                         <Link to="/products" className="inline-block bg-brand hover:bg-brand-matte text-white font-black uppercase tracking-widest py-4 px-10 transition-all shadow-xl shadow-brand/10 text-[12px]">
@@ -63,7 +63,7 @@ const Wishlist: React.FC = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {items.map(item => (
-                            <div key={item.id} className="group relative bg-white border border-brand-matte/5 rounded-none overflow-hidden transition-all duration-500 hover:shadow-2xl flex flex-col h-[440px] shadow-sm">
+                            <div key={item.id} className="group relative bg-brand-warm border border-brand-matte/5 rounded-none overflow-hidden transition-all duration-500 hover:shadow-2xl flex flex-col h-[440px] shadow-sm">
                                 <Link to={`/product/${item.product.id}`} className="block h-[280px] overflow-hidden relative bg-brand-warm/30">
                                     <img
                                         src={item.product.images[0]}
@@ -80,7 +80,7 @@ const Wishlist: React.FC = () => {
                                             e.preventDefault();
                                             handleRemove(item.product.id);
                                         }}
-                                        className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-white text-brand-matte hover:text-white hover:bg-red-500 transition-all shadow-md z-10"
+                                        className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-brand-warm text-brand-matte hover:text-brand-warm hover:bg-brand transition-all shadow-md z-10"
                                         title="Remove from Wishlist"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -97,7 +97,7 @@ const Wishlist: React.FC = () => {
                                         ADD TO CART
                                     </button>
                                 </Link>
-                                <div className="p-5 flex-grow flex flex-col justify-between bg-white">
+                                <div className="p-5 flex-grow flex flex-col justify-between bg-brand-warm">
                                     <div>
                                         <p className="text-[9px] font-black text-brand-gold uppercase tracking-[0.2em] mb-1">
                                             {item.product.category}

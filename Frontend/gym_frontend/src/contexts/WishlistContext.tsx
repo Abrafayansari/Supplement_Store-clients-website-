@@ -6,7 +6,7 @@ import { useAuth } from './AuthContext';
 
 interface WishlistContextType {
     items: WishlistItem[];
-    addToWishlist: (productId: string) => Promise<void>;
+    addToWishlist: (product: any) => Promise<void>;
     removeFromWishlist: (productId: string) => Promise<void>;
     checkIfWishlisted: (productId: string) => Promise<boolean>;
     showWishlist: () => Promise<void>;
@@ -18,10 +18,31 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [items, setItems] = useState<WishlistItem[]>([]);
     const { user } = useAuth();
 
+    const WISHLIST_STORAGE_KEY = 'nexus_wishlist_local';
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
+            if (stored) {
+                setItems(JSON.parse(stored));
+            }
+        }
+    }, [user]);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token && !user) {
+            localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(items));
+        }
+    }, [items, user]);
+
     const showWishlist = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
-            setItems([]);
+            // Already handled by local storage effect
+            const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
+            if (stored) setItems(JSON.parse(stored));
             return;
         }
         try {
@@ -32,14 +53,18 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
         }
     };
 
-    const addToWishlist = async (productId: string) => {
+    const addToWishlist = async (product: any) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
-                toast.error("Please login to add items to wishlist.");
+                setItems(prev => {
+                    if (prev.find(item => item.product.id === product.id)) return prev;
+                    return [...prev, { id: Date.now().toString(), product: product, productId: product.id, user: 'local', createdAt: new Date().toISOString() } as any];
+                });
+                toast.success("Added to wishlist.");
                 return;
             }
-            await api.post('/wishlist', { productId });
+            await api.post('/wishlist', { productId: product.id });
             showWishlist();
         } catch (err: any) {
             console.error("Add to wishlist error:", err);
@@ -49,7 +74,10 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
     const removeFromWishlist = async (productId: string) => {
         try {
             const token = localStorage.getItem("token");
-            if (!token) return;
+            if (!token) {
+                setItems(prev => prev.filter(item => item.productId !== productId && item.product.id !== productId));
+                return;
+            }
 
             await api.delete(`/wishlist/${productId}`);
 
@@ -61,7 +89,9 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const checkIfWishlisted = async (productId: string) => {
         const token = localStorage.getItem("token");
-        if (!token) return false;
+        if (!token) {
+            return items.some(item => item.product.id === productId);
+        }
         try {
             const res = await api.get(`/wishlist/exists/${productId}`);
             return res.data.exists;
