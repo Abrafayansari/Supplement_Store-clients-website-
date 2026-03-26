@@ -1,10 +1,15 @@
-# NEXUS UI Improvements: Categories Cards, New Arrivals Circles, Headline Placement
+# ProductDetail Theme Update TODO
 
-## Steps:
-- [x] 1. Increase Categories card sizes in Categories.tsx (320px+ responsive) - Partial ✓
-- [ ] 2. Edit Home.tsx: Place Categories/Top Collections section under banner slider, make slim (py-20)
-- [ ] 3. Optimize New Arrivals circles in Home.tsx: clamp responsive sizes, perfect image fit (max-w-[85%]), big/small screen
-- [ ] 4. Update TODO.md with completion
-- [ ] 5. Test responsiveness: cd Frontend/gym_frontend && npm run dev
+## Plan Steps:
+- [x] Step 0: Create TODO.md
+- [x] Step 1: Add CSS custom properties to GLOBAL_STYLE for theme consistency.
+- [x] Step 2: Replace all hardcoded colors with theme vars/BRAND_COLOR.
+- [x] Step 3: Update stock indicator from green to brand tint.
 
-Current progress: All edits complete - Categories larger, new arrivals circles same size/responsive with perfect fit, ready for test. Headline section ready to uncomment under banner if needed.
+- [ ] Step 4: Standardize buttons, borders, hovers to theme.
+- [ ] Step 5: Update tab underlines, headings, review form.
+- [ ] Step 6: Verify no old colors (#e8222e green) remain.
+- [ ] Step 7: Update TODO.md complete and attempt_completion.
+
+Current progress: TODO created, starting ProductDetail edits...
+

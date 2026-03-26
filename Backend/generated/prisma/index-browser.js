@@ -261,6 +261,29 @@ exports.Prisma.BundleScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AdminSettingsScalarFieldEnum = {
+  id: 'id',
+  city: 'city',
+  province: 'province',
+  country: 'country',
+  address: 'address',
+  email: 'email',
+  phone: 'phone',
+  whatsapp: 'whatsapp',
+  headline: 'headline',
+  youtubeUrl: 'youtubeUrl',
+  facebookUrl: 'facebookUrl',
+  instagramUrl: 'instagramUrl',
+  linkedinUrl: 'linkedinUrl',
+  deliveryCharges: 'deliveryCharges',
+  accountTitle: 'accountTitle',
+  bankAccountHolder: 'bankAccountHolder',
+  iban: 'iban',
+  bankName: 'bankName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -317,7 +340,8 @@ exports.Prisma.ModelName = {
   Address: 'Address',
   Notification: 'Notification',
   Banner: 'Banner',
-  Bundle: 'Bundle'
+  Bundle: 'Bundle',
+  AdminSettings: 'AdminSettings'
 };
 
 /**

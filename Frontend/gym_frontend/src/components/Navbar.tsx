@@ -54,18 +54,11 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-brand-warm/90 border-b border-brand-matte/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-brand-warm/80 border-b border-brand-matte/5 backdrop-blur-md py-2'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${isScrolled ? 'bg-white border-b border-brand-matte/5 py-1 shadow-lg backdrop-blur-xl' : 'bg-white border-b border-brand-matte/5 backdrop-blur-md py-2'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-12 md:h-14">
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-              <img src={logo} alt="Nexus Logo" className="h-6 w-auto sm:h-8 object-contain transition-luxury group-hover:scale-110" />
-              <span className="text-xl sm:text-2xl md:text-3xl tracking-tighter uppercase text-brand font-brand">
-                NEXUS
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8 xl:space-x-12">
+            {/* Left side: Navigation Links */}
+            <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 flex-1">
               <Link to="/" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Home</Link>
 
               {/* Shop Dropdown */}
@@ -77,33 +70,35 @@ const Navbar: React.FC = () => {
                   Shop <ChevronDown className="w-3 h-3 group-hover/shop-dropdown:rotate-180 transition-transform" />
                 </Link>
 
-                <div className="absolute left-1/2 -translate-x-1/2 mt-1 w-[600px] opacity-0 translate-y-2 pointer-events-none group-hover/shop-dropdown:opacity-100 group-hover/shop-dropdown:translate-y-0 group-hover/shop-dropdown:pointer-events-auto transition-all duration-300 z-[70] pt-4">
-                  <div className="bg-brand-warm border border-brand-matte/10 shadow-2xl p-8 grid grid-cols-3 gap-8 backdrop-blur-xl">
-                    {categories.map((cat) => (
-                      <div key={cat.name} className="space-y-4">
-                        <Link
-                          to={`/products?category=${cat.name}`}
-                          className="text-[10px] font-black uppercase tracking-[0.2em] text-brand border-b border-brand/10 pb-2 block truncate"
-                          title={cat.name}
-                        >
-                          {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
-                        </Link>
-                        <div className="space-y-2">
-                          {cat.subCategories.map((sub) => (
-                            <Link
-                              key={sub}
-                              to={`/products?subCategory=${sub}`}
-                              className="block text-[10px] font-bold text-brand-matte/60 hover:text-brand-gold uppercase tracking-widest transition-colors"
-                            >
-                              {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
-                            </Link>
-                          ))}
+                <div className="absolute left-0 mt-0 w-max max-w-[calc(100vw-2rem)] opacity-0 -translate-y-2 pointer-events-none group-hover/shop-dropdown:opacity-100 group-hover/shop-dropdown:translate-y-0 group-hover/shop-dropdown:pointer-events-auto transition-all duration-500 z-[70] pt-4 origin-top-left group-hover/shop-dropdown:scale-100 scale-95">
+                  <div className="bg-brand-warm border border-brand-matte/10 shadow-2xl p-10 backdrop-blur-3xl">
+                    <div className={`grid gap-12 ${categories.length > 6 ? 'grid-cols-4 w-[1000px]' : categories.length > 3 ? 'grid-cols-3 w-[800px]' : 'grid-cols-2 w-[500px]'} max-w-full`}>
+                      {categories.map((cat) => (
+                        <div key={cat.name} className="space-y-6">
+                          <Link
+                            to={`/products?category=${cat.name}`}
+                            className="text-[11px] font-black uppercase tracking-[0.3em] text-brand border-b-2 border-brand-gold pb-3 block truncate"
+                            title={cat.name}
+                          >
+                            {cat.name.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                          </Link>
+                          <div className="space-y-3">
+                            {cat.subCategories.slice(0, 8).map((sub) => (
+                              <Link
+                                key={sub}
+                                to={`/products?subCategory=${sub}`}
+                                className="block text-[10px] font-bold text-brand-matte/60 hover:text-brand transition-luxury uppercase tracking-[0.2em] transform hover:translate-x-1"
+                              >
+                                {sub.split(/[- ]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                              </Link>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                     {categories.length === 0 && (
-                      <div className="col-span-3 text-center py-4 text-brand-matte/40 text-[10px] uppercase font-black tracking-widest">
-                        Loading Categories...
+                      <div className="text-center py-10 text-brand-matte/40 text-[11px] uppercase font-black tracking-widest border border-dashed border-brand-matte/10">
+                        Synthesizing Nutritional Catalog...
                       </div>
                     )}
                   </div>
@@ -115,8 +110,15 @@ const Navbar: React.FC = () => {
               <Link to="/contact" className="text-[11px] font-black uppercase tracking-[0.4em] transition-luxury text-brand-matte hover:text-brand-gold">Contact</Link>
             </div>
 
-            {/* Icons and Mobile Trigger */}
-            <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6">
+            {/* Middle: Logo Only */}
+            <div className="flex-1 flex justify-center">
+              <Link to="/" className="flex items-center group shrink-0">
+                <img src={logo} alt="Nexus Logo" className="h-8 w-auto sm:h-10 object-contain transition-luxury group-hover:scale-110" />
+              </Link>
+            </div>
+
+            {/* Right side: Icons and Mobile Trigger */}
+            <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6 flex-1 justify-end">
               <div className="relative flex items-center">
                 <AnimatePresence mode="wait">
                   {isSearchOpen && (
@@ -166,7 +168,7 @@ const Navbar: React.FC = () => {
                         <p className="text-[10px] font-black text-brand-matte uppercase tracking-tighter truncate">{user.name}</p>
                         <p className="text-[9px] font-bold text-brand-gold uppercase tracking-[0.2em]">{user.role}</p>
                       </div>
-                      
+
                       {isAdmin ? (
                         <>
                           <Link to="/admin" className="flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-gold hover:text-brand-matte hover:bg-brand-gold/10 transition-luxury border-b border-brand-matte/5 mb-2">
@@ -248,7 +250,6 @@ const Navbar: React.FC = () => {
               <div className="flex justify-between items-center mb-12 sm:mb-16">
                 <div className="flex items-center gap-3">
                   <img src={logo} alt="Logo" className="h-10 w-auto" />
-                  <span className="text-2xl font-black text-brand-gold uppercase tracking-tighter">NEXUS</span>
                 </div>
                 <button
                   type="button"

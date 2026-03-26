@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Search, MoreHorizontal, UserX, Shield, ArrowLeft } from 'lucide-react';
+import { Users, Search, Trash2, UserX, Shield, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
@@ -65,6 +65,20 @@ const UserManagement: React.FC = () => {
     }
   };
 
+  const deleteUser = async (userId: string) => {
+    if (!window.confirm("Are you sure you want to delete this account? This action cannot be undone.")) return;
+    try {
+      await axios.delete(`${API_URL}/admin/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success("User account deleted successfully");
+      fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user account");
+    }
+  };
+
   if (loading && users.length === 0) {
     return (
       <div className="min-h-screen bg-brand-warm flex items-center justify-center">
@@ -81,7 +95,7 @@ const UserManagement: React.FC = () => {
       <main className="relative p-6 md:p-12 max-w-[1600px] mx-auto w-full space-y-16">
         {/* Header Section */}
         <div className="space-y-10">
-          <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand-gold font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
+          <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform duration-500" />
             Back to Dashboard
           </Link>
@@ -102,13 +116,13 @@ const UserManagement: React.FC = () => {
             </div>
 
             <div className="relative group w-full xl:w-[450px]">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-matte/20 group-focus-within:text-brand-gold transition-colors w-5 h-5" />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-matte/20 group-focus-within:text-brand transition-colors w-5 h-5" />
               <input
                 type="text"
                 placeholder="SEARCH CUSTOMERS..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-16 pr-6 py-5 bg-white border border-brand-matte/5 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte w-full shadow-sm transition-all placeholder:text-brand-matte/20"
+                className="pl-16 pr-6 py-5 bg-white border border-brand-matte/5 outline-none focus:border-brand/40 text-[11px] font-black uppercase tracking-[0.3em] text-brand-matte w-full shadow-sm transition-all placeholder:text-brand-matte/20"
               />
             </div>
           </div>
@@ -138,11 +152,11 @@ const UserManagement: React.FC = () => {
                     <tr key={user.id} className="group hover:bg-brand-warm transition-all duration-500">
                       <td className="px-10 py-10">
                         <div className="flex items-center gap-6">
-                          <div className="w-16 h-16 bg-brand-matte text-brand-gold flex items-center justify-center font-black text-2xl border border-brand-gold/10 group-hover:scale-105 transition-transform duration-500 italic">
+                          <div className="w-16 h-16 bg-brand-matte text-brand flex items-center justify-center font-black text-2xl border border-brand/10 group-hover:scale-105 transition-transform duration-500 italic">
                             {user.name.charAt(0)}
                           </div>
                           <div>
-                            <p className="font-black text-brand-matte uppercase tracking-tight text-xl leading-none group-hover:text-brand-gold transition-colors">{user.name}</p>
+                            <p className="font-black text-brand-matte uppercase tracking-tight text-xl leading-none group-hover:text-brand transition-colors">{user.name}</p>
                             <p className="text-[10px] text-brand-matte/30 font-bold uppercase mt-2 tracking-widest">{user.email}</p>
                           </div>
                         </div>
@@ -157,7 +171,7 @@ const UserManagement: React.FC = () => {
                         </span>
                       </td>
                       <td className="px-10 py-10 text-right">
-                        <div className="flex items-center justify-end gap-3 translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                        <div className="flex items-center justify-end gap-3">
                           <button
                             onClick={() => suspendUser(user.id)}
                             title={user.status === 'Suspended' ? "Restore Access" : "Revoke Access"}
@@ -165,8 +179,12 @@ const UserManagement: React.FC = () => {
                           >
                             <UserX className="w-5 h-5" />
                           </button>
-                          <button className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand-gold/5 hover:border-brand-gold/20 transition-all duration-300">
-                            <MoreHorizontal className="w-5 h-5" />
+                          <button
+                            onClick={() => deleteUser(user.id)}
+                            title="Delete Account"
+                            className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all duration-300"
+                          >
+                            <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                       </td>
@@ -181,7 +199,7 @@ const UserManagement: React.FC = () => {
 
       <style>{`
         .shine-gold {
-          background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+          background: linear-gradient(90deg, #e8222e, #FFF, #e8222e);
           background-size: 200% auto;
           animation: gold-shine 5s linear infinite;
           -webkit-background-clip: text;

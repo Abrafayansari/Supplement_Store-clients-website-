@@ -8,7 +8,8 @@
     "dev": "nodemon src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "seed:admin-settings": "node src/seeds/seedAdminSettings.js"
   },
   "keywords": [],
   "author": "",

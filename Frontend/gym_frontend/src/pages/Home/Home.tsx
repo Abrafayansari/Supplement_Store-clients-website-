@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Zap, ShieldCheck, Target, Award, ShoppingCart } from 'lucide-react';
+import { ArrowRight, Zap, ShieldCheck, Target, Award, ShoppingCart, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchProducts, getCategories } from '../../data/Product.tsx';
 import NexusLoader from '../../components/NexusLoader';
@@ -89,31 +89,12 @@ const Home: React.FC = () => {
     }
   }, [initialProducts]);
 
-  const marqueeText = "ELITE PERFORMANCE • UNCOMPROMISING QUALITY • NEXUS LABORATORY TESTED • BEYOND THE LIMIT • ";
-
   return (
     <div className="pb-0 overflow-x-hidden bg-[#FAFAFA]">
       {/* Hero Banner Slider */}
       <AutomaticBannerSlider />
 
-      {/* INFINITE RUNNING HEADLINE - THIN, SLOW & WHITE */}
-      <div className="bg-brand-matte py-2 md:py-3 overflow-hidden border-y border-white/5 relative z-20">
-        <div className="flex whitespace-nowrap">
-          <motion.div
-            initial={{ x: 0 }}
-            animate={{ x: "-50%" }}
-            transition={{
-              repeat: Infinity,
-              duration: 50, // SLOWER: increased from 25 to 50
-              ease: "linear",
-            }}
-            className="flex items-center gap-4 text-white font-black text-xs md:text-sm tracking-[0.4em] uppercase"
-          >
-            <span className="px-6">{marqueeText}{marqueeText}{marqueeText}{marqueeText}</span>
-            <span className="px-6">{marqueeText}{marqueeText}{marqueeText}{marqueeText}</span>
-          </motion.div>
-        </div>
-      </div>
+      {/* Headline moved into AutomaticBannerSlider to reuse fetched banners and avoid extra API calls */}
 
       {/* New Arrivals - White Background, Medium Circles Centered */}
       <section id="new-arrivals" className="py-20 bg-white overflow-hidden border-b border-brand-matte/5 scroll-mt-24">
@@ -154,10 +135,10 @@ const Home: React.FC = () => {
                       
                       {/* Circle Overlay - Forced Circular Shape */}
                       <div className="absolute inset-0 bg-brand-matte/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px] rounded-full">
-                        <button className="bg-brand text-white px-5 py-3 flex items-center gap-2 shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all">
-                          <ShoppingCart size={16} />
-                          <span className="text-[9px] font-black uppercase tracking-widest">Select</span>
-                        </button>
+                        <div className="bg-brand text-white px-5 py-3 flex items-center gap-2 shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all">
+                          <Eye size={16} />
+                          <span className="text-[9px] font-black uppercase tracking-widest">View</span>
+                        </div>
                       </div>
                     </motion.div>
                   </div>
@@ -190,50 +171,75 @@ const Home: React.FC = () => {
             <div className="w-16 h-1 bg-brand-gold mx-auto mt-4"></div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {dynamicCategories.length === 0 ? (
-              <div className="col-span-full py-20 text-center text-brand-matte/40 font-black uppercase tracking-widest">
-                Loading categories...
-              </div>
-            ) : (
-              dynamicCategories.slice(0, 4).map((categoryName, index) => {
-                const products = goalProducts[categoryName] || [];
-                const currentImageIdx = goalImageIndices[categoryName] || 0;
-                const currentImage = products[currentImageIdx]?.images?.[0];
-                return (
-                  <motion.div
-                    key={index}
-                    className="relative group cursor-pointer aspect-[3/4] overflow-hidden rounded-sm shadow-lg mx-auto w-full max-w-[350px]"
-                    whileHover={{ scale: 1.02 }}
-                    onClick={() => navigate(`/products?category=${categoryName}`)}
-                  >
-                    {/* Full Bleed Image - No Grayscale, No Brightness Decrease */}
-                    {currentImage ? (
-                      <motion.img
-                        src={currentImage}
-                        alt={categoryName}
-                        className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-brand-matte/10 animate-pulse" />
-                    )}
-                    
-                    {/* Minimal Bottom Gradient Overlay for Text Legibility only */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Category Label at bottom center */}
-                    <div className="absolute bottom-0 left-0 right-0 p-8 z-10 text-center">
-                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-widest text-white leading-tight drop-shadow-2xl">
-                        {categoryName}
-                      </h3>
-                    </div>
-                  </motion.div>
-                );
-              })
-            )}
+          <div className="relative group">
+            {/* Navigation Buttons */}
+            <button 
+              onClick={() => {
+                const el = document.getElementById('goal-slider');
+                if (el) el.scrollBy({ left: -300, behavior: 'smooth' });
+              }}
+              className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 bg-white shadow-xl p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"
+            >
+              <ChevronLeft className="w-5 h-5 text-brand" />
+            </button>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('goal-slider');
+                if (el) el.scrollBy({ left: 300, behavior: 'smooth' });
+              }}
+              className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-white shadow-xl p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hidden md:block"
+            >
+              <ChevronRight className="w-5 h-5 text-brand" />
+            </button>
+
+            <div 
+              id="goal-slider"
+              className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory px-2"
+            >
+              {dynamicCategories.length === 0 ? (
+                <div className="w-full py-20 text-center text-brand-matte/40 font-black uppercase tracking-widest">
+                  Loading categories...
+                </div>
+              ) : (
+                dynamicCategories.map((categoryName, index) => {
+                  const products = goalProducts[categoryName] || [];
+                  const currentImageIdx = goalImageIndices[categoryName] || 0;
+                  const currentImage = products[currentImageIdx]?.images?.[0];
+                  return (
+                    <motion.div
+                      key={index}
+                      className="min-w-[280px] md:min-w-[320px] lg:min-w-[350px] relative group cursor-pointer aspect-[3/4] overflow-hidden rounded-sm shadow-lg snap-start"
+                      whileHover={{ scale: 1.02 }}
+                      onClick={() => navigate(`/products?category=${categoryName}`)}
+                    >
+                      {/* Full Bleed Image - No Grayscale, No Brightness Decrease */}
+                      {currentImage ? (
+                        <motion.img
+                          src={currentImage}
+                          alt={categoryName}
+                          className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.5 }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-brand-matte/10 animate-pulse" />
+                      )}
+                      
+                      {/* Minimal Bottom Gradient Overlay for Text Legibility only */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      {/* Category Label at bottom center */}
+                      <div className="absolute bottom-0 left-0 right-0 p-8 z-10 text-center">
+                        <h3 className="text-xl md:text-2xl font-black uppercase tracking-widest text-white leading-tight drop-shadow-2xl">
+                          {categoryName}
+                        </h3>
+                      </div>
+                    </motion.div>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       </section>

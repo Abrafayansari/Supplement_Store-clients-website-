@@ -72,7 +72,7 @@ const BundleManagement: React.FC = () => {
                 <div className="space-y-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                         <div className="space-y-8">
-                            <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand-gold font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
+                            <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
                                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform duration-500" />
                                 Back to Dashboard
                             </Link>
@@ -107,10 +107,10 @@ const BundleManagement: React.FC = () => {
                                 placeholder="SEARCH BUNDLES..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-16 pr-6 py-5 bg-white border border-brand-matte/5 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest text-brand-matte shadow-sm placeholder:text-brand-matte/20"
+                                className="w-full pl-16 pr-6 py-5 bg-white border border-brand-matte/5 outline-none focus:border-brand/40 text-[11px] font-black uppercase tracking-widest text-brand-matte shadow-sm placeholder:text-brand-matte/20"
                             />
                         </div>
-                        <button className="flex items-center justify-center gap-4 px-12 py-5 bg-white border border-brand-matte/5 font-black text-[11px] uppercase tracking-[0.2em] text-brand-matte hover:text-brand-gold transition-all shadow-sm">
+                        <button className="flex items-center justify-center gap-4 px-12 py-5 bg-white border border-brand-matte/5 font-black text-[11px] uppercase tracking-[0.2em] text-brand-matte hover:text-brand transition-all shadow-sm">
                             <Filter className="w-4 h-4" /> Filter Bundles
                         </button>
                     </div>
@@ -142,7 +142,7 @@ const BundleManagement: React.FC = () => {
                                                         <img src={bundle.image || '/placeholder.png'} alt={bundle.name} className="w-full h-full object-contain grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <span className="font-black text-brand-matte uppercase tracking-tight text-xl leading-none block group-hover:text-brand-gold transition-colors">{bundle.name}</span>
+                                                        <span className="font-black text-brand-matte uppercase tracking-tight text-xl leading-none block group-hover:text-brand transition-colors">{bundle.name}</span>
                                                         <span className="text-[9px] font-bold text-brand-matte/20 uppercase tracking-[0.4em] italic">REF_{bundle.id.slice(0, 8).toUpperCase()}</span>
                                                     </div>
                                                 </div>
@@ -158,7 +158,7 @@ const BundleManagement: React.FC = () => {
                                             </td>
                                             <td className="px-10 py-10">
                                                 <div className="flex flex-col gap-1">
-                                                    <span className="font-black text-brand-gold text-2xl italic tracking-tighter tabular-nums leading-none">Rs. {bundle.price.toLocaleString()}</span>
+                                                    <span className="font-black text-brand text-2xl italic tracking-tighter tabular-nums leading-none">Rs. {bundle.price.toLocaleString()}</span>
                                                     {bundle.originalPrice && (
                                                         <span className="text-[10px] text-brand-matte/20 font-bold line-through tracking-[0.2em] uppercase">MSRP: Rs. {bundle.originalPrice.toLocaleString()}</span>
                                                     )}
@@ -168,14 +168,14 @@ const BundleManagement: React.FC = () => {
                                                 <div className="flex items-center justify-end gap-3 translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
                                                     <button
                                                         onClick={() => handleEdit(bundle)}
-                                                        className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand-gold/5 hover:border-brand-gold/20 transition-all duration-300"
+                                                        className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand hover:bg-brand/5 hover:border-brand/20 transition-all duration-300"
                                                         title="Edit Bundle"
                                                     >
                                                         <Edit2 className="w-4 h-4" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(bundle.id)}
-                                                        className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand hover:text-white hover:border-brand transition-all duration-300"
+                                                        className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand hover:bg-brand hover:text-white hover:border-brand transition-all duration-300"
                                                         title="Delete Bundle"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
@@ -204,7 +204,7 @@ const BundleManagement: React.FC = () => {
 
             <style>{`
                 .shine-gold {
-                    background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+                    background: linear-gradient(90deg, #e8222e, #FFF, #e8222e);
                     background-size: 200% auto;
                     animation: gold-shine 5s linear infinite;
                     -webkit-background-clip: text;

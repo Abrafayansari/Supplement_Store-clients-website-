@@ -6,6 +6,7 @@ import { adminOnly } from "../middlewares/authorization.js";
 import { createProduct, getallproducts, getCategories, uploadbulkproducts, getProductById, updateProduct, deleteProduct } from "../controllers/ProductController.js";
 import upload from "../middlewares/uploads.js";
 import { getAdminStats, getAllUsers, suspendUser } from "../controllers/AdminController.js";
+import AdminSettingsController from "../controllers/AdminSettingsController.js";
 import { getNotifications, getUnreadCount, markAsReadAndDelete, deleteAllNotifications } from "../controllers/NotificationController.js";
 import { getBanners, createBanner, deleteBanner } from "../controllers/BannerController.js";
 import { createBundle, getBundles, getBundleById, updateBundle, deleteBundle } from "../controllers/BundleController.js";
@@ -76,3 +77,8 @@ router.get("/bundle/:id", getBundleById);
 router.post("/admin/bundles", authenticate, adminOnly, upload.single("image"), createBundle);
 router.put("/admin/bundles/:id", authenticate, adminOnly, upload.single("image"), updateBundle);
 router.delete("/admin/bundles/:id", authenticate, adminOnly, deleteBundle);
+
+// Admin Settings Routes
+router.get("/admin/settings", authenticate, adminOnly, (req, res) => AdminSettingsController.getSettings(req, res));
+router.put("/admin/settings", authenticate, adminOnly, (req, res) => AdminSettingsController.updateSettings(req, res));
+router.get("/delivery-charge/:province", (req, res) => AdminSettingsController.getDeliveryCharge(req, res));

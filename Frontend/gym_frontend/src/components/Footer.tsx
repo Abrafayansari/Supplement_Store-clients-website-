@@ -1,8 +1,11 @@
 
 import React from 'react';
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Zap } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Zap, Linkedin } from 'lucide-react';
+import { useAdmin } from '../contexts/AdminContext';
 
 const Footer: React.FC = () => {
+  const { adminData } = useAdmin();
+
   return (
     <footer className="bg-brand-matte border-t border-brand-gold/10 text-brand-warm/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -15,12 +18,29 @@ const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
-              Designed for results. 100% verified products for maximum performance. High quality. Zero compromise.
+              {adminData?.headline || "Designed for results. 100% verified products for maximum performance. High quality. Zero compromise."}
             </p>
             <div className="flex space-x-6">
-              <Instagram className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury" />
-              <Youtube className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury" />
-              <Twitter className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury" />
+              {adminData?.instagramUrl && (
+                <a href={adminData.instagramUrl} target="_blank" rel="noopener noreferrer" className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury">
+                  <Instagram className="w-5 h-5" />
+                </a>
+              )}
+              {adminData?.youtubeUrl && (
+                <a href={adminData.youtubeUrl} target="_blank" rel="noopener noreferrer" className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury">
+                  <Youtube className="w-5 h-5" />
+                </a>
+              )}
+              {adminData?.facebookUrl && (
+                <a href={adminData.facebookUrl} target="_blank" rel="noopener noreferrer" className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury">
+                  <Facebook className="w-5 h-5" />
+                </a>
+              )}
+              {adminData?.linkedinUrl && (
+                <a href={adminData.linkedinUrl} target="_blank" rel="noopener noreferrer" className="w-5 h-5 hover:text-brand-gold cursor-pointer transition-luxury">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              )}
             </div>
           </div>
 
@@ -47,12 +67,22 @@ const Footer: React.FC = () => {
             <ul className="space-y-6 text-[10px] font-bold uppercase tracking-[0.2em]">
               <li className="flex items-center gap-4">
                 <MapPin className="w-4 h-4 text-brand-gold" />
-                <span>Nexus Performance Lab, Karachi</span>
+                <span>{adminData?.city ? `${adminData.city}, ${adminData.province}` : "NEXUS Performance Lab, Karachi"}</span>
               </li>
-              <li className="flex items-center gap-4 text-brand-gold">
-                <Zap className="w-4 h-4" />
-                <span>800-NEXUS-CARE</span>
-              </li>
+              {(adminData?.phone || adminData?.whatsapp) && (
+                <li className="flex items-center gap-4 text-brand-gold">
+                  <Phone className="w-4 h-4" />
+                  <span>{adminData.phone || adminData.whatsapp}</span>
+                </li>
+              )}
+              {adminData?.email && (
+                <li className="flex items-center gap-4 text-brand-gold">
+                  <Mail className="w-4 h-4" />
+                  <a href={`mailto:${adminData.email}`} className="hover:text-white transition-luxury">
+                    {adminData.email}
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

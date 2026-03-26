@@ -20,22 +20,20 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const WISHLIST_STORAGE_KEY = 'nexus_wishlist_local';
 
+    // Hydrate from localStorage on mount so UI updates immediately (works logged-in or not)
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
-            if (stored) {
-                setItems(JSON.parse(stored));
-            }
-        }
-    }, [user]);
+        const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
+        if (stored) setItems(JSON.parse(stored));
+    }, []);
 
+    // Always persist wishlist to localStorage so it stays available across sessions
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token && !user) {
+        try {
             localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(items));
+        } catch (err) {
+            console.error('Failed to persist wishlist to localStorage', err);
         }
-    }, [items, user]);
+    }, [items]);
 
     const showWishlist = async () => {
         const token = localStorage.getItem("token");

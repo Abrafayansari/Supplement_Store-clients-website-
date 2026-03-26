@@ -424,10 +424,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                                         />
                                         <label
                                             htmlFor="image-upload"
-                                            className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand-gold group-hover:bg-brand-gold/5 transition-luxury shadow-sm"
+                                            className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand group-hover:bg-brand/5 transition-luxury shadow-sm"
                                         >
-                                            <ImageIcon className="w-8 h-8 text-brand-matte/10 group-hover:text-brand-gold mb-3 transition-colors" />
-                                            <span className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.3em] group-hover:text-brand-gold transition-colors">
+                                            <ImageIcon className="w-8 h-8 text-brand-matte/10 group-hover:text-brand mb-3 transition-colors" />
+                                            <span className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.3em] group-hover:text-brand transition-colors">
                                                 {images.length > 0 ? `${images.length} Media Selected` : 'Click to add product photos'}
                                             </span>
                                         </label>
@@ -456,7 +456,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                     ) : (
                         <div className="space-y-8 py-10">
                             <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-dashed border-brand-matte/5 rounded-none text-center space-y-4 shadow-sm">
-                                <div className="w-20 h-20 bg-brand-warm rounded-full flex items-center justify-center text-brand-gold">
+                                <div className="w-20 h-20 bg-brand-warm rounded-full flex items-center justify-center text-brand">
                                     <FileText className="w-10 h-10" />
                                 </div>
                                 <div className="space-y-2">
@@ -504,7 +504,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                         form={activeTab === 'manual' ? 'manual-form' : undefined}
                         onClick={activeTab === 'bulk' ? handleBulkSubmit : undefined}
                         disabled={loading}
-                        className="px-12 py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-gold transition-luxury shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
+                        className="px-12 py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-matte transition-luxury shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
                     >
                         {loading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />

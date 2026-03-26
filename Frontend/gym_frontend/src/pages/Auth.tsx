@@ -242,17 +242,7 @@ const Auth: React.FC<AuthProps> = ({ mode }) => {
                             </div>
                         </div>
 
-                        {mode === 'login' && (
-                            <div className="mt-8 bg-brand-warm/50 border border-black/5 p-5 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 bg-brand-gold text-white text-[8px] font-black px-2 py-1 uppercase tracking-widest">Demo Account</div>
-                                <p className="text-[9px] font-black text-brand-matte/30 uppercase mb-3 tracking-widest">Use these credentials to test</p>
-                                <div className="flex flex-col sm:flex-row justify-between gap-2 text-[10px] text-brand-matte/60 font-mono tracking-widest">
-                                    <span className="group-hover:text-brand-matte transition-colors">EMAIL: test@gmail.com</span>
-                                    <span className="hidden sm:inline text-black/10">|</span>
-                                    <span className="group-hover:text-brand-matte transition-colors">PASS: test4321</span>
-                                </div>
-                            </div>
-                        )}
+                       
                     </form>
                 </motion.div>
             </div>

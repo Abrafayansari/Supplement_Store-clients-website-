@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { CreditCard, Truck, ShieldCheck, CheckCircle, ArrowLeft, Lock, Loader2, Banknote, QrCode, UploadCloud, ChevronRight, PlusCircle, MapPin, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useAdmin } from '../contexts/AdminContext';
 import api from '../lib/api';
 import { Product } from '@/types';
 import { toast } from 'sonner';
@@ -30,6 +31,7 @@ interface LocationState {
 const Checkout: React.FC = () => {
   const { items: cartItems, clearCart, totalPrice: cartTotalPrice } = useCart();
   const { user, token } = useAuth();
+  const { getDeliveryCharge } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
@@ -54,9 +56,6 @@ const Checkout: React.FC = () => {
       : (state.singleItem!.product.discountPrice || state.singleItem!.product.price)) * state.singleItem!.quantity
     : cartTotalPrice;
 
-  const shipping = subtotal > 50 || subtotal === 0 ? 0 : 300;
-  const total = subtotal + shipping;
-
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -66,6 +65,10 @@ const Checkout: React.FC = () => {
     zipCode: '',
     country: 'Pakistan'
   });
+
+  // Get shipping charge based on selected province
+  const shipping = subtotal === 0 ? 0 : getDeliveryCharge(formData.state);
+  const total = subtotal + shipping;
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -226,7 +229,7 @@ const Checkout: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setShowNewAddressForm(!showNewAddressForm)}
-                      className="text-[9px] font-black text-brand-gold uppercase tracking-widest flex items-center gap-2 hover:text-white transition-colors"
+                      className="text-[9px] font-black text-brand-matte/40 uppercase hover:text-brand transition-colors"
                     >
                       {showNewAddressForm ? 'Select Saved' : '+ New Address'}
                     </button>
@@ -410,7 +413,7 @@ const Checkout: React.FC = () => {
 
         <aside className="bg-white border border-brand-matte/5 p-10 shadow-2xl sticky top-32">
           <h2 className="text-2xl font-black text-brand-matte uppercase tracking-tighter mb-10">Order Summary</h2>
-          <div className="space-y-8 mb-10 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+          <div className="space-y-8 p-2 mb-10 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
             {itemsToProcess.map(item => (
               <div key={item.product.id} className="flex gap-6 items-center">
                 <div className="w-20 h-20 bg-brand-warm border border-brand-matte/5 p-3 shrink-0 relative">

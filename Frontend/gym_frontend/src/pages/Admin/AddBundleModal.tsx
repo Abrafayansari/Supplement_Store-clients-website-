@@ -222,7 +222,7 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                                     />
                                     <label
                                         htmlFor="bundle-image-upload"
-                                        className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand-gold group-hover:bg-brand-gold/5 transition-luxury shadow-sm"
+                                        className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand group-hover:bg-brand/5 transition-luxury shadow-sm"
                                     >
                                         {image ? (
                                             <div className="w-full h-full p-2">
@@ -238,8 +238,8 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                                             </div>
                                         ) : (
                                             <>
-                                                <ImageIcon className="w-8 h-8 text-brand-matte/10 group-hover:text-brand-gold mb-3 transition-colors" />
-                                                <span className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.3em] group-hover:text-brand-gold transition-colors text-center px-4">
+                                                <ImageIcon className="w-8 h-8 text-brand-matte/10 group-hover:text-brand mb-3 transition-colors" />
+                                                <span className="text-[10px] font-black text-brand-matte/20 uppercase tracking-[0.3em] group-hover:text-brand transition-colors text-center px-4">
                                                     Add media asset
                                                 </span>
                                             </>
@@ -313,7 +313,7 @@ const AddBundleModal: React.FC<AddBundleModalProps> = ({ isOpen, onClose, onSucc
                     <button
                         form="bundle-form"
                         disabled={loading || selectedProductIds.length === 0}
-                        className="px-12 py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-gold transition-luxury shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
+                        className="px-12 py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-matte transition-luxury shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
                     >
                         {loading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />

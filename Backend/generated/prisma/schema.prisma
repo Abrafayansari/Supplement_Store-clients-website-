@@ -213,3 +213,32 @@ model Bundle {
   updatedAt     DateTime  @updatedAt
   products      Product[] @relation("BundleProducts")
 }
+
+model AdminSettings {
+  id                String   @id @default(uuid())
+  // Location Details
+  city              String?
+  province          String?
+  country           String?
+  address           String?
+  // Contact Information
+  email             String?
+  phone             String?
+  whatsapp          String?
+  // Business Information
+  headline          String?
+  // Social Media Links
+  youtubeUrl        String?
+  facebookUrl       String?
+  instagramUrl      String?
+  linkedinUrl       String?
+  // Delivery Charges (province-wise as JSON)
+  deliveryCharges   String?  @default("[]") // JSON array: [{ province: "Punjab", charge: 500 }]
+  // Payment Details
+  accountTitle      String?
+  bankAccountHolder String?
+  iban              String?
+  bankName          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

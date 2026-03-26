@@ -87,21 +87,26 @@ const AutomaticBannerSlider: React.FC = () => {
     if (banners.length === 0) return null;
 
     return (
+        <>
         <section className="relative w-screen h-[40vh] md:h-[60vh] lg:h-[75vh] min-h-[300px] overflow-hidden bg-white -ml-[calc(50vw-50%)] mb-0">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={banners[currentIndex].id}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1, ease: "easeInOut" }}
+                    className="absolute inset-0 w-full h-full bg-brand-warm"
                 >
                     <img
                         src={banners[currentIndex].image}
                         alt={banners[currentIndex].title || 'Sales Banner'}
-                        className="w-full h-full object-contain object-top "
+                        className="w-full h-full object-cover md:object-contain bg-brand-warm"
+                        loading="eager"
+                        fetchPriority="high"
                     />
+                    {/* Overlay for contrast if needed */}
+                    <div className="absolute inset-0 bg-black/5 pointer-events-none" />
                 </motion.div>
             </AnimatePresence>
 
@@ -120,7 +125,7 @@ const AutomaticBannerSlider: React.FC = () => {
                         <ChevronRight className="w-5 h-5" />
                     </button>
 
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex mb-2 gap-3 z-10">
+                    {/* <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex mb-2 gap-3 z-10">
                         {banners.map((_, index) => (
                             <button
                                 key={index}
@@ -129,10 +134,45 @@ const AutomaticBannerSlider: React.FC = () => {
                                     }`}
                             />
                         ))}
-                    </div>
+                    </div> */}
                 </>
             )}
         </section>
+
+        {/* HEADLINE: if API-provided banners are present, show their title(s); otherwise render default marquee text */}
+        <div className="bg-brand-matte py-2 md:py-3 overflow-hidden border-y border-white/5 relative z-20">
+            <div className="flex whitespace-nowrap">
+                {/* determine if we're using default fallback banners (default- ids) */}
+                {(() => {
+                    const DEFAULT_MARQUEE = "ELITE PERFORMANCE • UNCOMPROMISING QUALITY • NEXUS LABORATORY TESTED • BEYOND THE LIMIT • ";
+                    const isUsingDefault = banners.length > 0 && String(banners[0].id).startsWith('default-');
+
+                    // Build a single headline string containing all banner titles (title1 • title2 • ...)
+                    const titles = (!isUsingDefault && banners.length > 0)
+                        ? banners.map(b => b.title).filter(Boolean) as string[]
+                        : [];
+                    const base = titles.length > 0 ? `${titles.join(' • ')} • ` : DEFAULT_MARQUEE;
+                    const marqueeSource = base.repeat(6);
+
+                    // Key the motion div on the joined titles so animation restarts when titles change
+                    const key = `headline-${titles.join('|') || 'default'}`;
+
+                    return (
+                        <motion.div
+                            key={key}
+                            initial={{ x: 0 }}
+                            animate={{ x: "-50%" }}
+                            transition={{ repeat: Infinity, duration: 50, ease: 'linear' }}
+                            className="flex items-center gap-4 text-white font-black text-xs md:text-sm tracking-[0.4em] uppercase"
+                        >
+                            <span className="px-6">{marqueeSource}</span>
+                            <span className="px-6">{marqueeSource}</span>
+                        </motion.div>
+                    );
+                })()}
+            </div>
+        </div>
+        </>
     );
 };
 

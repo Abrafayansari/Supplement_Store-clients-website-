@@ -14,6 +14,8 @@ const ProductManagement: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
@@ -52,7 +54,13 @@ const ProductManagement: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const filtered = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const categories = Array.from(new Set(products.map(p => p.category))).sort();
+
+  const filtered = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !selectedCategory || p.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   if (loading && products.length === 0) {
     return (
@@ -72,7 +80,7 @@ const ProductManagement: React.FC = () => {
         <div className="space-y-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="space-y-8">
-              <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand-gold font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
+              <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform duration-500" />
                 Back to Dashboard
               </Link>
@@ -81,8 +89,8 @@ const ProductManagement: React.FC = () => {
                 <span className="shine-gold italic font-brand">Inventory</span>
               </h1>
               <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-[0.4em]">
-                <span className="flex items-center gap-3 px-5 py-2.5 bg-white border border-brand-matte/5 text-brand-gold shadow-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-glow" /> LIVE INVENTORY SYNCED
+                <span className="flex items-center gap-3 px-5 py-2.5 bg-white border border-brand-matte/5 text-brand shadow-sm">
+                  <div className="w-1.5 h-1.5 rounded-full bg-brand animate-glow" /> LIVE INVENTORY SYNCED
                 </span>
                 <span className="w-[1px] h-4 bg-brand-matte/10 hidden sm:block" />
                 <span className="text-brand-matte/40">{products.length} TOTAL SKUs</span>
@@ -99,7 +107,7 @@ const ProductManagement: React.FC = () => {
         </div>
 
         <div className="bg-white border border-brand-matte/5 shadow-2xl relative">
-          <div className="p-8 border-b border-brand-matte/5 flex flex-col xl:flex-row gap-8 bg-brand-warm/30">
+          <div className="p-8 border-b border-brand-matte/5 flex flex-col xl:flex-row gap-8 bg-brand-warm/30 relative">
             <div className="relative flex-grow group">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-matte/20 group-focus-within:text-brand transition-colors w-5 h-5" />
               <input
@@ -107,12 +115,45 @@ const ProductManagement: React.FC = () => {
                 placeholder="SEARCH INVENTORY..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-16 pr-6 py-5 bg-white border border-brand-matte/5 outline-none focus:border-brand-gold/40 text-[11px] font-black uppercase tracking-widest text-brand-matte shadow-sm placeholder:text-brand-matte/20"
+                className="w-full pl-16 pr-6 py-5 bg-white border border-brand-matte/5 outline-none focus:border-brand/40 text-[11px] font-black uppercase tracking-widest text-brand-matte shadow-sm placeholder:text-brand-matte/20"
               />
             </div>
-            <button className="flex items-center justify-center gap-4 px-12 py-5 bg-white border border-brand-matte/5 font-black text-[11px] uppercase tracking-[0.2em] text-brand-matte hover:text-brand-gold transition-all shadow-sm">
-              <Filter className="w-4 h-4" /> Filter Categories
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowCategoryFilter(!showCategoryFilter)}
+                className="flex items-center justify-center gap-4 px-12 py-5 bg-white border border-brand-matte/5 font-black text-[11px] uppercase tracking-[0.2em] text-brand-matte hover:text-brand transition-all shadow-sm">
+                <Filter className="w-4 h-4" /> Filter Categories
+              </button>
+            {showCategoryFilter && (
+              <div className="absolute top-full right-0 mt-2 bg-white border border-brand-matte/10 shadow-xl z-50 rounded-none min-w-[240px]">
+                <button
+                  onClick={() => {
+                    setSelectedCategory('');
+                    setShowCategoryFilter(false);
+                  }}
+                  className={`w-full text-left px-6 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-brand-warm transition-colors ${
+                    !selectedCategory ? 'bg-brand/5 text-brand' : 'text-brand-matte/40'
+                  }`}
+                >
+                  All Categories
+                </button>
+                {categories.map(category => (
+                  <button
+                    key={category}
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setShowCategoryFilter(false);
+                    }}
+                    className={`w-full text-left px-6 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-brand-warm transition-colors border-t border-brand-matte/5 ${
+                      selectedCategory === category ? 'bg-brand/5 text-brand' : 'text-brand-matte/40'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            )}
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -139,49 +180,49 @@ const ProductManagement: React.FC = () => {
                       <td className="px-10 py-10">
                         <div className="flex items-center gap-8">
                           <div className="w-20 h-20 bg-white border border-brand-matte/5 p-4 overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-500">
-                            <img src={product.images?.[0] || '/placeholder.png'} alt={product.name} className="w-full h-full object-contain grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
+                            <img src={product.images?.[0] || '/placeholder.png'} alt={product.name} className="w-full h-full object-contain   transition-all duration-700" />
                           </div>
                           <div className="space-y-1">
-                            <span className="font-black text-brand-matte uppercase tracking-tight text-xl leading-none group-hover:text-brand-gold transition-colors">{product.name}</span>
+                            <span className="font-black text-brand-matte uppercase tracking-tight text-xl leading-none group-hover:text-brand transition-colors">{product.name}</span>
                             <p className="text-[9px] text-brand-matte/20 font-bold uppercase tracking-widest italic tracking-tighter">SKU: {product.id.slice(0, 8).toUpperCase()}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-10 py-10">
                         <span
-                          className="inline-block px-5 py-2 bg-brand-warm border border-brand-matte/5 text-brand-gold text-[9px] font-black uppercase tracking-widest shadow-sm max-w-[140px] truncate align-middle"
+                          className="inline-block px-5 py-2 bg-brand-warm border border-brand-matte/5 text-brand text-[9px] font-black uppercase tracking-widest shadow-sm max-w-[140px] truncate align-middle"
                           title={product.category}
                         >
                           {product.category}
                         </span>
                       </td>
-                      <td className="px-10 py-10 font-black text-brand-gold text-2xl italic tracking-tighter tabular-nums">Rs. {product.price.toLocaleString()}</td>
+                      <td className="px-10 py-10 font-black text-brand text-2xl italic tracking-tighter tabular-nums">Rs. {product.price.toLocaleString()}</td>
                       <td className="px-10 py-10">
                         <div className="space-y-3 min-w-[140px]">
                           <div className="w-full max-w-[128px] bg-brand-matte/5 h-1.5 overflow-hidden">
                             <div
-                              className={`h-full transition-all duration-1000 ${product.stock < 10 ? 'bg-brand' : 'bg-brand-gold'}`}
+                              className={`h-full transition-all duration-1000 bg-brand`}
                               style={{ width: `${Math.min(100, (product.stock / 100) * 100)}%` }} // 100 units = Full Bar for visual scale
                             ></div>
                           </div>
                           <span className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-2 ${product.stock < 10 ? 'text-brand' : 'text-brand-matte/40'}`}>
-                            <div className={`w-1 h-1 rounded-full ${product.stock < 10 ? 'bg-brand animate-pulse' : 'bg-brand-gold'}`} />
+                            <div className={`w-1 h-1 rounded-full bg-brand ${product.stock < 10 ? 'animate-pulse' : ''}`} />
                             {product.stock} Units In Stock
                           </span>
                         </div>
                       </td>
                       <td className="px-10 py-10 text-right">
-                        <div className="flex items-center justify-end gap-3 translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                        <div className="flex items-center justify-end gap-3">
                           <button
                             onClick={() => handleEdit(product)}
-                            className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand-gold/5 hover:border-brand-gold/20 transition-all duration-300"
+                            className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand hover:bg-brand/5 hover:border-brand/20 transition-all duration-300"
                             title="Edit Asset"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(product.id)}
-                            className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand-gold hover:bg-brand hover:text-white hover:border-brand transition-all duration-300"
+                            className="p-4 text-brand-matte/30 border border-brand-matte/10 hover:text-brand hover:bg-brand hover:text-white hover:border-brand transition-all duration-300"
                             title="Delete Asset"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -210,7 +251,7 @@ const ProductManagement: React.FC = () => {
 
       <style>{`
         .shine-gold {
-          background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+          background: linear-gradient(90deg, #e8222e, #FFF, #e8222e);
           background-size: 200% auto;
           animation: gold-shine 5s linear infinite;
           -webkit-background-clip: text;

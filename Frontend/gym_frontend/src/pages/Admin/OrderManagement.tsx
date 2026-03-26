@@ -96,7 +96,7 @@ const OrderManagement: React.FC = () => {
     switch (status) {
       case 'PENDING': return { icon: <Clock className="w-3 h-3" />, class: 'bg-brand-warm text-brand-matte/40 border-brand-matte/10' };
       case 'PROCESSING': return { icon: <RefreshCw className="w-3 h-3 animate-spin" />, class: 'bg-brand/10 text-brand border-brand/20' };
-      case 'SHIPPED': return { icon: <Truck className="w-3 h-3" />, class: 'bg-brand-gold/10 text-brand-gold border-brand-gold/20' };
+      case 'SHIPPED': return { icon: <Truck className="w-3 h-3" />, class: 'bg-brand/10 text-brand border-brand/20' };
       case 'DELIVERED': return { icon: <CheckCircle className="w-3 h-3" />, class: 'bg-brand text-brand-warm border-brand shadow-[0_5px_15px_rgba(123,15,23,0.15)]' };
       case 'CANCELLED': return { icon: <XCircle className="w-3 h-3" />, class: 'bg-red-50 text-red-600 border-red-100' };
       default: return { icon: null, class: 'bg-brand-warm text-brand-matte/40 border-brand-matte/10' };
@@ -119,7 +119,7 @@ const OrderManagement: React.FC = () => {
       <main className="relative p-6 md:p-12 max-w-[1600px] mx-auto w-full space-y-16">
         {/* Header Section */}
         <div className="space-y-10">
-          <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand-gold font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
+          <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform duration-500" />
             Back to Dashboard
           </Link>
@@ -139,10 +139,10 @@ const OrderManagement: React.FC = () => {
               </div>
             </div>
 
-            <button className="btn-luxury px-14 py-6 text-[11px] flex items-center gap-4 group">
+            {/* <button className="btn-luxury px-14 py-6 text-[11px] flex items-center gap-4 group">
               <Download className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
               Download Report
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -156,7 +156,7 @@ const OrderManagement: React.FC = () => {
                   onClick={() => setFilterStatus(status)}
                   className={`px-8 py-4 text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${filterStatus === status
                     ? 'bg-brand text-white border-brand shadow-lg shadow-brand/10'
-                    : 'bg-transparent border-brand-matte/5 text-brand-matte/30 hover:text-brand-gold hover:bg-brand-warm'
+                    : 'bg-transparent border-brand-matte/5 text-brand-matte/30 hover:text-brand hover:bg-brand-warm'
                     }`}
                 >
                   {status}
@@ -164,13 +164,13 @@ const OrderManagement: React.FC = () => {
               ))}
             </div>
             <div className="relative group w-full xl:w-[400px]">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-matte/20 group-focus-within:text-brand-gold transition-colors w-4 h-4" />
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-matte/20 group-focus-within:text-brand transition-colors w-4 h-4" />
               <input
                 type="text"
                 placeholder="SEARCH ORDER ID OR CUSTOMER..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-14 pr-6 py-5 bg-brand-warm/50 border border-brand-matte/5 outline-none focus:border-brand-gold/40 text-[10px] font-black uppercase tracking-[0.3em] text-brand-matte w-full transition-all duration-300 placeholder:text-brand-matte/20"
+                className="pl-14 pr-6 py-5 bg-brand-warm/50 border border-brand-matte/5 outline-none focus:border-brand/40 text-[10px] font-black uppercase tracking-[0.3em] text-brand-matte w-full transition-all duration-300 placeholder:text-brand-matte/20"
               />
             </div>
           </div>
@@ -195,7 +195,7 @@ const OrderManagement: React.FC = () => {
                     return (
                       <tr key={order.id} className="group hover:bg-brand-warm transition-all duration-500">
                         <td className="px-10 py-12">
-                          <span className="font-black text-brand-matte/40 uppercase tracking-tighter text-sm italic group-hover:text-brand-gold transition-all duration-500">
+                          <span className="font-black text-brand-matte/40 uppercase tracking-tighter text-sm italic group-hover:text-brand transition-all duration-500">
                             #{order.id.slice(0, 8).toUpperCase()}
                           </span>
                         </td>
@@ -205,7 +205,7 @@ const OrderManagement: React.FC = () => {
                             <p className="text-[9px] text-brand-matte/30 font-bold uppercase tracking-widest">{order.user.email}</p>
                           </div>
                         </td>
-                        <td className="px-10 py-12 font-black text-brand-gold italic text-2xl tracking-tighter">
+                        <td className="px-10 py-12 font-black text-brand italic text-2xl tracking-tighter">
                           Rs. {order.total.toLocaleString()}
                         </td>
                         <td className="px-10 py-12">
@@ -220,7 +220,7 @@ const OrderManagement: React.FC = () => {
                               {display.icon} {order.status}
                             </div>
                             <div className="flex items-center gap-2 px-1 text-[8px] font-black text-brand-matte/30 uppercase tracking-widest">
-                              {order.paymentMethod === 'COD' ? <Banknote className="w-3 h-3" /> : <QrCode className="w-3 h-3 text-brand-gold" />}
+                              {order.paymentMethod === 'COD' ? <Banknote className="w-3 h-3" /> : <QrCode className="w-3 h-3 text-brand" />}
                               {order.paymentMethod} • {order.paymentStatus}
                             </div>
                           </div>
@@ -240,7 +240,7 @@ const OrderManagement: React.FC = () => {
                                 disabled={order.status === action.s}
                                 className={`p-3 border transition-all duration-300 ${order.status === action.s
                                   ? 'bg-brand/10 border-brand/20 text-brand cursor-not-allowed'
-                                  : 'bg-white border-brand-matte/10 text-brand-matte/40 hover:text-brand-gold hover:border-brand-gold hover:bg-brand-gold/5'
+                                  : 'bg-white border-brand-matte/10 text-brand-matte/40 hover:text-brand hover:border-brand hover:bg-brand/5'
                                   }`}
                               >
                                 {action.icon}
@@ -284,7 +284,7 @@ const OrderManagement: React.FC = () => {
           <div className="relative max-w-lg w-full bg-white border border-brand-matte/10 p-1 shadow-2xl">
             <button
               onClick={() => setSelectedReceipt(null)}
-              className="absolute -top-10 right-0 text-white/40 hover:text-brand-gold flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors"
+              className="absolute -top-10 right-0 text-white/40 hover:text-brand flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors"
             >
               <XCircle className="w-4 h-4" /> Close Receipt
             </button>
@@ -304,7 +304,7 @@ const OrderManagement: React.FC = () => {
 
       <style>{`
         .shine-gold {
-          background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+          background: linear-gradient(90deg, #e8222e, #FFF, #e8222e);
           background-size: 200% auto;
           animation: gold-shine 5s linear infinite;
           -webkit-background-clip: text;
@@ -324,9 +324,9 @@ const OrderManagement: React.FC = () => {
           border: 1px solid transparent;
         }
         .btn-luxury:hover {
-          background-color: #C9A24D;
+          background-color: #e8222e;
           border-color: #FFF;
-          box-shadow: 0 0 20px rgba(201, 162, 77, 0.4);
+          box-shadow: 0 0 20px rgba(232, 34, 46, 0.4);
           transform: translateY(-2px);
         }
       `}</style>

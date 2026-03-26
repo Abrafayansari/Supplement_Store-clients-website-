@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Users, ShoppingBag, DollarSign, TrendingUp,
   ArrowUpRight, ArrowDownRight, Package,
-  Settings, LogOut, ChevronRight, Bell, X
+  Settings, LogOut, ChevronRight, Bell, X, Menu
 } from 'lucide-react';
 import { MOCK_ORDERS, MOCK_PRODUCTS } from '../../mockData.ts';
 import axios from 'axios';
@@ -36,6 +36,7 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   const fetchNotifications = async () => {
     try {
@@ -109,7 +110,7 @@ const AdminDashboard: React.FC = () => {
     switch (status) {
       case 'PENDING': return 'bg-brand-warm text-brand-matte/40 border-brand-matte/10';
       case 'PROCESSING': return 'bg-brand/10 text-brand border-brand/20';
-      case 'SHIPPED': return 'bg-brand-gold/10 text-brand-gold border-brand-gold/20';
+      case 'SHIPPED': return 'bg-brand/10 text-brand border-brand/20';
       case 'DELIVERED': return 'bg-brand text-brand-warm border-brand shadow-[0_5px_15px_rgba(123,15,23,0.15)]';
       case 'CANCELLED': return 'bg-red-50 text-red-600 border-red-100';
       default: return 'bg-brand-warm text-brand-matte/40';
@@ -166,12 +167,12 @@ const AdminDashboard: React.FC = () => {
             { icon: <Users className="w-5 h-5" />, label: 'Users', to: '/admin/users' },
             { icon: <Package className="w-5 h-5" />, label: 'Bundles', to: '/admin/bundles' },
             { icon: <TrendingUp className="w-5 h-5" />, label: 'Banners', to: '/admin/banners' },
-            { icon: <Settings className="w-5 h-5" />, label: 'Settings', to: '#' },
+            { icon: <Settings className="w-5 h-5" />, label: 'Settings', to: '/admin/settings' },
           ].map(item => (
             <Link
               key={item.label}
               to={item.to}
-              className={`flex items-center gap-4 px-6 py-4 rounded-none text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${item.active ? 'bg-brand text-white shadow-lg shadow-brand/10' : 'text-brand-matte/40 hover:text-brand-gold hover:bg-brand-warm'}`}
+              className={`flex items-center gap-4 px-6 py-4 rounded-none text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${item.active ? 'bg-brand text-white shadow-lg shadow-brand/10' : 'text-brand-matte/40 hover:text-brand hover:bg-brand-warm'}`}
             >
               <div className={item.active ? 'scale-110' : ''}>{item.icon}</div>
               {item.label}
@@ -181,14 +182,14 @@ const AdminDashboard: React.FC = () => {
 
         <div className="pt-8 border-t border-brand-matte/5 space-y-6">
           <div className="flex items-center gap-4 px-4">
-            <div className="w-12 h-12 bg-white border border-brand-matte/10 flex items-center justify-center font-black text-brand-gold text-lg italic shadow-sm">A</div>
+            <div className="w-12 h-12 bg-white border border-brand-matte/10 flex items-center justify-center font-black text-brand text-lg italic shadow-sm">A</div>
             <div>
               <p className="text-xs font-black text-brand-matte uppercase tracking-widest">Admin</p>
-              <p className="text-[9px] font-bold text-brand-gold uppercase tracking-[0.25em]">Verified</p>
+              <p className="text-[9px] font-bold text-brand uppercase tracking-[0.25em]">Verified</p>
             </div>
           </div>
           <button className="w-full flex items-center justify-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.3em] text-brand border border-brand/20 hover:bg-brand hover:text-white transition-all duration-500">
-            <LogOut className="w-4 h-4 text-brand-gold" /> Logout
+            <LogOut className="w-4 h-4 text-brand" /> Logout
           </button>
         </div>
       </aside>
@@ -206,11 +207,23 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
           <div className="flex gap-4">
+            {/* Mobile Hamburger Menu */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="bg-white p-4 border border-brand-matte/5 xl:hidden hover:border-brand transition-colors shadow-sm flex items-center justify-center"
+            >
+              {sidebarOpen ? (
+                <X className="w-6 h-6 text-brand" />
+              ) : (
+                <Menu className="w-6 h-6 text-brand-matte/20" />
+              )}
+            </button>
+
             {/* Notification Bell with Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="bg-white p-4 border border-brand-matte/5 relative hover:border-brand-gold transition-colors shadow-sm"
+                className="bg-white p-4 border border-brand-matte/5 relative hover:border-brand transition-colors shadow-sm"
               >
                 <Bell className="w-6 h-6 text-brand-matte/20" />
                 {notifications.length > 0 && (
@@ -228,7 +241,7 @@ const AdminDashboard: React.FC = () => {
                     {notifications.length > 0 && (
                       <button
                         onClick={clearAllNotifications}
-                        className="text-[9px] font-black text-brand-gold hover:text-brand uppercase tracking-widest transition-colors"
+                        className="text-[9px] font-black text-brand hover:text-brand-matte uppercase tracking-widest transition-colors"
                       >
                         Dismiss All
                       </button>
@@ -250,7 +263,7 @@ const AdminDashboard: React.FC = () => {
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-grow min-w-0">
                               <div className="flex items-center gap-3 mb-2">
-                                <span className={`px-2 py-0.5 text-[7px] font-black uppercase tracking-wider rounded-none ${notification.type === 'new_order' ? 'bg-brand text-white' : 'bg-brand-gold/10 text-brand-gold'
+                                <span className={`px-2 py-0.5 text-[7px] font-black uppercase tracking-wider rounded-none ${notification.type === 'new_order' ? 'bg-brand text-white' : 'bg-brand/10 text-brand'
                                   }`}>
                                   {notification.type.replace('_', ' ')}
                                 </span>
@@ -263,7 +276,7 @@ const AdminDashboard: React.FC = () => {
                               {notification.orderId && (
                                 <Link
                                   to="/admin/orders"
-                                  className="inline-flex items-center gap-2 py-2 px-3 bg-brand-matte/5 text-[9px] font-black text-brand-gold hover:bg-brand-gold hover:text-white uppercase tracking-widest transition-all"
+                                  className="inline-flex items-center gap-2 py-2 px-3 bg-brand-matte/5 text-[9px] font-black text-brand hover:bg-brand hover:text-white uppercase tracking-widest transition-all"
                                   onClick={() => {
                                     deleteNotification(notification.id);
                                     setShowNotifications(false);
@@ -301,8 +314,8 @@ const AdminDashboard: React.FC = () => {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
               {stats.map(stat => (
-                <div key={stat.label} className="bg-white p-10 border border-brand-matte/5 shadow-sm space-y-6 group hover:border-brand-gold/30 transition-all duration-500">
-                  <div className="w-14 h-14 bg-brand-warm border border-brand-matte/5 text-brand-gold rounded-none flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-sm">
+                <div key={stat.label} className="bg-white p-10 border border-brand-matte/5 shadow-sm space-y-6 group hover:border-brand/30 transition-all duration-500">
+                  <div className="w-14 h-14 bg-brand-warm border border-brand-matte/5 text-brand rounded-none flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-sm">
                     {stat.icon}
                   </div>
                   <div className="space-y-2">
@@ -323,7 +336,7 @@ const AdminDashboard: React.FC = () => {
               <div className="bg-white border border-brand-matte/5 shadow-sm p-10 space-y-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-black text-brand-matte uppercase tracking-tighter italic">Recent Orders</h3>
-                  <Link to="/admin/orders" className="text-[10px] font-black text-brand-gold flex items-center gap-2 hover:text-brand transition-all duration-300 uppercase tracking-widest group">
+                  <Link to="/admin/orders" className="text-[10px] font-black text-brand flex items-center gap-2 hover:text-brand-matte transition-all duration-300 uppercase tracking-widest group">
                     View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
@@ -340,9 +353,9 @@ const AdminDashboard: React.FC = () => {
                     <tbody className="divide-y divide-brand-matte/5">
                       {(recentOrders.length > 0 ? recentOrders : []).map(order => (
                         <tr key={order.id} className="group hover:bg-brand-warm transition-all duration-500">
-                          <td className="py-6 font-black text-brand-matte/60 text-sm tracking-tighter group-hover:text-brand-gold transition-colors italic">#{order.id.slice(0, 8)}</td>
+                          <td className="py-6 font-black text-brand-matte/60 text-sm tracking-tighter group-hover:text-brand transition-colors italic">#{order.id.slice(0, 8)}</td>
                           <td className="py-6 text-[10px] font-black text-brand-matte uppercase tracking-widest">{order.user.name}</td>
-                          <td className="py-6 text-sm font-black text-brand-gold text-right italic">Rs. {order.total}</td>
+                          <td className="py-6 text-sm font-black text-brand text-right italic">Rs. {order.total}</td>
                           <td className="py-6 text-right">
                             <span className={`inline-block px-4 py-1.5 border text-[9px] font-black uppercase tracking-widest ${getStatusStyle(order.status)}`}>
                               {order.status}
@@ -360,9 +373,70 @@ const AdminDashboard: React.FC = () => {
         )}
       </main>
 
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 xl:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          {/* Mobile Sidebar */}
+          <aside className="mobile-sidebar open w-72 bg-white border-r border-brand-matte/5 flex flex-col p-8 space-y-12 backdrop-blur-3xl shadow-2xl">
+            <Link
+              to="/"
+              className="flex items-center gap-4 group"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <img src={logo} alt="Nexus Logo" className="w-12 h-12 object-contain" />
+              <div className="flex flex-col">
+                <span className="text-xl font-black text-brand-matte tracking-tighter uppercase leading-none">NEXUS</span>
+                <span className="text-[10px] font-bold text-brand-matte/20 uppercase tracking-[0.4em]">Management</span>
+              </div>
+            </Link>
+
+            <nav className="flex-grow space-y-4">
+              {[
+                { icon: <TrendingUp className="w-5 h-5" />, label: 'Overview', active: true, to: '/admin' },
+                { icon: <Package className="w-5 h-5" />, label: 'Products', to: '/admin/products' },
+                { icon: <ShoppingBag className="w-5 h-5" />, label: 'Orders', to: '/admin/orders' },
+                { icon: <Users className="w-5 h-5" />, label: 'Users', to: '/admin/users' },
+                { icon: <Package className="w-5 h-5" />, label: 'Bundles', to: '/admin/bundles' },
+                { icon: <TrendingUp className="w-5 h-5" />, label: 'Banners', to: '/admin/banners' },
+                { icon: <Settings className="w-5 h-5" />, label: 'Settings', to: '/admin/settings' },
+              ].map(item => (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-4 px-6 py-4 rounded-none text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${item.active ? 'bg-brand text-white shadow-lg shadow-brand/10' : 'text-brand-matte/40 hover:text-brand hover:bg-brand-warm'}`}
+                >
+                  <div className={item.active ? 'scale-110' : ''}>{item.icon}</div>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="pt-8 border-t border-brand-matte/5 space-y-6">
+              <div className="flex items-center gap-4 px-4">
+                <div className="w-12 h-12 bg-white border border-brand-matte/10 flex items-center justify-center font-black text-brand text-lg italic shadow-sm">A</div>
+                <div>
+                  <p className="text-xs font-black text-brand-matte uppercase tracking-widest">Admin</p>
+                  <p className="text-[9px] font-bold text-brand uppercase tracking-[0.25em]">Verified</p>
+                </div>
+              </div>
+              <button className="w-full flex items-center justify-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.3em] text-brand border border-brand/20 hover:bg-brand hover:text-white transition-all duration-500">
+                <LogOut className="w-4 h-4 text-brand" /> Logout
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
       <style>{`
         .shine-gold {
-          background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+          background: linear-gradient(90deg, #e8222e, #FFF, #e8222e);
           background-size: 200% auto;
           animation: gold-shine 5s linear infinite;
           -webkit-background-clip: text;
@@ -382,9 +456,9 @@ const AdminDashboard: React.FC = () => {
           border: 1px solid transparent;
         }
         .btn-luxury:hover {
-          background-color: #C9A24D;
+          background-color: #e8222e;
           border-color: #FFF;
-          box-shadow: 0 0 20px rgba(201, 162, 77, 0.4);
+          box-shadow: 0 0 20px rgba(232, 34, 46, 0.4);
           transform: translateY(-2px);
         }
         .custom-scrollbar::-webkit-scrollbar {
@@ -398,7 +472,20 @@ const AdminDashboard: React.FC = () => {
           border-radius: 2px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #C9A24D;
+          background: #e8222e;
+        }
+        .mobile-sidebar {
+          position: fixed;
+          inset: 0;
+          z-index: 40;
+          display: flex;
+        }
+        .mobile-sidebar.open {
+          animation: slideIn 300ms ease-in-out;
+        }
+        @keyframes slideIn {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
         }
       `}</style>
     </div>

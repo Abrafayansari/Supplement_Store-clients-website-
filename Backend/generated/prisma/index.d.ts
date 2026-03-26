@@ -73,6 +73,11 @@ export type Banner = $Result.DefaultSelection<Prisma.$BannerPayload>
  * 
  */
 export type Bundle = $Result.DefaultSelection<Prisma.$BundlePayload>
+/**
+ * Model AdminSettings
+ * 
+ */
+export type AdminSettings = $Result.DefaultSelection<Prisma.$AdminSettingsPayload>
 
 /**
  * Enums
@@ -373,6 +378,16 @@ export class PrismaClient<
     * ```
     */
   get bundle(): Prisma.BundleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adminSettings`: Exposes CRUD operations for the **AdminSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdminSettings
+    * const adminSettings = await prisma.adminSettings.findMany()
+    * ```
+    */
+  get adminSettings(): Prisma.AdminSettingsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -818,7 +833,8 @@ export namespace Prisma {
     Address: 'Address',
     Notification: 'Notification',
     Banner: 'Banner',
-    Bundle: 'Bundle'
+    Bundle: 'Bundle',
+    AdminSettings: 'AdminSettings'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -834,7 +850,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "product" | "productVariant" | "cartItem" | "wishlistItem" | "order" | "orderItem" | "review" | "address" | "notification" | "banner" | "bundle"
+      modelProps: "user" | "product" | "productVariant" | "cartItem" | "wishlistItem" | "order" | "orderItem" | "review" | "address" | "notification" | "banner" | "bundle" | "adminSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1726,6 +1742,80 @@ export namespace Prisma {
           }
         }
       }
+      AdminSettings: {
+        payload: Prisma.$AdminSettingsPayload<ExtArgs>
+        fields: Prisma.AdminSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdminSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdminSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.AdminSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdminSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.AdminSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.AdminSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.AdminSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdminSettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.AdminSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>
+          }
+          update: {
+            args: Prisma.AdminSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdminSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdminSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdminSettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdminSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.AdminSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdminSettings>
+          }
+          groupBy: {
+            args: Prisma.AdminSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdminSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdminSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<AdminSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1846,6 +1936,7 @@ export namespace Prisma {
     notification?: NotificationOmit
     banner?: BannerOmit
     bundle?: BundleOmit
+    adminSettings?: AdminSettingsOmit
   }
 
   /* Types for Logging */
@@ -16123,6 +16214,1196 @@ export namespace Prisma {
 
 
   /**
+   * Model AdminSettings
+   */
+
+  export type AggregateAdminSettings = {
+    _count: AdminSettingsCountAggregateOutputType | null
+    _min: AdminSettingsMinAggregateOutputType | null
+    _max: AdminSettingsMaxAggregateOutputType | null
+  }
+
+  export type AdminSettingsMinAggregateOutputType = {
+    id: string | null
+    city: string | null
+    province: string | null
+    country: string | null
+    address: string | null
+    email: string | null
+    phone: string | null
+    whatsapp: string | null
+    headline: string | null
+    youtubeUrl: string | null
+    facebookUrl: string | null
+    instagramUrl: string | null
+    linkedinUrl: string | null
+    deliveryCharges: string | null
+    accountTitle: string | null
+    bankAccountHolder: string | null
+    iban: string | null
+    bankName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AdminSettingsMaxAggregateOutputType = {
+    id: string | null
+    city: string | null
+    province: string | null
+    country: string | null
+    address: string | null
+    email: string | null
+    phone: string | null
+    whatsapp: string | null
+    headline: string | null
+    youtubeUrl: string | null
+    facebookUrl: string | null
+    instagramUrl: string | null
+    linkedinUrl: string | null
+    deliveryCharges: string | null
+    accountTitle: string | null
+    bankAccountHolder: string | null
+    iban: string | null
+    bankName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AdminSettingsCountAggregateOutputType = {
+    id: number
+    city: number
+    province: number
+    country: number
+    address: number
+    email: number
+    phone: number
+    whatsapp: number
+    headline: number
+    youtubeUrl: number
+    facebookUrl: number
+    instagramUrl: number
+    linkedinUrl: number
+    deliveryCharges: number
+    accountTitle: number
+    bankAccountHolder: number
+    iban: number
+    bankName: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AdminSettingsMinAggregateInputType = {
+    id?: true
+    city?: true
+    province?: true
+    country?: true
+    address?: true
+    email?: true
+    phone?: true
+    whatsapp?: true
+    headline?: true
+    youtubeUrl?: true
+    facebookUrl?: true
+    instagramUrl?: true
+    linkedinUrl?: true
+    deliveryCharges?: true
+    accountTitle?: true
+    bankAccountHolder?: true
+    iban?: true
+    bankName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AdminSettingsMaxAggregateInputType = {
+    id?: true
+    city?: true
+    province?: true
+    country?: true
+    address?: true
+    email?: true
+    phone?: true
+    whatsapp?: true
+    headline?: true
+    youtubeUrl?: true
+    facebookUrl?: true
+    instagramUrl?: true
+    linkedinUrl?: true
+    deliveryCharges?: true
+    accountTitle?: true
+    bankAccountHolder?: true
+    iban?: true
+    bankName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AdminSettingsCountAggregateInputType = {
+    id?: true
+    city?: true
+    province?: true
+    country?: true
+    address?: true
+    email?: true
+    phone?: true
+    whatsapp?: true
+    headline?: true
+    youtubeUrl?: true
+    facebookUrl?: true
+    instagramUrl?: true
+    linkedinUrl?: true
+    deliveryCharges?: true
+    accountTitle?: true
+    bankAccountHolder?: true
+    iban?: true
+    bankName?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AdminSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminSettings to aggregate.
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminSettings to fetch.
+     */
+    orderBy?: AdminSettingsOrderByWithRelationInput | AdminSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdminSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdminSettings
+    **/
+    _count?: true | AdminSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdminSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdminSettingsMaxAggregateInputType
+  }
+
+  export type GetAdminSettingsAggregateType<T extends AdminSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdminSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdminSettings[P]>
+      : GetScalarType<T[P], AggregateAdminSettings[P]>
+  }
+
+
+
+
+  export type AdminSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminSettingsWhereInput
+    orderBy?: AdminSettingsOrderByWithAggregationInput | AdminSettingsOrderByWithAggregationInput[]
+    by: AdminSettingsScalarFieldEnum[] | AdminSettingsScalarFieldEnum
+    having?: AdminSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdminSettingsCountAggregateInputType | true
+    _min?: AdminSettingsMinAggregateInputType
+    _max?: AdminSettingsMaxAggregateInputType
+  }
+
+  export type AdminSettingsGroupByOutputType = {
+    id: string
+    city: string | null
+    province: string | null
+    country: string | null
+    address: string | null
+    email: string | null
+    phone: string | null
+    whatsapp: string | null
+    headline: string | null
+    youtubeUrl: string | null
+    facebookUrl: string | null
+    instagramUrl: string | null
+    linkedinUrl: string | null
+    deliveryCharges: string | null
+    accountTitle: string | null
+    bankAccountHolder: string | null
+    iban: string | null
+    bankName: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: AdminSettingsCountAggregateOutputType | null
+    _min: AdminSettingsMinAggregateOutputType | null
+    _max: AdminSettingsMaxAggregateOutputType | null
+  }
+
+  type GetAdminSettingsGroupByPayload<T extends AdminSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdminSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdminSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdminSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], AdminSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdminSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    city?: boolean
+    province?: boolean
+    country?: boolean
+    address?: boolean
+    email?: boolean
+    phone?: boolean
+    whatsapp?: boolean
+    headline?: boolean
+    youtubeUrl?: boolean
+    facebookUrl?: boolean
+    instagramUrl?: boolean
+    linkedinUrl?: boolean
+    deliveryCharges?: boolean
+    accountTitle?: boolean
+    bankAccountHolder?: boolean
+    iban?: boolean
+    bankName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["adminSettings"]>
+
+  export type AdminSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    city?: boolean
+    province?: boolean
+    country?: boolean
+    address?: boolean
+    email?: boolean
+    phone?: boolean
+    whatsapp?: boolean
+    headline?: boolean
+    youtubeUrl?: boolean
+    facebookUrl?: boolean
+    instagramUrl?: boolean
+    linkedinUrl?: boolean
+    deliveryCharges?: boolean
+    accountTitle?: boolean
+    bankAccountHolder?: boolean
+    iban?: boolean
+    bankName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["adminSettings"]>
+
+  export type AdminSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    city?: boolean
+    province?: boolean
+    country?: boolean
+    address?: boolean
+    email?: boolean
+    phone?: boolean
+    whatsapp?: boolean
+    headline?: boolean
+    youtubeUrl?: boolean
+    facebookUrl?: boolean
+    instagramUrl?: boolean
+    linkedinUrl?: boolean
+    deliveryCharges?: boolean
+    accountTitle?: boolean
+    bankAccountHolder?: boolean
+    iban?: boolean
+    bankName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["adminSettings"]>
+
+  export type AdminSettingsSelectScalar = {
+    id?: boolean
+    city?: boolean
+    province?: boolean
+    country?: boolean
+    address?: boolean
+    email?: boolean
+    phone?: boolean
+    whatsapp?: boolean
+    headline?: boolean
+    youtubeUrl?: boolean
+    facebookUrl?: boolean
+    instagramUrl?: boolean
+    linkedinUrl?: boolean
+    deliveryCharges?: boolean
+    accountTitle?: boolean
+    bankAccountHolder?: boolean
+    iban?: boolean
+    bankName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AdminSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "city" | "province" | "country" | "address" | "email" | "phone" | "whatsapp" | "headline" | "youtubeUrl" | "facebookUrl" | "instagramUrl" | "linkedinUrl" | "deliveryCharges" | "accountTitle" | "bankAccountHolder" | "iban" | "bankName" | "createdAt" | "updatedAt", ExtArgs["result"]["adminSettings"]>
+
+  export type $AdminSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdminSettings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      city: string | null
+      province: string | null
+      country: string | null
+      address: string | null
+      email: string | null
+      phone: string | null
+      whatsapp: string | null
+      headline: string | null
+      youtubeUrl: string | null
+      facebookUrl: string | null
+      instagramUrl: string | null
+      linkedinUrl: string | null
+      deliveryCharges: string | null
+      accountTitle: string | null
+      bankAccountHolder: string | null
+      iban: string | null
+      bankName: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["adminSettings"]>
+    composites: {}
+  }
+
+  type AdminSettingsGetPayload<S extends boolean | null | undefined | AdminSettingsDefaultArgs> = $Result.GetResult<Prisma.$AdminSettingsPayload, S>
+
+  type AdminSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdminSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdminSettingsCountAggregateInputType | true
+    }
+
+  export interface AdminSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdminSettings'], meta: { name: 'AdminSettings' } }
+    /**
+     * Find zero or one AdminSettings that matches the filter.
+     * @param {AdminSettingsFindUniqueArgs} args - Arguments to find a AdminSettings
+     * @example
+     * // Get one AdminSettings
+     * const adminSettings = await prisma.adminSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdminSettingsFindUniqueArgs>(args: SelectSubset<T, AdminSettingsFindUniqueArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdminSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdminSettingsFindUniqueOrThrowArgs} args - Arguments to find a AdminSettings
+     * @example
+     * // Get one AdminSettings
+     * const adminSettings = await prisma.adminSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdminSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, AdminSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsFindFirstArgs} args - Arguments to find a AdminSettings
+     * @example
+     * // Get one AdminSettings
+     * const adminSettings = await prisma.adminSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdminSettingsFindFirstArgs>(args?: SelectSubset<T, AdminSettingsFindFirstArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsFindFirstOrThrowArgs} args - Arguments to find a AdminSettings
+     * @example
+     * // Get one AdminSettings
+     * const adminSettings = await prisma.adminSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdminSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, AdminSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdminSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdminSettings
+     * const adminSettings = await prisma.adminSettings.findMany()
+     * 
+     * // Get first 10 AdminSettings
+     * const adminSettings = await prisma.adminSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adminSettingsWithIdOnly = await prisma.adminSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdminSettingsFindManyArgs>(args?: SelectSubset<T, AdminSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdminSettings.
+     * @param {AdminSettingsCreateArgs} args - Arguments to create a AdminSettings.
+     * @example
+     * // Create one AdminSettings
+     * const AdminSettings = await prisma.adminSettings.create({
+     *   data: {
+     *     // ... data to create a AdminSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdminSettingsCreateArgs>(args: SelectSubset<T, AdminSettingsCreateArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdminSettings.
+     * @param {AdminSettingsCreateManyArgs} args - Arguments to create many AdminSettings.
+     * @example
+     * // Create many AdminSettings
+     * const adminSettings = await prisma.adminSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdminSettingsCreateManyArgs>(args?: SelectSubset<T, AdminSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdminSettings and returns the data saved in the database.
+     * @param {AdminSettingsCreateManyAndReturnArgs} args - Arguments to create many AdminSettings.
+     * @example
+     * // Create many AdminSettings
+     * const adminSettings = await prisma.adminSettings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdminSettings and only return the `id`
+     * const adminSettingsWithIdOnly = await prisma.adminSettings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdminSettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, AdminSettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdminSettings.
+     * @param {AdminSettingsDeleteArgs} args - Arguments to delete one AdminSettings.
+     * @example
+     * // Delete one AdminSettings
+     * const AdminSettings = await prisma.adminSettings.delete({
+     *   where: {
+     *     // ... filter to delete one AdminSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdminSettingsDeleteArgs>(args: SelectSubset<T, AdminSettingsDeleteArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdminSettings.
+     * @param {AdminSettingsUpdateArgs} args - Arguments to update one AdminSettings.
+     * @example
+     * // Update one AdminSettings
+     * const adminSettings = await prisma.adminSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdminSettingsUpdateArgs>(args: SelectSubset<T, AdminSettingsUpdateArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdminSettings.
+     * @param {AdminSettingsDeleteManyArgs} args - Arguments to filter AdminSettings to delete.
+     * @example
+     * // Delete a few AdminSettings
+     * const { count } = await prisma.adminSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdminSettingsDeleteManyArgs>(args?: SelectSubset<T, AdminSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdminSettings
+     * const adminSettings = await prisma.adminSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdminSettingsUpdateManyArgs>(args: SelectSubset<T, AdminSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminSettings and returns the data updated in the database.
+     * @param {AdminSettingsUpdateManyAndReturnArgs} args - Arguments to update many AdminSettings.
+     * @example
+     * // Update many AdminSettings
+     * const adminSettings = await prisma.adminSettings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdminSettings and only return the `id`
+     * const adminSettingsWithIdOnly = await prisma.adminSettings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdminSettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, AdminSettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdminSettings.
+     * @param {AdminSettingsUpsertArgs} args - Arguments to update or create a AdminSettings.
+     * @example
+     * // Update or create a AdminSettings
+     * const adminSettings = await prisma.adminSettings.upsert({
+     *   create: {
+     *     // ... data to create a AdminSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdminSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdminSettingsUpsertArgs>(args: SelectSubset<T, AdminSettingsUpsertArgs<ExtArgs>>): Prisma__AdminSettingsClient<$Result.GetResult<Prisma.$AdminSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdminSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsCountArgs} args - Arguments to filter AdminSettings to count.
+     * @example
+     * // Count the number of AdminSettings
+     * const count = await prisma.adminSettings.count({
+     *   where: {
+     *     // ... the filter for the AdminSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdminSettingsCountArgs>(
+      args?: Subset<T, AdminSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdminSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdminSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdminSettingsAggregateArgs>(args: Subset<T, AdminSettingsAggregateArgs>): Prisma.PrismaPromise<GetAdminSettingsAggregateType<T>>
+
+    /**
+     * Group by AdminSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdminSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdminSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: AdminSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdminSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdminSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdminSettings model
+   */
+  readonly fields: AdminSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdminSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdminSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdminSettings model
+   */
+  interface AdminSettingsFieldRefs {
+    readonly id: FieldRef<"AdminSettings", 'String'>
+    readonly city: FieldRef<"AdminSettings", 'String'>
+    readonly province: FieldRef<"AdminSettings", 'String'>
+    readonly country: FieldRef<"AdminSettings", 'String'>
+    readonly address: FieldRef<"AdminSettings", 'String'>
+    readonly email: FieldRef<"AdminSettings", 'String'>
+    readonly phone: FieldRef<"AdminSettings", 'String'>
+    readonly whatsapp: FieldRef<"AdminSettings", 'String'>
+    readonly headline: FieldRef<"AdminSettings", 'String'>
+    readonly youtubeUrl: FieldRef<"AdminSettings", 'String'>
+    readonly facebookUrl: FieldRef<"AdminSettings", 'String'>
+    readonly instagramUrl: FieldRef<"AdminSettings", 'String'>
+    readonly linkedinUrl: FieldRef<"AdminSettings", 'String'>
+    readonly deliveryCharges: FieldRef<"AdminSettings", 'String'>
+    readonly accountTitle: FieldRef<"AdminSettings", 'String'>
+    readonly bankAccountHolder: FieldRef<"AdminSettings", 'String'>
+    readonly iban: FieldRef<"AdminSettings", 'String'>
+    readonly bankName: FieldRef<"AdminSettings", 'String'>
+    readonly createdAt: FieldRef<"AdminSettings", 'DateTime'>
+    readonly updatedAt: FieldRef<"AdminSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdminSettings findUnique
+   */
+  export type AdminSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdminSettings to fetch.
+     */
+    where: AdminSettingsWhereUniqueInput
+  }
+
+  /**
+   * AdminSettings findUniqueOrThrow
+   */
+  export type AdminSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdminSettings to fetch.
+     */
+    where: AdminSettingsWhereUniqueInput
+  }
+
+  /**
+   * AdminSettings findFirst
+   */
+  export type AdminSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdminSettings to fetch.
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminSettings to fetch.
+     */
+    orderBy?: AdminSettingsOrderByWithRelationInput | AdminSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminSettings.
+     */
+    cursor?: AdminSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminSettings.
+     */
+    distinct?: AdminSettingsScalarFieldEnum | AdminSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * AdminSettings findFirstOrThrow
+   */
+  export type AdminSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdminSettings to fetch.
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminSettings to fetch.
+     */
+    orderBy?: AdminSettingsOrderByWithRelationInput | AdminSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminSettings.
+     */
+    cursor?: AdminSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminSettings.
+     */
+    distinct?: AdminSettingsScalarFieldEnum | AdminSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * AdminSettings findMany
+   */
+  export type AdminSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which AdminSettings to fetch.
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminSettings to fetch.
+     */
+    orderBy?: AdminSettingsOrderByWithRelationInput | AdminSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdminSettings.
+     */
+    cursor?: AdminSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminSettings.
+     */
+    skip?: number
+    distinct?: AdminSettingsScalarFieldEnum | AdminSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * AdminSettings create
+   */
+  export type AdminSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a AdminSettings.
+     */
+    data: XOR<AdminSettingsCreateInput, AdminSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * AdminSettings createMany
+   */
+  export type AdminSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdminSettings.
+     */
+    data: AdminSettingsCreateManyInput | AdminSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdminSettings createManyAndReturn
+   */
+  export type AdminSettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdminSettings.
+     */
+    data: AdminSettingsCreateManyInput | AdminSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdminSettings update
+   */
+  export type AdminSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a AdminSettings.
+     */
+    data: XOR<AdminSettingsUpdateInput, AdminSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which AdminSettings to update.
+     */
+    where: AdminSettingsWhereUniqueInput
+  }
+
+  /**
+   * AdminSettings updateMany
+   */
+  export type AdminSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdminSettings.
+     */
+    data: XOR<AdminSettingsUpdateManyMutationInput, AdminSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminSettings to update
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * Limit how many AdminSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminSettings updateManyAndReturn
+   */
+  export type AdminSettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update AdminSettings.
+     */
+    data: XOR<AdminSettingsUpdateManyMutationInput, AdminSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminSettings to update
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * Limit how many AdminSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminSettings upsert
+   */
+  export type AdminSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the AdminSettings to update in case it exists.
+     */
+    where: AdminSettingsWhereUniqueInput
+    /**
+     * In case the AdminSettings found by the `where` argument doesn't exist, create a new AdminSettings with this data.
+     */
+    create: XOR<AdminSettingsCreateInput, AdminSettingsUncheckedCreateInput>
+    /**
+     * In case the AdminSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdminSettingsUpdateInput, AdminSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * AdminSettings delete
+   */
+  export type AdminSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+    /**
+     * Filter which AdminSettings to delete.
+     */
+    where: AdminSettingsWhereUniqueInput
+  }
+
+  /**
+   * AdminSettings deleteMany
+   */
+  export type AdminSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminSettings to delete
+     */
+    where?: AdminSettingsWhereInput
+    /**
+     * Limit how many AdminSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminSettings without action
+   */
+  export type AdminSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminSettings
+     */
+    select?: AdminSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminSettings
+     */
+    omit?: AdminSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16311,6 +17592,32 @@ export namespace Prisma {
   };
 
   export type BundleScalarFieldEnum = (typeof BundleScalarFieldEnum)[keyof typeof BundleScalarFieldEnum]
+
+
+  export const AdminSettingsScalarFieldEnum: {
+    id: 'id',
+    city: 'city',
+    province: 'province',
+    country: 'country',
+    address: 'address',
+    email: 'email',
+    phone: 'phone',
+    whatsapp: 'whatsapp',
+    headline: 'headline',
+    youtubeUrl: 'youtubeUrl',
+    facebookUrl: 'facebookUrl',
+    instagramUrl: 'instagramUrl',
+    linkedinUrl: 'linkedinUrl',
+    deliveryCharges: 'deliveryCharges',
+    accountTitle: 'accountTitle',
+    bankAccountHolder: 'bankAccountHolder',
+    iban: 'iban',
+    bankName: 'bankName',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AdminSettingsScalarFieldEnum = (typeof AdminSettingsScalarFieldEnum)[keyof typeof AdminSettingsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -17420,6 +18727,133 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Bundle"> | Date | string
   }
 
+  export type AdminSettingsWhereInput = {
+    AND?: AdminSettingsWhereInput | AdminSettingsWhereInput[]
+    OR?: AdminSettingsWhereInput[]
+    NOT?: AdminSettingsWhereInput | AdminSettingsWhereInput[]
+    id?: StringFilter<"AdminSettings"> | string
+    city?: StringNullableFilter<"AdminSettings"> | string | null
+    province?: StringNullableFilter<"AdminSettings"> | string | null
+    country?: StringNullableFilter<"AdminSettings"> | string | null
+    address?: StringNullableFilter<"AdminSettings"> | string | null
+    email?: StringNullableFilter<"AdminSettings"> | string | null
+    phone?: StringNullableFilter<"AdminSettings"> | string | null
+    whatsapp?: StringNullableFilter<"AdminSettings"> | string | null
+    headline?: StringNullableFilter<"AdminSettings"> | string | null
+    youtubeUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    facebookUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    instagramUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    linkedinUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    deliveryCharges?: StringNullableFilter<"AdminSettings"> | string | null
+    accountTitle?: StringNullableFilter<"AdminSettings"> | string | null
+    bankAccountHolder?: StringNullableFilter<"AdminSettings"> | string | null
+    iban?: StringNullableFilter<"AdminSettings"> | string | null
+    bankName?: StringNullableFilter<"AdminSettings"> | string | null
+    createdAt?: DateTimeFilter<"AdminSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"AdminSettings"> | Date | string
+  }
+
+  export type AdminSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    city?: SortOrderInput | SortOrder
+    province?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    whatsapp?: SortOrderInput | SortOrder
+    headline?: SortOrderInput | SortOrder
+    youtubeUrl?: SortOrderInput | SortOrder
+    facebookUrl?: SortOrderInput | SortOrder
+    instagramUrl?: SortOrderInput | SortOrder
+    linkedinUrl?: SortOrderInput | SortOrder
+    deliveryCharges?: SortOrderInput | SortOrder
+    accountTitle?: SortOrderInput | SortOrder
+    bankAccountHolder?: SortOrderInput | SortOrder
+    iban?: SortOrderInput | SortOrder
+    bankName?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdminSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AdminSettingsWhereInput | AdminSettingsWhereInput[]
+    OR?: AdminSettingsWhereInput[]
+    NOT?: AdminSettingsWhereInput | AdminSettingsWhereInput[]
+    city?: StringNullableFilter<"AdminSettings"> | string | null
+    province?: StringNullableFilter<"AdminSettings"> | string | null
+    country?: StringNullableFilter<"AdminSettings"> | string | null
+    address?: StringNullableFilter<"AdminSettings"> | string | null
+    email?: StringNullableFilter<"AdminSettings"> | string | null
+    phone?: StringNullableFilter<"AdminSettings"> | string | null
+    whatsapp?: StringNullableFilter<"AdminSettings"> | string | null
+    headline?: StringNullableFilter<"AdminSettings"> | string | null
+    youtubeUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    facebookUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    instagramUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    linkedinUrl?: StringNullableFilter<"AdminSettings"> | string | null
+    deliveryCharges?: StringNullableFilter<"AdminSettings"> | string | null
+    accountTitle?: StringNullableFilter<"AdminSettings"> | string | null
+    bankAccountHolder?: StringNullableFilter<"AdminSettings"> | string | null
+    iban?: StringNullableFilter<"AdminSettings"> | string | null
+    bankName?: StringNullableFilter<"AdminSettings"> | string | null
+    createdAt?: DateTimeFilter<"AdminSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"AdminSettings"> | Date | string
+  }, "id">
+
+  export type AdminSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    city?: SortOrderInput | SortOrder
+    province?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    whatsapp?: SortOrderInput | SortOrder
+    headline?: SortOrderInput | SortOrder
+    youtubeUrl?: SortOrderInput | SortOrder
+    facebookUrl?: SortOrderInput | SortOrder
+    instagramUrl?: SortOrderInput | SortOrder
+    linkedinUrl?: SortOrderInput | SortOrder
+    deliveryCharges?: SortOrderInput | SortOrder
+    accountTitle?: SortOrderInput | SortOrder
+    bankAccountHolder?: SortOrderInput | SortOrder
+    iban?: SortOrderInput | SortOrder
+    bankName?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AdminSettingsCountOrderByAggregateInput
+    _max?: AdminSettingsMaxOrderByAggregateInput
+    _min?: AdminSettingsMinOrderByAggregateInput
+  }
+
+  export type AdminSettingsScalarWhereWithAggregatesInput = {
+    AND?: AdminSettingsScalarWhereWithAggregatesInput | AdminSettingsScalarWhereWithAggregatesInput[]
+    OR?: AdminSettingsScalarWhereWithAggregatesInput[]
+    NOT?: AdminSettingsScalarWhereWithAggregatesInput | AdminSettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdminSettings"> | string
+    city?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    province?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    country?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    address?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    email?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    whatsapp?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    headline?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    youtubeUrl?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    facebookUrl?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    instagramUrl?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    linkedinUrl?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    deliveryCharges?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    accountTitle?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    bankAccountHolder?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    iban?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    bankName?: StringNullableWithAggregatesFilter<"AdminSettings"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AdminSettings"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AdminSettings"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -18457,6 +19891,167 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AdminSettingsCreateInput = {
+    id?: string
+    city?: string | null
+    province?: string | null
+    country?: string | null
+    address?: string | null
+    email?: string | null
+    phone?: string | null
+    whatsapp?: string | null
+    headline?: string | null
+    youtubeUrl?: string | null
+    facebookUrl?: string | null
+    instagramUrl?: string | null
+    linkedinUrl?: string | null
+    deliveryCharges?: string | null
+    accountTitle?: string | null
+    bankAccountHolder?: string | null
+    iban?: string | null
+    bankName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdminSettingsUncheckedCreateInput = {
+    id?: string
+    city?: string | null
+    province?: string | null
+    country?: string | null
+    address?: string | null
+    email?: string | null
+    phone?: string | null
+    whatsapp?: string | null
+    headline?: string | null
+    youtubeUrl?: string | null
+    facebookUrl?: string | null
+    instagramUrl?: string | null
+    linkedinUrl?: string | null
+    deliveryCharges?: string | null
+    accountTitle?: string | null
+    bankAccountHolder?: string | null
+    iban?: string | null
+    bankName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdminSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    headline?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryCharges?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    headline?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryCharges?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminSettingsCreateManyInput = {
+    id?: string
+    city?: string | null
+    province?: string | null
+    country?: string | null
+    address?: string | null
+    email?: string | null
+    phone?: string | null
+    whatsapp?: string | null
+    headline?: string | null
+    youtubeUrl?: string | null
+    facebookUrl?: string | null
+    instagramUrl?: string | null
+    linkedinUrl?: string | null
+    deliveryCharges?: string | null
+    accountTitle?: string | null
+    bankAccountHolder?: string | null
+    iban?: string | null
+    bankName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdminSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    headline?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryCharges?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp?: NullableStringFieldUpdateOperationsInput | string | null
+    headline?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryCharges?: NullableStringFieldUpdateOperationsInput | string | null
+    accountTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    iban?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -19370,6 +20965,75 @@ export namespace Prisma {
   export type BundleSumOrderByAggregateInput = {
     price?: SortOrder
     originalPrice?: SortOrder
+  }
+
+  export type AdminSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    city?: SortOrder
+    province?: SortOrder
+    country?: SortOrder
+    address?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    whatsapp?: SortOrder
+    headline?: SortOrder
+    youtubeUrl?: SortOrder
+    facebookUrl?: SortOrder
+    instagramUrl?: SortOrder
+    linkedinUrl?: SortOrder
+    deliveryCharges?: SortOrder
+    accountTitle?: SortOrder
+    bankAccountHolder?: SortOrder
+    iban?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdminSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    city?: SortOrder
+    province?: SortOrder
+    country?: SortOrder
+    address?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    whatsapp?: SortOrder
+    headline?: SortOrder
+    youtubeUrl?: SortOrder
+    facebookUrl?: SortOrder
+    instagramUrl?: SortOrder
+    linkedinUrl?: SortOrder
+    deliveryCharges?: SortOrder
+    accountTitle?: SortOrder
+    bankAccountHolder?: SortOrder
+    iban?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdminSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    city?: SortOrder
+    province?: SortOrder
+    country?: SortOrder
+    address?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    whatsapp?: SortOrder
+    headline?: SortOrder
+    youtubeUrl?: SortOrder
+    facebookUrl?: SortOrder
+    instagramUrl?: SortOrder
+    linkedinUrl?: SortOrder
+    deliveryCharges?: SortOrder
+    accountTitle?: SortOrder
+    bankAccountHolder?: SortOrder
+    iban?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type AddressCreateNestedManyWithoutUserInput = {

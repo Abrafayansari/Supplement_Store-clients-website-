@@ -12,58 +12,119 @@
   <meta property="og:description" content="NEXUS provides the highest quality supplements to fuel your fitness journey.">
   <meta property="og:type" content="website">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+
+  <!--
+    FONT STACK:
+    ─────────────────────────────────────────────────────────
+    Bebas Neue   → headings, product names, CTAs, hero text
+                   All-caps display font. Iconic in supplements.
+                   Use: font-display class or font-family: 'Bebas Neue'
+
+    DM Sans      → body copy, labels, nav, descriptions
+                   Clean geometric sans. Friendly but not weak.
+                   Use: font-body class or font-family: 'DM Sans'
+    ─────────────────────────────────────────────────────────
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
+            /*
+              font-display → Bebas Neue
+              Use for: h1, h2, product titles, hero text, nav brand, badges, CTAs
+              Example: <h1 class="font-display text-5xl tracking-wide">NEXUS PROTEIN</h1>
+
+              font-body → DM Sans
+              Use for: p, spans, labels, descriptions, prices, nav links
+              Example: <p class="font-body text-base font-medium">40 servings per container</p>
+            */
+            display: ['"Bebas Neue"', 'sans-serif'],
+            body:    ['"DM Sans"', 'sans-serif'],
+            sans:    ['"DM Sans"', 'sans-serif'],
           },
           colors: {
             brand: {
               DEFAULT: '#7B0F17',
-              gold: '#7B0F17',
-              //'#C9A24D',
-              matte: '#0E0E0E',
-              warm: '#FAFAFA',
+              gold:    '#7B0F17',
+              matte:   '#0E0E0E',
+              warm:    '#FAFAFA',
             }
+          },
+          letterSpacing: {
+            /* Bebas Neue looks best with a small positive tracking */
+            display: '0.04em',
           }
         }
       }
     }
   </script>
+
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
+    /*
+      BASE TYPOGRAPHY
+      ───────────────────────────────────────────────
+      body           → DM Sans (all UI, readable text)
+      .font-display  → Bebas Neue (headings, titles, CTAs)
+
+      Sizing guide for Bebas Neue:
+        Hero title      : 72–96px   (text-7xl / text-8xl)
+        Section heading : 40–56px   (text-4xl / text-5xl)
+        Product name    : 28–36px   (text-3xl)
+        Badge / label   : 14–16px   (text-sm / text-base)
+        Button text     : 14–16px   (text-sm / text-base + tracking-widest)
+
+      Sizing guide for DM Sans:
+        Body text       : 14–16px   (text-sm / text-base)
+        Price           : 20–28px   (text-xl / text-2xl + font-semibold)
+        Nav links       : 13–14px   (text-sm + font-medium)
+        Micro labels    : 11–12px   (text-xs + font-semibold + uppercase)
+    */
+
+    html {
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
       background-color: #FAFAFA;
       color: #0E0E0E;
     }
 
-    ::-webkit-scrollbar {
-      width: 4px;
+    /* Display font utility — use on headings & CTAs */
+    .font-display {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.04em;
     }
 
-    ::-webkit-scrollbar-track {
-      background: #FAFAFA;
+    /* Body font utility — explicitly override if needed */
+    .font-body {
+      font-family: 'DM Sans', sans-serif;
     }
 
-    ::-webkit-scrollbar-thumb {
-      background: #7B0F17;
-    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #FAFAFA; }
+    ::-webkit-scrollbar-thumb { background: #7B0F17; }
 
     .transition-luxury {
       transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
     .btn-luxury {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.12em;
       background-color: #7B0F17;
       color: white;
       text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 0.15em;
+      font-size: 15px;
       transition: all 0.3s ease;
       border: 1px solid transparent;
     }
@@ -76,13 +137,8 @@
     }
 
     @keyframes gold-shine {
-      0% {
-        background-position: -200% center;
-      }
-
-      100% {
-        background-position: 200% center;
-      }
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
     }
 
     .shine-gold {
@@ -104,27 +160,16 @@
     .mesh-bg {
       background-color: #FAFAFA;
       background-image:
-        radial-gradient(at 0% 0%, hsla(355, 78%, 27%, 0.05) 0, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(41, 55%, 54%, 0.05) 0, transparent 50%);
+        radial-gradient(at 0%   0%, hsla(355, 78%, 27%, 0.05) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(41,  55%, 54%, 0.05) 0, transparent 50%);
     }
 
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #F3F4F6;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #D1D5DB;
-      border-radius: 10px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #7B0F17;
-    }
+    .custom-scrollbar::-webkit-scrollbar       { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #F3F4F6; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #7B0F17; }
   </style>
+
   <script type="importmap">
 {
   "imports": {
@@ -179,7 +224,7 @@
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
-</script>
+  </script>
 </head>
 
 <body class="mesh-bg text-brand-matte selection:bg-brand-gold selection:text-brand-matte">

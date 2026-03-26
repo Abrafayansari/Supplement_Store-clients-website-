@@ -11,12 +11,13 @@ interface ProductCardProps {
   product: Product;
   variant?: any;
   mode?: 'default' | 'buyNow';
+  itemId?: string;
 }
 
-const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) => {
+const ProductCard = ({ product, variant, mode = 'default', itemId }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, items, removeFromCart } = useCart();
   const { addToWishlist, removeFromWishlist, checkIfWishlisted } = useWishlist();
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -30,6 +31,10 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
     }
     check();
   }, [product.id, checkIfWishlisted]);
+
+  // derive cart quantity for this product (optionally match variant)
+  const cartItem = items.find(i => i.product.id === product.id && (!variant || i.variant?.id === variant?.id));
+  const cartQty = cartItem?.quantity ?? 0;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -49,7 +54,7 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
     e.preventDefault();
     e.stopPropagation();
     if (!localStorage.getItem("token")) {
-      toast.error("Login required");
+      navigate('/login');
       return;
     }
     navigate('/checkout', { state: { singleItem: { product, quantity: 1, variant, variantId: variant?.id } } });
@@ -66,13 +71,6 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
   const handleAddToWishlist = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    const token = localStorage.getItem("token");
-    if (!token && !isWishlisted) {
-      toast.error("Please login to add items to your wishlist");
-      navigate('/login');
-      return;
-    }
 
     try {
       if (isWishlisted) {
@@ -126,8 +124,8 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
                 </span>
               )}
               {discount > 0 && (
-                <span className="bg-brand text-white text-[10px] font-black px-2 py-1 uppercase tracking-wider shadow-sm">
-                  SALE {discount}% OFF
+                <span className="bg-red-600 text-white text-[10px] font-black px-2 py-1 uppercase tracking-wider shadow-sm">
+                  {discount}% OFF
                 </span>
               )}
             </div>
@@ -163,6 +161,12 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
               </button>
             </div>
 
+            {mode === 'buyNow' && cartQty > 0 && (
+              <div className="absolute left-3 top-3 bg-brand text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow-md">
+                {cartQty}
+              </div>
+            )}
+
             {mode === 'default' ? (
               <button
                 onClick={handleAddToCart}
@@ -187,17 +191,26 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
                 )}
               </button>
             ) : (
-              <button
-                onClick={handleBuyNow}
-                className={`absolute bottom-0 left-0 right-0 bg-brand text-white py-4 flex items-center justify-center gap-2 text-[10px] font-black hover:bg-brand-gold uppercase tracking-widest transition-all duration-300 
-                  translate-y-0
-                  lg:translate-y-full
-                  ${isHovered ? 'lg:translate-y-0' : ''}
-                `}
-              >
-                <CreditCard className="w-4 h-4" />
-                BUY NOW
-              </button>
+              <div className={`absolute bottom-0 left-0 right-0 flex gap-2 px-4 py-3 justify-between items-center bg-white border-t border-brand-matte/5 lg:translate-y-full ${isHovered ? 'lg:translate-y-0' : ''}`}>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (itemId) removeFromCart(itemId);
+                  }}
+                  className="bg-red-500 text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition"
+                >
+                  Remove
+                </button>
+
+                <button
+                  onClick={handleBuyNow}
+                  className="bg-brand text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-brand-gold transition"
+                >
+                  <CreditCard className="w-4 h-4 inline-block mr-2" />
+                  BUY NOW
+                </button>
+              </div>
             )}
           </div>
 
@@ -213,14 +226,13 @@ const ProductCard = ({ product, variant, mode = 'default' }: ProductCardProps) =
 
             <div className="flex items-center justify-between mt-auto pt-4 border-t border-brand-matte/5">
               <div className="flex flex-col">
-                <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">
-                  {!variant && product.variants.length > 1 && <span className="text-[10px] font-bold not-italic mr-1 text-brand-matte/40 uppercase tracking-widest text-shadow-none">From</span>}
-                  Rs. {displayPrice.toFixed(2)}
-                </span>
-                {originalPrice && (
-                  <span className="text-[10px] text-brand-matte/30 line-through font-black">
-                    Rs. {originalPrice.toFixed(2)}
-                  </span>
+                {originalPrice && displayPrice < originalPrice ? (
+                  <>
+                    <span className="text-[10px] text-[#bbb] line-through font-black">Rs. {originalPrice.toFixed(2)}</span>
+                    <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">Rs. {displayPrice.toFixed(2)}</span>
+                  </>
+                ) : (
+                  <span className="text-lg md:text-xl font-black text-brand italic tracking-tighter">Rs. {displayPrice.toFixed(2)}</span>
                 )}
               </div>
               <div className="flex text-brand-gold">

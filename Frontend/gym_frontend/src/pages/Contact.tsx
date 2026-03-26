@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, MessageSquare, Clock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
+import { useAdmin } from '../contexts/AdminContext';
 
 const Contact: React.FC = () => {
+  const { adminData } = useAdmin();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -64,7 +66,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40 mb-2">Location</h4>
-                    <p className="text-sm font-black uppercase tracking-tight">Main Street, Business Hub<br />Austin, TX 78701</p>
+                    <p className="text-sm font-black uppercase tracking-tight">{adminData?.address || 'Main Street, Business Hub'}<br />{adminData?.city ? `${adminData.city}, ${adminData.province}` : 'Austin, TX 78701'}</p>
                   </div>
                 </div>
 
@@ -74,7 +76,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40 mb-2">Email</h4>
-                    <p className="text-sm font-black uppercase tracking-tight">support@nexus.com</p>
+                    <a href={`mailto:${adminData?.email || 'support@nexus.com'}`} className="text-sm font-black uppercase tracking-tight hover:text-brand transition-colors">{adminData?.email || 'support@nexus.com'}</a>
                   </div>
                 </div>
 
@@ -84,7 +86,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40 mb-2">Phone</h4>
-                    <p className="text-sm font-black uppercase tracking-tight">+1-202-555-0178</p>
+                    <a href={`tel:${adminData?.phone || '+1-202-555-0178'}`} className="text-sm font-black uppercase tracking-tight hover:text-brand transition-colors">{adminData?.phone || '+1-202-555-0178'}</a>
                   </div>
                 </div>
 

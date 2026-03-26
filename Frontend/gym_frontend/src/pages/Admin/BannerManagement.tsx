@@ -3,7 +3,6 @@ import { Plus, Trash2, ArrowLeft, Upload, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
-import { motion } from "framer-motion"
 import { toast } from 'sonner';
 import NexusLoader from '../../components/NexusLoader';
 
@@ -99,7 +98,7 @@ const BannerManagement: React.FC = () => {
                 <div className="space-y-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                         <div className="space-y-8">
-                            <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand-gold font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
+                            <Link to="/admin" className="inline-flex items-center gap-3 text-brand-matte/40 hover:text-brand font-black uppercase tracking-[0.3em] text-[10px] transition-all duration-500 group">
                                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform duration-500" />
                                 Back to Dashboard
                             </Link>
@@ -126,67 +125,83 @@ const BannerManagement: React.FC = () => {
                 </div>
 
                 {showAddForm && (
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-brand-matte/95 backdrop-blur-sm">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            className="bg-brand-warm p-12 max-w-2xl w-full border border-brand-matte/5 relative shadow-2xl"
-                        >
-                            <button onClick={() => setShowAddForm(false)} className="absolute top-8 right-8 text-brand-matte/30 hover:text-brand transition-colors">
-                                <X className="w-6 h-6" />
-                            </button>
-
-                            <div className="space-y-2 mb-12">
-                                <h2 className="text-3xl font-black text-brand-matte uppercase tracking-tighter">Slide <span className="shine-gold italic font-brand">Composer</span></h2>
-                                <p className="text-[10px] text-brand-matte/30 font-black uppercase tracking-widest leading-loose">Configure your promotional highlight on the main stage.</p>
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-brand-matte/80 backdrop-blur-sm overflow-y-auto">
+                        <div className="bg-brand-warm border border-brand-matte/5 w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl my-auto">
+                            {/* Header */}
+                            <div className="p-6 md:p-8 border-b border-brand-matte/5 flex items-center justify-between bg-white shadow-sm">
+                                <div>
+                                    <h2 className="text-2xl font-black text-brand-matte uppercase tracking-tighter italic">Create <span className="text-brand">Slide</span></h2>
+                                    <p className="text-brand-matte/40 text-[10px] font-black uppercase tracking-widest mt-1">Configure your promotional highlight on the main stage</p>
+                                </div>
+                                <button onClick={() => setShowAddForm(false)} className="p-2 hover:bg-brand-warm rounded-none transition text-brand-matte/40 hover:text-brand">
+                                    <X className="w-6 h-6" />
+                                </button>
                             </div>
 
-                            <form onSubmit={handleCreate} className="space-y-10">
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-matte/40">Visual Title</label>
-                                    <input
-                                        type="text"
-                                        placeholder="E.G. NEW ARRIVAL - SUMMER COLLECTION"
-                                        className="w-full px-8 py-5 bg-brand-warm border border-brand-matte/10 text-[11px] font-black uppercase tracking-widest focus:border-brand-gold transition-colors outline-none"
-                                        value={newBanner.title}
-                                        onChange={e => setNewBanner({ ...newBanner, title: e.target.value })}
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-matte/40">Target Navigation Link</label>
-                                    <input
-                                        type="text"
-                                        placeholder="/products?category=sale"
-                                        className="w-full px-8 py-5 bg-brand-warm border border-brand-matte/10 text-[11px] font-black tracking-widest focus:border-brand-gold transition-colors outline-none"
-                                        value={newBanner.link}
-                                        onChange={e => setNewBanner({ ...newBanner, link: e.target.value })}
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-matte/40">Imagery Asset</label>
-                                    <div className="relative border-2 border-dashed border-brand-matte/10 p-12 text-center hover:border-brand-gold/40 transition-all group pointer-cursor bg-brand-warm/50">
+                            {/* Content */}
+                            <div className="flex-grow overflow-y-auto p-6 md:p-8 space-y-6">
+                                <form onSubmit={handleCreate} className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-[0.2em] ml-1">Visual Title</label>
                                         <input
-                                            type="file"
-                                            id="banner-image"
-                                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                                            accept="image/*"
-                                            onChange={e => setNewBanner({ ...newBanner, image: e.target.files?.[0] || null })}
+                                            type="text"
+                                            placeholder="E.G. NEW ARRIVAL - SUMMER COLLECTION"
+                                            className="w-full px-6 md:px-8 py-4 md:py-5 bg-white border border-brand-matte/10 text-[11px] font-black uppercase tracking-widest focus:border-brand transition-colors outline-none shadow-sm"
+                                            value={newBanner.title}
+                                            onChange={e => setNewBanner({ ...newBanner, title: e.target.value })}
                                         />
-                                        <Upload className="w-12 h-12 text-brand-matte/10 mx-auto mb-6 group-hover:text-brand-gold transition-colors" />
-                                        <p className="text-[11px] font-black uppercase tracking-widest text-brand-matte/40 group-hover:text-brand-matte transition-colors">
-                                            {newBanner.image ? newBanner.image.name : 'Select or drop 1920x800 asset'}
-                                        </p>
                                     </div>
-                                </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-[0.2em] ml-1">Target Navigation Link</label>
+                                        <input
+                                            type="text"
+                                            placeholder="/products?category=sale"
+                                            className="w-full px-6 md:px-8 py-4 md:py-5 bg-white border border-brand-matte/10 text-[11px] font-black tracking-widest focus:border-brand transition-colors outline-none shadow-sm"
+                                            value={newBanner.link}
+                                            onChange={e => setNewBanner({ ...newBanner, link: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-brand-matte/40 uppercase tracking-[0.2em] ml-1">Imagery Asset</label>
+                                        <div className="relative group">
+                                            <input
+                                                type="file"
+                                                id="banner-image"
+                                                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                                accept="image/*"
+                                                onChange={e => setNewBanner({ ...newBanner, image: e.target.files?.[0] || null })}
+                                            />
+                                            <label
+                                                htmlFor="banner-image"
+                                                className="flex flex-col items-center justify-center w-full h-40 bg-white border-2 border-dashed border-brand-matte/10 rounded-none cursor-pointer group-hover:border-brand group-hover:bg-brand/5 transition-all shadow-sm"
+                                            >
+                                                <Upload className="w-10 h-10 text-brand-matte/10 group-hover:text-brand mb-3 transition-colors" />
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-brand-matte/40 group-hover:text-brand transition-colors text-center px-4">
+                                                    {newBanner.image ? newBanner.image.name : 'Select or drop 1920x800 asset'}
+                                                </p>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="p-6 md:p-8 border-t border-brand-matte/5 bg-white flex justify-end gap-4">
                                 <button
-                                    type="submit"
-                                    disabled={uploading}
-                                    className="w-full py-8 bg-brand text-white font-black uppercase tracking-[0.5em] text-[12px] hover:bg-brand-matte transition-all disabled:opacity-50 shadow-xl shadow-brand/20"
+                                    onClick={() => setShowAddForm(false)}
+                                    className="px-6 md:px-8 py-4 md:py-5 text-brand-matte/40 font-black text-[10px] uppercase tracking-[0.3em] hover:text-brand transition-colors rounded-none"
                                 >
-                                    {uploading ? 'Processing Asset...' : 'Deploy Banner'}
+                                    Back
                                 </button>
-                            </form>
-                        </motion.div>
+                                <button
+                                    onClick={handleCreate}
+                                    disabled={uploading}
+                                    className="px-8 md:px-12 py-4 md:py-5 bg-brand text-white font-black text-[10px] uppercase tracking-[0.4em] hover:bg-brand-matte transition-all shadow-lg shadow-brand/10 rounded-none flex items-center gap-3 disabled:opacity-50"
+                                >
+                                    {uploading ? 'Processing...' : 'Deploy Banner'}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
@@ -198,7 +213,7 @@ const BannerManagement: React.FC = () => {
                         </div>
                     ) : (
                         banners.map(banner => (
-                            <div key={banner.id} className="group bg-white border border-brand-matte/5 overflow-hidden shadow-2xl hover:shadow-brand-gold/10 hover:border-brand-gold/20 transition-all duration-700">
+                            <div key={banner.id} className="group bg-white border border-brand-matte/5 overflow-hidden shadow-2xl hover:shadow-brand/10 hover:border-brand/20 transition-all duration-700">
                                 <div className="relative h-64 overflow-hidden bg-brand-warm">
                                     <img src={banner.image} alt={banner.title} className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" />
                                     <div className="absolute inset-0 bg-brand-matte/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
@@ -212,8 +227,8 @@ const BannerManagement: React.FC = () => {
                                 </div>
                                 <div className="p-10 space-y-4">
                                     <div className="space-y-1">
-                                        <p className="text-[8px] font-bold text-brand-gold uppercase tracking-[0.4em]">Interactive Hub</p>
-                                        <h3 className="text-xl font-black text-brand-matte uppercase tracking-tighter truncate group-hover:text-brand-gold transition-colors">{banner.title || 'Visual Asset'}</h3>
+                                        <p className="text-[8px] font-bold text-brand uppercase tracking-[0.4em]">Interactive Hub</p>
+                                        <h3 className="text-xl font-black text-brand-matte uppercase tracking-tighter truncate group-hover:text-brand transition-colors">{banner.title || 'Visual Asset'}</h3>
                                     </div>
                                     <div className="pt-4 border-t border-brand-matte/5">
                                         <p className="text-[10px] font-black text-brand-matte/30 uppercase tracking-[0.2em] truncate italic">{banner.link || 'Static Highlight'}</p>
@@ -227,7 +242,7 @@ const BannerManagement: React.FC = () => {
 
             <style>{`
                 .shine-gold {
-                    background: linear-gradient(90deg, #C9A24D, #FFF, #C9A24D);
+                    background: linear-gradient(90deg, #e8222e, #FFF, #e8222e);
                     background-size: 200% auto;
                     animation: gold-shine 5s linear infinite;
                     -webkit-background-clip: text;
