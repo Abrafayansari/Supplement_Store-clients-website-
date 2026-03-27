@@ -25,7 +25,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     // Show success message if the backend sends a 'message' field
-    if (response.data && response.data.message && response.config.method !== 'get') {
+    // Allow callers to suppress toasts by setting header 'X-Suppress-Toast'
+    const suppress = response.config.headers && (response.config.headers['X-Suppress-Toast'] || response.config.headers['x-suppress-toast']);
+    if (!suppress && response.data && response.data.message && response.config.method !== 'get') {
       toast.success(response.data.message);
     }
     return response;

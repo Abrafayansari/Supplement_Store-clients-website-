@@ -106,7 +106,7 @@ const Home: React.FC = () => {
             <div className="w-16 h-1 bg-brand-gold mx-auto opacity-30"></div>
         </div>
 
-        <div className="relative cursor-grab active:cursor-grabbing overflow-hidden px-4 sm:px-6">
+        <div className="relative cursor-grab active:cursor-grabbing overflow-hidden py-4 px-4 sm:px-6">
           <motion.div
             ref={sliderRef}
             drag="x"
@@ -272,7 +272,7 @@ const Home: React.FC = () => {
           <div className="space-y-10">
             <div className="space-y-3">
               <span className="text-brand font-black uppercase tracking-[0.4em] text-[10px]">Our Mission</span>
-              <h2 className="text-3xl md:text-4xl font-black text-brand-matte uppercase tracking-tighter leading-tight">
+              <h2 className="text-3xl md:text-5xl font-black text-brand-matte uppercase tracking-tighter leading-tight">
                 SCIENCE OVER <br /> <span className="text-brand-gold italic">SPECULATION</span>
               </h2>
             </div>
@@ -325,7 +325,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Quality Assurance */}
-      <section className="py-20 bg-brand-warm border-y border-brand-matte/5">
+      {/* <section className="py-20 bg-brand-warm border-y border-brand-matte/5">
         <div className="container mx-auto px-6 text-center space-y-12">
           <div className="space-y-3">
             <h2 className="text-3xl md:text-5xl font-black text-brand-matte uppercase tracking-tighter">CERTIFIED FACILITIES</h2>
@@ -340,7 +340,7 @@ const Home: React.FC = () => {
             <div className="text-2xl md:text-3xl font-black text-brand-matte">NSF-CERT</div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Final CTA */}
       <section className="bg-brand-warm py-40 md:py-52 text-center relative overflow-hidden">

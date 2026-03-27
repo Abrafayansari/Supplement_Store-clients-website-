@@ -15,16 +15,21 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [items, setItems] = useState<WishlistItem[]>([]);
+    // Initialize from localStorage to avoid hydrate->persist race on mount
+    const [items, setItems] = useState<WishlistItem[]>(() => {
+        try {
+            const stored = localStorage.getItem('nexus_wishlist_local');
+            return stored ? JSON.parse(stored) : [];
+        } catch (err) {
+            console.error('Failed to read wishlist from localStorage', err);
+            return [];
+        }
+    });
     const { user } = useAuth();
 
     const WISHLIST_STORAGE_KEY = 'nexus_wishlist_local';
 
-    // Hydrate from localStorage on mount so UI updates immediately (works logged-in or not)
-    useEffect(() => {
-        const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
-        if (stored) setItems(JSON.parse(stored));
-    }, []);
+    // Persist wishlist to localStorage so it stays available across sessions
 
     // Always persist wishlist to localStorage so it stays available across sessions
     useEffect(() => {
@@ -55,15 +60,30 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
         try {
             const token = localStorage.getItem("token");
             if (!token) {
+                let added = false;
                 setItems(prev => {
                     if (prev.find(item => item.product.id === product.id)) return prev;
+                    added = true;
                     return [...prev, { id: Date.now().toString(), product: product, productId: product.id, user: 'local', createdAt: new Date().toISOString() } as any];
                 });
-                toast.success("Added to wishlist.");
+                if (added) toast.success("Added to wishlist.");
                 return;
             }
-            await api.post('/wishlist', { productId: product.id });
-            showWishlist();
+            // Suppress backend success toast; show manual toast only if created
+            try {
+                const res = await api.post('/wishlist', { productId: product.id }, { headers: { 'X-Suppress-Toast': '1' } });
+                if (res && (res.status === 201 || res.status === 200)) {
+                    toast.success("Added to wishlist.");
+                }
+            } catch (err: any) {
+                // If backend says item already exists, suppress message
+                if (err.response?.status === 400 && typeof err.response.data?.message === 'string' && err.response.data.message.toLowerCase().includes('already')) {
+                    // do nothing
+                } else {
+                    console.error('Add to wishlist error (server):', err);
+                }
+            }
+            await showWishlist();
         } catch (err: any) {
             console.error("Add to wishlist error:", err);
         }
@@ -77,7 +97,7 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
                 return;
             }
 
-            await api.delete(`/wishlist/${productId}`);
+            await api.delete(`/wishlist/${productId}`, { headers: { 'X-Suppress-Toast': '1' } });
 
             setItems(prev => prev.filter(item => item.productId !== productId && item.product.id !== productId));
         } catch (err: any) {
@@ -99,7 +119,33 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
 
     useEffect(() => {
-        showWishlist();
+        const syncAndLoad = async () => {
+            const token = localStorage.getItem('token');
+            // If user just logged in, push local wishlist items to server first
+            if (token) {
+                const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
+                if (stored) {
+                    try {
+                        const localItems: WishlistItem[] = JSON.parse(stored);
+                        const productIds = Array.from(new Set(localItems.map(i => i.productId || i.product?.id)));
+                        for (const pid of productIds) {
+                            if (!pid) continue;
+                            try {
+                                await api.post('/wishlist', { productId: pid }, { headers: { 'X-Suppress-Toast': '1' } });
+                            } catch (e) {
+                                // ignore individual failures
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Failed parsing local wishlist for sync', err);
+                    }
+                }
+            }
+
+            await showWishlist();
+        };
+
+        syncAndLoad();
     }, [user]);
 
     return (

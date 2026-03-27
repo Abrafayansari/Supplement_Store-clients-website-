@@ -1,14 +1,16 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import api from '../lib/api';
 import { toast } from 'sonner';
 
 import { Product, ProductVariant } from '@/types.ts';
+import { useAuth } from './AuthContext';
 
 interface CartItem {
   id: string; // Add ID from backend
   product: Product;
   variant?: ProductVariant;
   quantity: number;
+  synced?: boolean;
 }
 
 interface CartContextType {
@@ -28,14 +30,92 @@ const CART_STORAGE_KEY = 'supplement_store_cart';
 
 // Fix: Use React.FC to explicitly define the children prop for the CartProvider component to resolve TS errors during usage.
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(CART_STORAGE_KEY);
-    if (stored) {
-      setItems(JSON.parse(stored));
+  // Initialize from localStorage to avoid hydrate->persist race on mount
+  const [items, setItems] = useState<CartItem[]>(() => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch (err) {
+      console.error('Failed to read cart from localStorage', err);
+      return [];
     }
-  }, []);
+  });
+  const { user } = useAuth();
+
+  // When a user logs in (transition from unauthenticated -> authenticated), sync local anonymous cart items to server
+  const prevUserRef = useRef<typeof user | null>(null);
+  useEffect(() => {
+    const syncLocalCartToServer = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      if (!stored) return;
+
+      let localItems: CartItem[] = [];
+      try {
+        localItems = JSON.parse(stored);
+      } catch (err) {
+        console.error('Failed to parse local cart for sync', err);
+        return;
+      }
+
+      if (!Array.isArray(localItems) || localItems.length === 0) return;
+
+      try {
+        // Fetch server cart to compute correct merges
+        const res = await api.get('/showcart');
+        const serverItems: any[] = res.data.cartItems || [];
+
+        // Map server items by productId + variantId for quick lookup
+        const keyOf = (pId: string, vId?: string) => `${pId}::${vId || ''}`;
+        const serverMap = new Map<string, any>();
+        for (const si of serverItems) {
+          const k = keyOf(si.product.id, si.variant?.id);
+          serverMap.set(k, si);
+        }
+
+        // Aggregate local items by key
+        const localAgg = new Map<string, { productId: string; variantId?: string; qty: number }>();
+        for (const li of localItems) {
+          const pId = li.product.id;
+          const vId = li.variant?.id;
+          const k = keyOf(pId, vId);
+          const existing = localAgg.get(k);
+          if (existing) existing.qty += li.quantity || 0;
+          else localAgg.set(k, { productId: pId, variantId: vId, qty: li.quantity || 0 });
+        }
+
+        // For each aggregated local item, compute delta relative to server and only apply positive deltas
+        for (const [k, ag] of localAgg.entries()) {
+          const serverMatch = serverMap.get(k);
+          if (serverMatch) {
+            const serverQty = serverMatch.quantity || 0;
+            const localQty = ag.qty || 0;
+            const delta = localQty - serverQty;
+            if (delta > 0) {
+              const newQty = serverQty + delta;
+              // suppress global toasts for these background sync calls
+              await api.post('/updatecart', { productId: ag.productId, variantId: ag.variantId, quantity: newQty }, { headers: { 'X-Suppress-Toast': '1' } });
+            }
+          } else {
+            await api.post('/addtocart', { productId: ag.productId, variantId: ag.variantId, quantity: ag.qty }, { headers: { 'X-Suppress-Toast': '1' } });
+          }
+        }
+
+        // After sync, refresh canonical cart from server and persist locally
+        await showCart();
+      } catch (err) {
+        console.error('Failed to sync local cart to server', err);
+      }
+    };
+
+    // Only attempt sync when user transitions from not-logged-in -> logged-in
+    if (!prevUserRef.current && user) {
+      syncLocalCartToServer();
+    }
+    prevUserRef.current = user;
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
@@ -47,11 +127,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const variant = variantId && product.variants ? product.variants.find(v => v.id === variantId) : null;
       
       if (token) {
+        // Suppress backend success toast; show manual toast below
         await api.post('/addtocart', {
           productId: product.id,
           variantId: variantId,
           quantity: quantity
-        });
+        }, { headers: { 'X-Suppress-Toast': '1' } });
         await showCart(); // Refresh cart from server
       } else {
         // Local add to cart
@@ -75,7 +156,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await api.delete(`/removecart/${itemId}`);
+        // Suppress toast for background deletion (only show toast on user-initiated add)
+        await api.delete(`/removecart/${itemId}`, { headers: { 'X-Suppress-Toast': '1' } });
       }
       setItems(prev => prev.filter(item => item.id !== itemId));
     } catch (err: any) {
@@ -88,9 +170,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const token = localStorage.getItem("token");
       if (token) {
+        // Suppress toasts for background update operations
         await api.post(
           '/updatecart',
-          { productId, variantId, quantity }
+          { productId, variantId, quantity },
+          { headers: { 'X-Suppress-Toast': '1' } }
         );
       }
 
@@ -115,7 +199,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await api.delete('/clearcart');
+        await api.delete('/clearcart', { headers: { 'X-Suppress-Toast': '1' } });
       }
       setItems([]);
     } catch (err: any) {
@@ -136,6 +220,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         product: ci.product,
         variant: ci.variant,
         quantity: ci.quantity,
+        synced: true,
       }));
 
       setItems(cartItems);

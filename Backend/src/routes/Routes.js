@@ -34,7 +34,8 @@ router.put("/product/:id", authenticate, adminOnly, upload.array("images", 5), u
 router.delete("/product/:id", authenticate, adminOnly, deleteProduct);
 router.get("/getcategories", getCategories)
 router.post("/updatecart", authenticate, updateCart);
-router.delete("/removecartitem", authenticate, deleteCartItem)
+// Provide RESTful route to remove a specific cart item by id
+router.delete("/removecart/:id", authenticate, deleteCartItem)
 router.delete("/clearcart", authenticate, clearCart)
 router.get("/showcart", authenticate, showcart)
 router.post("/wishlist", authenticate, addToWishlist);
@@ -53,6 +54,8 @@ router.post("/contact", handleContactMessage);
 
 // Banner Routes
 router.get("/banners", getBanners);
+// Public admin settings endpoint (exposes headline, contact info, etc.)
+router.get("/settings", (req, res) => AdminSettingsController.getSettings(req, res));
 router.post("/admin/banners", authenticate, adminOnly, upload.single("image"), createBanner);
 router.delete("/admin/banners/:id", authenticate, adminOnly, deleteBanner);
 

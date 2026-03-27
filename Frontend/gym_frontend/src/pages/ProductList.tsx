@@ -840,7 +840,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
 const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') || '');
     const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
     const [catalogMaxPrice, setCatalogMaxPrice] = useState(10000);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -859,6 +859,13 @@ const ProductList: React.FC = () => {
     useEffect(() => {
         setPage(1);
     }, [activeCategory, activeSubCategory, searchQuery, maxPrice, sortBy]);
+
+    // Keep local searchQuery in sync with the URL `search` param so
+    // navigating to /products?search=term (from Navbar) updates results.
+    useEffect(() => {
+        const s = searchParams.get('search') || '';
+        if (s !== searchQuery) setSearchQuery(s);
+    }, [searchParams]);
 
     useEffect(() => {
         const loadPageData = async () => {

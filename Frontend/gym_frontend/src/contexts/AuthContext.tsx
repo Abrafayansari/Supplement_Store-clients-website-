@@ -104,7 +104,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.clear();
+    // Remove auth-related items but preserve local cart/wishlist and other app data
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    } catch (err) {
+      console.error('Failed to clear auth from localStorage', err);
+    }
   };
 
   return (
