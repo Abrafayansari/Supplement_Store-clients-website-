@@ -1,7 +1,27 @@
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const normalizeApiUrl = (raw?: string): string => {
+  let value = (raw || '').trim();
+
+  if (!value) {
+    if (typeof window !== 'undefined') return `${window.location.origin}/api`;
+    return '/api';
+  }
+
+  // Guard against accidental concatenation like: https://a.comhttps://a.com/api/
+  const firstHttp = value.indexOf('http');
+  if (firstHttp !== -1) {
+    const secondHttp = value.indexOf('http', firstHttp + 4);
+    if (secondHttp !== -1) {
+      value = value.slice(secondHttp);
+    }
+  }
+
+  return value.replace(/\/+$/, '');
+};
+
+const API_URL = normalizeApiUrl(import.meta.env.VITE_API_URL);
 
 const api = axios.create({
   baseURL: API_URL,
@@ -33,6 +53,11 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    const suppress = error.config?.headers && (error.config.headers['X-Suppress-Toast'] || error.config.headers['x-suppress-toast']);
+    if (suppress) {
+      return Promise.reject(error);
+    }
+
     const message = error.response?.data?.message || error.response?.data?.error || 'An unexpected error occurred';
     
     if (error.response) {

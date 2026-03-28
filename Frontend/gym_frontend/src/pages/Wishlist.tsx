@@ -25,7 +25,7 @@ const Wishlist: React.FC = () => {
     }, []);
 
     const handleAddToCart = async (product: any) => {
-        addToCart(product, 1);
+        await addToCart(product, 1);
     };
 
     const handleRemove = async (productId: string) => {

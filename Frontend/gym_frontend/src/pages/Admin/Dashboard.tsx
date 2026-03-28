@@ -12,7 +12,7 @@ import NexusLoader from '../../components/NexusLoader';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-import logo from '../../assets/nexus_logo.jpg';
+import logo from '../../assets/logo.png';
 
 interface Notification {
   id: string;

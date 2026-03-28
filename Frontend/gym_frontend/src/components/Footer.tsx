@@ -2,6 +2,7 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Zap, Linkedin } from 'lucide-react';
 import { useAdmin } from '../contexts/AdminContext';
+import logo from '../assets/logo.png';
 
 const Footer: React.FC = () => {
   const { adminData } = useAdmin();
@@ -12,7 +13,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
           <div className="space-y-8">
             <div className="flex items-center gap-3 text-white">
-              <img src="/src/assets/nexus_logo.jpg" alt="Nexus Logo" className="h-10 w-auto object-contain" />
+              <img src={logo} alt="Nexus Logo" className="h-10 w-auto object-contain" />
               <span className="text-3xl font-black tracking-tighter uppercase">
                 NEXUS
               </span>

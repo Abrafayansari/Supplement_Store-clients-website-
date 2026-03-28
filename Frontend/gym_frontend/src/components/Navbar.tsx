@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../contexts/CartContext.tsx';
 import { useWishlist } from '../contexts/WishlistContext.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
-import logo from '../assets/nexus_logo.jpg';
+import logo from '../assets/logo.png';
 import { getCategories, Category } from '../data/Product';
 
 const Navbar: React.FC = () => {

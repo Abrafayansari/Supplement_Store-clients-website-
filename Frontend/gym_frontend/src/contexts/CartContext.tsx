@@ -41,6 +41,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   });
   const { user } = useAuth();
+  const syncPromiseRef = useRef<Promise<void> | null>(null);
 
   // When a user logs in (transition from unauthenticated -> authenticated), sync local anonymous cart items to server
   const prevUserRef = useRef<typeof user | null>(null);
@@ -64,7 +65,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       try {
         // Fetch server cart to compute correct merges
-        const res = await api.get('/showcart');
+        const res = await api.get('/showcart', { headers: { 'X-Suppress-Toast': '1' } });
         const serverItems: any[] = res.data.cartItems || [];
 
         // Map server items by productId + variantId for quick lookup
@@ -86,7 +87,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           else localAgg.set(k, { productId: pId, variantId: vId, qty: li.quantity || 0 });
         }
 
-        // For each aggregated local item, compute delta relative to server and only apply positive deltas
+        // For each aggregated local item, compute delta relative to server and only apply positive deltas.
         for (const [k, ag] of localAgg.entries()) {
           const serverMatch = serverMap.get(k);
           if (serverMatch) {
@@ -112,7 +113,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     // Only attempt sync when user transitions from not-logged-in -> logged-in
     if (!prevUserRef.current && user) {
-      syncLocalCartToServer();
+      syncPromiseRef.current = syncLocalCartToServer().finally(() => {
+        syncPromiseRef.current = null;
+      });
     }
     prevUserRef.current = user;
   }, [user]);
@@ -127,12 +130,33 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const variant = variantId && product.variants ? product.variants.find(v => v.id === variantId) : null;
       
       if (token) {
-        // Suppress backend success toast; show manual toast below
-        await api.post('/addtocart', {
-          productId: product.id,
-          variantId: variantId,
-          quantity: quantity
-        }, { headers: { 'X-Suppress-Toast': '1' } });
+        // Wait for login-time sync (if any) to avoid duplicate create races.
+        if (syncPromiseRef.current) {
+          await syncPromiseRef.current;
+        }
+
+        const existing = items.find(
+          item => item.product.id === product.id && (item.variant?.id || undefined) === (variantId || undefined)
+        );
+
+        if (existing) {
+          await api.post(
+            '/updatecart',
+            {
+              productId: product.id,
+              variantId: variantId,
+              quantity: existing.quantity + quantity,
+            },
+            { headers: { 'X-Suppress-Toast': '1' } }
+          );
+        } else {
+          await api.post('/addtocart', {
+            productId: product.id,
+            variantId: variantId,
+            quantity: quantity
+          }, { headers: { 'X-Suppress-Toast': '1' } });
+        }
+
         await showCart(); // Refresh cart from server
       } else {
         // Local add to cart
