@@ -9,12 +9,15 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://www.nexussupplement.com/',
+    'https://www.nexussupplement.com',
     // 'https://nuve-life-supplements.vercel.app',
-    'https://supplement-store-clients-website-zeta.vercel.app'  , 
+    // 'https://supplement-store-clients-website-zeta.vercel.app', 
     // 'https://supplement-store-clients-website.vercel.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400
 }));
 app.use(cookieParser());
 
