@@ -10,6 +10,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://nuve-life-supplements.vercel.app',
+    'https://supplement-store-clients-website-zeta.vercel.app'  , 
     'https://supplement-store-clients-website.vercel.app'
   ],
   credentials: true
