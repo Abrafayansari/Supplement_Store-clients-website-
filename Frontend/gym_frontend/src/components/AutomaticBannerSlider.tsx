@@ -130,7 +130,7 @@ const AutomaticBannerSlider: React.FC = () => {
                  */}
                 <div className="w-screen -ml-[calc(50vw-50%)] mt-0 bg-gray-100 animate-pulse
                                 h-0 pb-[100%]
-                                md:h-[45vh] md:pb-0
+                                md:h-[65vh] md:pb-0
                                 lg:h-[50vh]" />
                 <div className="w-screen -ml-[calc(50vw-50%)] h-4 md:h-6 bg-white" />
                 <div className="w-screen -ml-[calc(50vw-50%)] h-8 md:h-10 bg-gray-200 animate-pulse" />
