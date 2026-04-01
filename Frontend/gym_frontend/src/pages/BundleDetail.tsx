@@ -138,7 +138,7 @@ const BundleDetail: React.FC = () => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="aspect-square bg-brand-warm border border-brand-matte/5 relative group overflow-hidden shadow-2xl"
+                            className="aspect-square bg-white border border-brand-matte/5 relative group overflow-hidden shadow-2xl"
                         >
                             <img
                                 src={bundle.image || (bundle.products[0]?.images?.[0]) || "https://images.unsplash.com/photo-1579722820308-d74e571900a9?auto=format&fit=crop&q=80&w=1200"}

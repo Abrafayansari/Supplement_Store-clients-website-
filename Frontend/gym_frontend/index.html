@@ -5,14 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NEXUS | Quality Supplements</title>
-  <meta name="description" content="NEXUS provides the highest quality supplements to fuel your fitness journey. Shop our wide range of products for optimal performance.">
+  <meta name="description"
+    content="NEXUS provides the highest quality supplements to fuel your fitness journey. Shop our wide range of products for optimal performance.">
   <meta name="keywords" content="supplements, fitness, gym, nutrition, health, workout, nexus">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="NEXUS | Quality Supplements">
-  <meta property="og:description" content="NEXU S provides the highest quality supplements to fuel your fitness journey.">
+  <meta property="og:description"
+    content="NEXUS provides the highest quality supplements to fuel your fitness journey.">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/png+xml" href="/assets/logo.png">
-
+  <script src="https://cdn.tailwindcss.com"></script>
   <!--
     FONT STACK:
     ─────────────────────────────────────────────────────────
@@ -27,7 +29,9 @@
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -44,15 +48,15 @@
               Example: <p class="font-body text-base font-medium">40 servings per container</p>
             */
             display: ['"Bebas Neue"', 'sans-serif'],
-            body:    ['"DM Sans"', 'sans-serif'],
-            sans:    ['"DM Sans"', 'sans-serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+            sans: ['"DM Sans"', 'sans-serif'],
           },
           colors: {
             brand: {
               DEFAULT: '#7B0F17',
-              gold:    '#7B0F17',
-              matte:   '#0E0E0E',
-              warm:    '#FAFAFA',
+              gold: '#7B0F17',
+              matte: '#0E0E0E',
+              warm: '#FAFAFA',
             }
           },
           letterSpacing: {
@@ -110,9 +114,17 @@
       font-family: 'DM Sans', sans-serif;
     }
 
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: #FAFAFA; }
-    ::-webkit-scrollbar-thumb { background: #7B0F17; }
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #FAFAFA;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #7B0F17;
+    }
 
     .transition-luxury {
       transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
@@ -137,8 +149,13 @@
     }
 
     @keyframes gold-shine {
-      0%   { background-position: -200% center; }
-      100% { background-position:  200% center; }
+      0% {
+        background-position: -200% center;
+      }
+
+      100% {
+        background-position: 200% center;
+      }
     }
 
     .shine-gold {
@@ -160,14 +177,26 @@
     .mesh-bg {
       background-color: #FAFAFA;
       background-image:
-        radial-gradient(at 0%   0%, hsla(355, 78%, 27%, 0.05) 0, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(41,  55%, 54%, 0.05) 0, transparent 50%);
+        radial-gradient(at 0% 0%, hsla(355, 78%, 27%, 0.05) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(41, 55%, 54%, 0.05) 0, transparent 50%);
     }
 
-    .custom-scrollbar::-webkit-scrollbar       { width: 5px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #F3F4F6; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #7B0F17; }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F3F4F6;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #D1D5DB;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #7B0F17;
+    }
   </style>
 
   <script type="importmap">

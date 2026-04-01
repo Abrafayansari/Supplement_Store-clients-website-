@@ -37,6 +37,24 @@ const AdminDashboard: React.FC = () => {
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const notificationCloseTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openNotifications = () => {
+    if (notificationCloseTimeoutRef.current) {
+      clearTimeout(notificationCloseTimeoutRef.current);
+      notificationCloseTimeoutRef.current = null;
+    }
+    setShowNotifications(true);
+  };
+
+  const closeNotifications = () => {
+    if (notificationCloseTimeoutRef.current) {
+      clearTimeout(notificationCloseTimeoutRef.current);
+    }
+    notificationCloseTimeoutRef.current = setTimeout(() => {
+      setShowNotifications(false);
+    }, 120);
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -105,6 +123,14 @@ const AdminDashboard: React.FC = () => {
       fetchNotifications();
     }
   }, [token]);
+
+  React.useEffect(() => {
+    return () => {
+      if (notificationCloseTimeoutRef.current) {
+        clearTimeout(notificationCloseTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -220,9 +246,13 @@ const AdminDashboard: React.FC = () => {
             </button>
 
             {/* Notification Bell with Dropdown */}
-            <div className="relative">
+            <div
+              className="relative"
+              onMouseEnter={openNotifications}
+              onMouseLeave={closeNotifications}
+            >
               <button
-                onClick={() => setShowNotifications(!showNotifications)}
+                onClick={() => setShowNotifications(prev => !prev)}
                 className="bg-white p-4 border border-brand-matte/5 relative hover:border-brand transition-colors shadow-sm"
               >
                 <Bell className="w-6 h-6 text-brand-matte/20" />

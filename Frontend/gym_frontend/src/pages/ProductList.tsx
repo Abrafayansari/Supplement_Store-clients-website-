@@ -955,40 +955,44 @@ const ProductList: React.FC = () => {
     return (
         <div className="min-h-screen bg-white selection:bg-brand selection:text-white">
 
-            {/* 1. DARK HERO SECTION */}
-            <div className="bg-brand-matte pt-32 pb-24 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-                <div className="absolute top-0 right-0 p-20 opacity-5">
-                    <img src="/assets/dumbbell.svg" alt="dumbbell" className="w-96 h-96" />
+            {/* 1. PREMIUM DARK HERO SECTION */}
+            <div className="bg-brand-matte pt-36 pb-32 relative overflow-hidden">
+                {/* Decorative background elements */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
+                <div className="absolute -top-10 -right-10 opacity-[0.03] rotate-12 pointer-events-none select-none">
+                    <img src="/assets/dumbbell.svg" alt="" className="w-[600px] h-[600px]" />
                 </div>
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-gold/10 rounded-full blur-[120px] pointer-events-none"></div>
+
                 <div className="max-w-[1700px] mx-auto px-6 relative z-10">
-                    <div className="flex px-4 flex-col lg:flex-row justify-between items-end gap-12">
-                        <div className="space-y-6">
+                    <div className="flex flex-col lg:flex-row justify-between items-end gap-12">
+                        <div className="space-y-8 w-full lg:w-auto">
                             <div className="flex items-center gap-4">
-                                <Badge className="bg-brand-gold text-brand-matte font-black rounded-none px-3 py-1 border-none">SHOP</Badge>
-                                <span className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Products Available</span>
+                                <Badge className="bg-brand-gold text-white font-black rounded-none px-4 py-1.5 border-none shadow-[0_5px_15px_rgba(123,15,23,0.3)]">COLLECTION</Badge>
+                                <span className="text-white/60 text-[11px] font-black uppercase tracking-[0.4em] animate-pulse">Inventory Live</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.85]">
-                                Shop <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-white shine-gold">All Products</span>
+                            <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.8]">
+                                The <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-white to-brand-gold shine-gold">Arsenal</span>
                             </h1>
                         </div>
                         <div className="w-full lg:w-[500px] relative group">
-                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/20 w-5 h-5 group-focus-within:text-brand-gold transition-colors" />
+                            <div className="absolute inset-0 bg-brand-gold/5 blur-xl group-focus-within:bg-brand-gold/10 transition-all duration-500 rounded-none"></div>
+                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 w-5 h-5 group-focus-within:text-brand-gold group-focus-within:scale-110 transition-all duration-300" />
                             <input
                                 type="text"
-                                placeholder="SEARCH PRODUCTS..."
+                                placeholder="SEARCH THE CATALOGUE..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-16 pr-8 py-6 bg-white/5 border border-white/10 backdrop-blur-sm focus:bg-black/40 focus:border-brand-gold/50 text-white placeholder:text-white/20 text-[13px] font-bold uppercase tracking-widest outline-none transition-all"
+                                className="w-full pl-16 pr-8 py-7 bg-white/5 border border-white/10 backdrop-blur-md focus:bg-black/60 focus:border-brand-gold/40 text-white placeholder:text-white/20 text-[14px] font-bold uppercase tracking-widest outline-none transition-all duration-300"
                             />
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* 2. LIGHT CONTENT AREA */}
-            <div className="max-w-[1700px] mx-auto px-6 -mt-10 relative z-20 pb-40">
+            {/* 2. MAIN STOREFRONT */}
+            <div className="max-w-[1700px] mx-auto px-6 -mt-12 relative z-20 pb-40">
 
                 {/* TOOLBAR */}
                 <div className="bg-white border-b-4 border-brand-gold shadow-[0_20px_40px_rgba(0,0,0,0.05)] p-4 mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
@@ -1111,7 +1115,9 @@ const ProductList: React.FC = () => {
                             </div>
                         ) : processedProducts.length > 0 ? (
                             <>
-                                <div className={`${viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8' : 'flex flex-col gap-6'}`}>
+                                <div className={`${viewMode === 'grid' 
+                                    ? 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8' 
+                                    : 'flex flex-col gap-6'}`}>
                                     {processedProducts.map(product => (
                                         <div key={product.id} className={`${viewMode === 'grid' ? 'flex justify-start' : 'w-full'}`}>
                                             {viewMode === 'grid' ? (

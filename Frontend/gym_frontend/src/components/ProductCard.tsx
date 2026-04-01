@@ -110,7 +110,7 @@ const ProductCard = ({ product, variant, mode = 'default', itemId }: ProductCard
         onMouseLeave={() => setIsHovered(false)}
       >
         <Link to={`/product/${product.id}`} className="flex flex-col h-full">
-          <div className="relative h-[260px] md:h-[280px] overflow-hidden bg-brand-warm/30 flex items-center justify-center shrink-0">
+          <div className="relative h-[260px] md:h-[280px] overflow-hidden bg-white flex items-center justify-center shrink-0">
             <img
               src={product.images?.[0] || 'https://images.unsplash.com/photo-1593095191850-2a0bf3a772bf?auto=format&fit=crop&q=80&w=800'}
               alt={product.name}

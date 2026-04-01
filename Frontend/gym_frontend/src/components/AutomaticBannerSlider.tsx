@@ -45,19 +45,19 @@ const DEFAULT_BANNERS: Banner[] = [
     },
 ];
 
-/* ─── HOOK: detect mobile (< 768 px) ─────────────────────────────────────── */
-function useIsMobile() {
-    const [isMobile, setIsMobile] = useState(
-        () => typeof window !== 'undefined' && window.innerWidth < 768
+/* ─── HOOK: detect compact screens (< 1024 px) ───────────────────────────── */
+function useIsCompactScreen() {
+    const [isCompactScreen, setIsCompactScreen] = useState(
+        () => typeof window !== 'undefined' && window.innerWidth < 1024
     );
     useEffect(() => {
-        const mq = window.matchMedia('(max-width: 767px)');
-        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+        const mq = window.matchMedia('(max-width: 1023px)');
+        const handler = (e: MediaQueryListEvent) => setIsCompactScreen(e.matches);
         mq.addEventListener('change', handler);
-        setIsMobile(mq.matches);
+        setIsCompactScreen(mq.matches);
         return () => mq.removeEventListener('change', handler);
     }, []);
-    return isMobile;
+    return isCompactScreen;
 }
 
 /* ─── COMPONENT ───────────────────────────────────────────────────────────── */
@@ -65,7 +65,7 @@ const AutomaticBannerSlider: React.FC = () => {
     const [banners, setBanners] = useState<Banner[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
-    const isMobile = useIsMobile();
+    const isCompactScreen = useIsCompactScreen();
 
     useEffect(() => {
         const fetchBanners = async () => {
@@ -113,25 +113,20 @@ const AutomaticBannerSlider: React.FC = () => {
 
     /* ── Marquee text ─────────────────────────────────────────────────────── */
     const isDefault = banners.length > 0 && String(banners[0].id).startsWith('default-');
-    const titles   = isDefault ? [] : banners.map(b => b.title).filter(Boolean) as string[];
+    const titles = isDefault ? [] : banners.map(b => b.title).filter(Boolean) as string[];
     const BASE_TXT = 'ELITE PERFORMANCE • UNCOMPROMISING QUALITY • NEXUS LABORATORY TESTED • BEYOND THE LIMIT • ';
     // Prefer admin-provided headline if available, otherwise banners' titles, otherwise base text
     const sourceText = adminHeadline ? adminHeadline : (titles.length ? `${titles.join(' • ')}` : BASE_TXT.trim());
     const marqueeText = `${sourceText} • `.repeat(6);
-    const marqueeKey  = `mq-${adminHeadline || titles.join('|') || 'default'}`;
+    const marqueeKey = `mq-${adminHeadline || titles.join('|') || 'default'}`;
 
     /* ── Loading skeleton ─────────────────────────────────────────────────── */
     if (loading && banners.length === 0) {
         return (
             <>
-                {/*
-                 * Skeleton mirrors the exact same height logic as the real slider
-                 * Mobile → square (pb-[100%] trick), md → 45 vh, lg → 50 vh
-                 */}
+                {/* Skeleton mirrors the real slider sizing: dynamic on mobile, vh-based on desktop. */}
                 <div className="w-screen -ml-[calc(50vw-50%)] mt-0 bg-gray-100 animate-pulse
-                                h-0 pb-[100%]
-                                md:h-[45vh] md:pb-0
-                                lg:h-[50vh]" />
+                                aspect-square md:aspect-video lg:h-[65vh] lg:aspect-none" />
                 <div className="w-screen -ml-[calc(50vw-50%)] h-4 md:h-6 bg-white" />
                 <div className="w-screen -ml-[calc(50vw-50%)] h-8 md:h-10 bg-gray-200 animate-pulse" />
             </>
@@ -141,19 +136,15 @@ const AutomaticBannerSlider: React.FC = () => {
     if (banners.length === 0) return null;
 
     const active = banners[currentIndex];
-    /* Use mobile-specific image when available on small screens */
-    const src = isMobile && active.imageMobile ? active.imageMobile : active.image;
+    /* Use mobile-specific image when available on mobile/tablet widths */
+    const src = isCompactScreen && active.imageMobile ? active.imageMobile : active.image;
 
     const Img = () => (
         <img
             src={src}
             alt={active.title || 'Banner'}
-            /*
-             * object-cover fills the container completely (same as the reference
-             * site). Ensure your banner images have the key content centred so
-             * nothing critical is cropped at narrower widths.
-             */
-            className="w-full h-full object-cover object-center"
+            /* object-contain on mobile/tablet to see the whole info. object-cover on laptop to fill the 65vh. */
+            className="w-full h-full object-contain md:object-contain lg:object-fill object-center"
             loading="eager"
             fetchPriority="high"
         />
@@ -161,27 +152,19 @@ const AutomaticBannerSlider: React.FC = () => {
 
     return (
         <>
-            {/* ── BANNER SLIDER ─────────────────────────────────────────────────
-             *
-             *  HEIGHT PER BREAKPOINT
-             *  ─────────────────────
-             *  Mobile  (< 768 px)  →  100 vw  =  square
-             *                          Achieved with the padding-top trick:
-             *                          h-0 + pb-[100%] = height equals width.
-             *  Tablet  (768–1023)  →  45 vh
-             *  Desktop (≥ 1024 px) →  50 vh
-             *
-             *  The section is flush against the navbar (mt-0, no gap above).
-             * ──────────────────────────────────────────────────────────────── */}
+            {/* Banner section sizing: 65vh on laptop/desktop as requested. 
+                On mobile, it uses h-auto with a ghost image to perfectly fit the picture. */}
             <section
                 className="relative w-screen overflow-hidden bg-black -ml-[calc(50vw-50%)] mt-0
-                           h-0 pb-[100%]
-                           md:h-[50vh] md:pb-0
-                           lg:h-[65vh]"
+                            h-auto min-h-[25vh] lg:h-[80vh]"
             >
+                {/* Managed container: Ghost image ensures the section height matches the picture on mobile/tablet. */}
+                <div className="w-full lg:hidden invisible pointer-events-none" aria-hidden="true">
+                    <img src={src} className="w-full h-auto" alt="" />
+                </div>
                 <AnimatePresence mode="wait">
                     <motion.div
-                        key={`${active.id}-${isMobile}`}
+                        key={`${active.id}-${isCompactScreen}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -230,11 +213,10 @@ const AutomaticBannerSlider: React.FC = () => {
                                     key={i}
                                     onClick={() => setCurrentIndex(i)}
                                     aria-label={`Go to slide ${i + 1}`}
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                                        i === currentIndex
-                                            ? 'w-5 md:w-6 bg-white'
-                                            : 'w-1.5 bg-white/40 hover:bg-white/70'
-                                    }`}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex
+                                        ? 'w-5 md:w-6 bg-white'
+                                        : 'w-1.5 bg-white/40 hover:bg-white/70'
+                                        }`}
                                 />
                             ))}
                         </div>
