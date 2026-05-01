@@ -110,7 +110,7 @@ export const createOrder = async (req, res) => {
         addressId,
         total: Math.round(total), // Ensure integer
         paymentMethod: paymentMethod || 'COD',
-        paymentStatus: paymentMethod === 'ONLINE' ? 'PAID' : 'PENDING',
+        paymentStatus: 'PENDING',
         receipt: receiptUrl,
         items: {
           create: orderItemsData,
@@ -134,30 +134,7 @@ export const createOrder = async (req, res) => {
       },
     });
 
-    // 6. Update product and variant stock
-    for (const item of items) {
-      if (item.variantId) {
-        await prisma.productVariant.update({
-          where: { id: item.variantId },
-          data: {
-            stock: {
-              decrement: item.quantity,
-            },
-          },
-        });
-      }
-
-      await prisma.product.update({
-        where: { id: item.productId },
-        data: {
-          stock: {
-            decrement: item.quantity,
-          },
-        },
-      });
-    }
-
-    // 7. Create notification for admin
+    // 6. Create notification for admin
     await prisma.notification.create({
       data: {
         type: "NEW_ORDER",

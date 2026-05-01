@@ -1,6 +1,7 @@
 import express from "express"
 import { addToCart, addToWishlist, check, clearCart, deleteCartItem, getProfile, getWishlist, giveReview, isWishlisted, login, logout, removeFromWishlist, showcart, signUp, updateCart, updateProfile, forgotPassword, resetPassword, enrollPlan, handleContactMessage } from "../controllers/UserController.js"
 import { createAddress, createOrder, getAllOrders, getUserAddresses, getUserOrders, updateAddress, updateOrderStatus } from "../controllers/OrderController.js";
+import { createPaymentIntent } from "../controllers/PaymentController.js";
 import { authenticate } from "../middlewares/auth.js";
 import { adminOnly } from "../middlewares/authorization.js";
 import { createProduct, getallproducts, getCategories, uploadbulkproducts, getProductById, updateProduct, deleteProduct } from "../controllers/ProductController.js";
@@ -47,6 +48,7 @@ router.put("/address/:addressId", authenticate, updateAddress);
 router.get("/addresses", authenticate, getUserAddresses);
 router.post("/orders", authenticate, upload.single("receipt"), createOrder);
 router.get("/orders", authenticate, getUserOrders);
+router.post("/create-payment-intent", authenticate, createPaymentIntent);
 router.get("/getprofile", authenticate, getProfile);
 router.put("/profile", authenticate, updateProfile);
 router.post("/enroll-plan", authenticate, enrollPlan);

@@ -18,6 +18,7 @@ model User {
   addressId        String?
   resetToken       String?
   resetTokenExpire DateTime?
+  stripeCustomerId String?
   addresses        Address[]
   cartItems        CartItem[]
   orders           Order[]
@@ -102,10 +103,12 @@ model Order {
   createdAt     DateTime      @default(now())
   addressId     String
   status        Status        @default(PENDING)
-  paymentMethod PaymentMethod @default(COD)
-  paymentStatus String        @default("PENDING")
-  receipt       String?
-  adress        Address       @relation(fields: [addressId], references: [id])
+  paymentMethod         PaymentMethod @default(COD)
+  paymentStatus         String        @default("PENDING")
+  receipt               String?
+  stripePaymentIntentId String?
+  stripeSessionId       String?
+  adress                Address       @relation(fields: [addressId], references: [id])
   user          User          @relation(fields: [userId], references: [id])
   items         OrderItem[]
 }
