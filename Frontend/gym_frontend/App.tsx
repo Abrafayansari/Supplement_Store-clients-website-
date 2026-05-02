@@ -28,6 +28,7 @@ import ResetPassword from './src/pages/ResetPassword';
 import Plans from './src/pages/Plans';
 import Bundles from './src/pages/Bundles';
 import BundleDetail from './src/pages/BundleDetail';
+import OrderSuccess from './src/pages/OrderSuccess';
 import { CartProvider } from './src/contexts/CartContext';
 import { AuthProvider } from './src/contexts/AuthContext';
 import { AdminProvider } from './src/contexts/AdminContext';
@@ -83,6 +84,7 @@ const App: React.FC = () => {
                     <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
                     <Route path="/reset-password/:token" element={<Layout><ResetPassword /></Layout>} />
                     <Route path="/wishlist" element={<Layout><Wishlist /></Layout>} />
+                    <Route path="/order-success" element={<Layout><ProtectedRoute><OrderSuccess /></ProtectedRoute></Layout>} />
 
                     {/* Admin routes */}
                     <Route path="/admin/login" element={<Layout><Auth mode="admin-login" /></Layout>} />
